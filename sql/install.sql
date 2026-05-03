@@ -15,7 +15,7 @@ create table Staff(
     LastName varchar(20) not null,
     BirthDate date not null,
     Email varchar(30) UNIQUE,                               
-    HireDate date not null default(CURRENT_DATE),
+    HireDate date not null,
     IsActive boolean not null default 1,
     `Type` varchar(20) not null check(`Type` in ('Doctor', 'Nurse', 'AdminStaff')),
 
@@ -152,7 +152,7 @@ create table `Cost`(
     Description text not null,
     BaseCost mediumint not null check(BaseCost > 0),
     PredictedAvgTime int not null check(PredictedAvgTime > 0),
-    ExtraChargePerDay DECIMAL(10,2) generated always as (BaseCost / PredictedAvgTime) virtual
+    ChargePerDay DECIMAL(10,2) generated always as (BaseCost / PredictedAvgTime) virtual
 );
 
 create table Hospitalization(
@@ -674,6 +674,8 @@ BEGIN
     declare NewStartDateTime datetime;
     declare cnt int unsigned default 0;
     declare overlapcnt int unsigned default 0;
+    declare v_DoctorRank varchar(20);
+    declare v_SeniorCount int default 0;
 
     -- Check maximum shifts per month (15 shifts)
     select count(*) into ShiftCount
@@ -719,6 +721,25 @@ BEGIN
             set message_text = "A doctor cannot work more than 3 consecutive night shifts";
         end if;  
     end if;
+
+    -- Find the rank of the doctor trying to be inserted
+    SELECT `Rank` INTO v_DoctorRank FROM Doctor WHERE AMK = NEW.DoctorAMK;
+
+    -- If they are a Resident, check the shift for a senior
+    IF v_DoctorRank = 'Resident' THEN
+        SELECT COUNT(*) INTO v_SeniorCount
+        FROM hasDoctor hd
+        JOIN Doctor d ON hd.DoctorAMK = d.AMK
+        WHERE hd.DepartmentID = NEW.DepartmentID
+          AND hd.ShiftTypeName = NEW.ShiftTypeName
+          AND hd.ShiftDate = NEW.ShiftDate
+          AND d.`Rank` IN ('Director', 'Registrar', 'Consultant');
+
+        IF v_SeniorCount = 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Staffing Error: A Resident cannot be scheduled for a shift without a Senior doctor present.';
+        END IF;
+    END IF;
 END//
 
 CREATE TRIGGER trg_hasdoctor_shift_before_update
@@ -730,6 +751,8 @@ BEGIN
     declare NewStartDateTime datetime;
     declare cnt int unsigned default 0;
     declare overlapcnt int unsigned default 0;
+    declare v_DoctorRank varchar(20);
+    declare v_SeniorCount int default 0;
 
     -- Check maximum shifts per month (15 shifts)
     select count(*) into ShiftCount
@@ -775,9 +798,25 @@ BEGIN
             set message_text = "A doctor cannot work more than 3 consecutive night shifts";
         end if;  
     end if;
-END//
 
-DELIMITER //
+    -- Check for a senior doctor in the shift if the doctor being updated is a Resident
+    SELECT `Rank` INTO v_DoctorRank FROM Doctor WHERE AMK = NEW.DoctorAMK;
+
+    IF v_DoctorRank = 'Resident' THEN
+        SELECT COUNT(*) INTO v_SeniorCount
+        FROM hasDoctor hd
+        JOIN Doctor d ON hd.DoctorAMK = d.AMK
+        WHERE hd.DepartmentID = NEW.DepartmentID
+          AND hd.ShiftTypeName = NEW.ShiftTypeName
+          AND hd.ShiftDate = NEW.ShiftDate
+          AND d.`Rank` IN ('Director', 'Registrar', 'Consultant');
+
+        IF v_SeniorCount = 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Staffing Error: A Resident cannot be scheduled for a shift without a Senior doctor present.';
+        END IF;
+    END IF;
+END//
 
 -- ----------------------------- NURSE SHIFT RULES -----------------------------
 -- INSERT NURSE
@@ -1052,6 +1091,49 @@ BEGIN
 
 END //
 
+CREATE TRIGGER trg_triage_hospitalization_same_patient_insert
+BEFORE INSERT ON TriageEvent
+FOR EACH ROW
+BEGIN
+    DECLARE v_HospPatientAMKA CHAR(11);
+
+    IF NEW.HospitalizationID IS NOT NULL THEN
+        SELECT PatientAMKA INTO v_HospPatientAMKA
+        FROM Hospitalization
+        WHERE HospitalizationID = NEW.HospitalizationID;
+
+        IF NEW.PatientAMKA != v_HospPatientAMKA THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Data Integrity Error: The Triage Patient AMKA does not match the Hospitalization Patient AMKA.';
+        END IF;
+    END IF;
+END //
+
+CREATE TRIGGER trg_triage_hospitalization_same_patient_update
+BEFORE UPDATE ON TriageEvent
+FOR EACH ROW
+BEGIN
+    DECLARE v_HospPatientAMKA CHAR(11);
+
+    -- OPTIMIZATION: We only need to perform the check if the HospitalizationID is being set for the first time (from NULL to a value) or if it is being changed to a different value.
+    -- <=> is the NULL-safe equality operator in MySQL, it returns true if both sides are NULL or if they are equal.
+    IF NEW.HospitalizationID IS NOT NULL AND (
+        NOT (NEW.HospitalizationID <=> OLD.HospitalizationID) OR 
+        NEW.PatientAMKA != OLD.PatientAMKA
+    ) THEN
+    
+        SELECT PatientAMKA INTO v_HospPatientAMKA
+        FROM Hospitalization
+        WHERE HospitalizationID = NEW.HospitalizationID;
+
+        IF NEW.PatientAMKA != v_HospPatientAMKA THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Data Integrity Error: The Triage Patient AMKA does not match the Hospitalization Patient AMKA.';
+        END IF;
+        
+    END IF;
+END //
+
 -- =========================
 -- Stored Procedures
 -- =========================
@@ -1062,19 +1144,31 @@ CREATE PROCEDURE RegisterDoctor (
     IN p_LastName VARCHAR(20),
     IN p_BirthDate DATE,
     IN p_Email VARCHAR(30),
+    IN p_HireDate DATE,
     IN p_License VARCHAR(20),
     IN p_Specialty VARCHAR(20),
     IN p_Rank VARCHAR(20),
     IN p_SupervisorAMK CHAR(11)
 )
 BEGIN
+    declare v_HireDate date;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
     -- Start a transaction to ensure Atomicity
     START TRANSACTION;
+
+    set v_HireDate = coalesce(p_HireDate, current_date);
+
+    -- Check for not future HireDate
+    if v_HireDate > current_date then
+        signal sqlstate '45000'
+        set message_text = "HireDate cannot be in the future";
+    end if;
     
     -- 1. Insert into the Superclass (Staff). 
     -- We explicitly hardcode the Type as 'Doctor' to enforce subtype disjointness.
-    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, `Type`)
-    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, 'Doctor');
+    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, HireDate, `Type`)
+    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Doctor');
     
     -- 2. Insert into the Subclass (Doctor) utilizing the exact same AMK.
     INSERT INTO Doctor (AMK, License, Specialty, `Rank`, SupervisorAMK)
@@ -1092,6 +1186,7 @@ CREATE PROCEDURE UpdateDoctorInfo (
     IN p_SupervisorAMK CHAR(11)
 )
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     START TRANSACTION;
     
     -- 1. Update the Superclass (Staff).
@@ -1121,16 +1216,27 @@ CREATE PROCEDURE RegisterNurse (
     IN p_LastName VARCHAR(20),
     IN p_BirthDate DATE,
     IN p_Email VARCHAR(30),
+    IN p_HireDate DATE,
     IN p_Rank VARCHAR(20),
     IN p_DepartmentID INT
 )
 BEGIN
+    DECLARE v_HireDate DATE;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
     -- Start a transaction to ensure Atomicity.
     START TRANSACTION;
+
+    SET v_HireDate = COALESCE(p_HireDate, CURRENT_DATE);
+
+    IF v_HireDate > CURRENT_DATE THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HireDate cannot be in the future';
+    END IF;
     
     -- 1. Insert into the Superclass (Staff). 
-    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, Type)
-    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, 'Nurse');
+    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, HireDate, Type)
+    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Nurse');
     
     -- 2. Insert into the Subclass (Nurse) utilizing the exact same AMK.
     INSERT INTO Nurse (AMK, Rank, DepartmentID)
@@ -1146,6 +1252,7 @@ CREATE PROCEDURE UpdateNurseInfo (
     IN p_DepartmentID INT
 )
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     START TRANSACTION;
     
     -- 1. Update the Superclass (Staff).
@@ -1169,16 +1276,27 @@ CREATE PROCEDURE RegisterAdminStaff (
     IN p_LastName VARCHAR(20),
     IN p_BirthDate DATE,
     IN p_Email VARCHAR(30),
+    IN p_HireDate DATE,
     IN p_Role VARCHAR(20),
     IN p_Office VARCHAR(20),
     IN p_DepartmentID INT
 )
 BEGIN
+    DECLARE v_HireDate DATE;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
     START TRANSACTION;
     
+    SET v_HireDate = COALESCE(p_HireDate, CURRENT_DATE);
+
+    IF v_HireDate > CURRENT_DATE THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HireDate cannot be in the future';
+    END IF;
+    
     -- 1. Insert into the Superclass (Staff). 
-    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, Type)
-    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, 'AdminStaff');
+    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, HireDate, Type)
+    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'AdminStaff');
     
     -- 2. Insert into the Subclass (AdminStaff) utilizing the exact same AMK.
     INSERT INTO AdminStaff (AMK, Role, Office, DepartmentID)
@@ -1195,6 +1313,7 @@ CREATE PROCEDURE UpdateAdminStaffInfo (
     IN p_DepartmentID INT
 )
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     START TRANSACTION;
     
     -- 1. Update the Superclass (Staff).
@@ -1222,6 +1341,7 @@ CREATE PROCEDURE CreateDepartmentWithDirector (
 )
 BEGIN
     DECLARE v_DeptID INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     
     -- Start a transaction to ensure atomicity
     START TRANSACTION;
@@ -1245,6 +1365,7 @@ CREATE PROCEDURE UpdateDepartmentWithDirector (
     IN p_DirectorAMK CHAR(11)
 )
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     -- Start a transaction to ensure atomicity
     START TRANSACTION;
     
@@ -1272,11 +1393,12 @@ CREATE PROCEDURE AdmitPatient (
 )
 BEGIN
     DECLARE v_RoomState VARCHAR(20);
-    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
     START TRANSACTION;
     
     -- 1. Proactively verify room availability
-    SELECT State INTO v_RoomState 
+    SELECT `State` INTO v_RoomState 
     FROM Room 
     WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID
     FOR UPDATE; -- Locks the room row to prevent concurrent admission conflicts
@@ -1288,13 +1410,12 @@ BEGIN
     
     -- 2. Mutate the Room state
     UPDATE Room 
-    SET State = 'Occupied' 
+    SET `State` = 'Occupied' 
     WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID;
     
     -- 3. Insert the Hospitalization record
     INSERT INTO Hospitalization (AdmissionDateTime, PatientAMKA, RoomID, DepartmentID, KENcode)
     VALUES (p_AdmissionDateTime, p_PatientAMKA, p_RoomID, p_DepartmentID, p_KENcode);
-    
     COMMIT;
 END//
 
@@ -1305,6 +1426,7 @@ CREATE PROCEDURE DischargePatient (
 BEGIN
     DECLARE v_RoomID SMALLINT;
     DECLARE v_DepartmentID INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
     START TRANSACTION;
     
@@ -1325,9 +1447,60 @@ BEGIN
     
     COMMIT;
 END//
+
+-- For Derived Attributes : Additional Fees, Total Fees of Hospitialization Table
+CREATE PROCEDURE CalculateHospitalizationBill(
+    IN p_HospitalizationID INT,
+    OUT p_AdditionalFees DECIMAL(10,2),
+    OUT p_TotalFees DECIMAL(10,2)
+)
+BEGIN
+    DECLARE v_BaseCost DECIMAL(10,2) DEFAULT 0;
+    DECLARE v_PredictedDays INT DEFAULT 0;
+    DECLARE v_ChargePerDay DECIMAL(10,2) DEFAULT 0;
+    DECLARE v_ActualDays INT DEFAULT 0;
+
+    DECLARE v_LabFees DECIMAL(10,2) DEFAULT 0;
+    DECLARE v_ProcedureFees DECIMAL(10,2) DEFAULT 0;
+
+    -- Retrieve the KEN Base Cost, Predicted Average Time, and Actual Days 
+    SELECT c.BaseCost, c.PredictedAvgTime, c.ChargePerDay, h.ActualDays
+    INTO v_BaseCost, v_PredictedDays, v_ChargePerDay, v_ActualDays
+    FROM Hospitalization h
+    JOIN Cost c ON h.KENcode = c.KENCode
+    WHERE h.HospitalizationID = p_HospitalizationID;
+
+    -- Calculate Additional KEN Fees, if the actual hospitalization duration exceeds the predicted average time
+    IF v_ActualDays > v_PredictedDays THEN
+        SET p_AdditionalFees = (v_ActualDays - v_PredictedDays) * v_ChargePerDay;
+    ELSE
+        SET p_AdditionalFees = 0;
+    END IF;
+
+    -- If the patient had no lab tests -> 0
+    SELECT IFNULL(sum(lt.LabCost), 0) 
+    INTO v_LabFees
+    FROM HospLabTest hlt
+    JOIN LabTest lt ON hlt.LabCode = lt.LabCode
+    WHERE hlt.HospitalizationID = p_HospitalizationID;
+
+    --  Aggregate Procedure 
+    SELECT IFNULL(sum(pt.ProcCost), 0) 
+    INTO v_ProcedureFees
+    FROM ProcedureEvent pe
+    JOIN ProcedureType pt ON pe.ProcedureCode = pt.ProcCode
+    WHERE pe.HospitalizationID = p_HospitalizationID;
+
+    -- Calculate Final Total Fees
+    SET p_TotalFees = v_BaseCost + p_AdditionalFees + v_LabFees + v_ProcedureFees;
+
+END//
+
 DELIMITER ;
 
--- Views ----------------------------------
+-- =========================
+-- VIEWS
+-- =========================
 
 create view DepartmentInfo as
 select 
@@ -1335,7 +1508,10 @@ select
     d.Name AS DepartmentName,
     d.Floor,
     d.Building,
+    doc.LastName AS DirectorName,
     COUNT(r.ID) AS RoomNum
 from Department d
 left join Room r ON d.DepartmentID = r.DepartmentID
-group by d.DepartmentID, d.Name, d.Floor, d.Building;
+left join Doctor doc ON d.DirectorAMK = doc.AMK
+group by d.DepartmentID, d.Name, d.Floor, d.Building, doc.LastName;
+

@@ -163,7 +163,7 @@ create table Hospitalization(
     RoomID smallint not null,
     DepartmentID int not null,
     KENcode varchar(5) not null,
-    ActualDays int generated always as (TIMESTAMPDIFF(DAY, AdmissionDateTime, ExitDateTime)) virtual
+    ActualDays int generated always as (TIMESTAMPDIFF(DAY, AdmissionDateTime, ExitDateTime)) virtual,
     -- AdditionalFees(),
     -- TotalFees(),
 
@@ -314,7 +314,7 @@ create table helps_in (
 create table ShiftType (
     `Name` varchar(20) primary key check(`Name` in ('Morning', 'Afternoon', 'Night')),
     StartTime time not null unique CHECK (StartTime IN ('07:00:00', '15:00:00', '23:00:00')),
-    EndTime time generated always as (ADDTIME(StartTime, '08:00:00')) virtual
+    EndTime time generated always as (ADDTIME(StartTime, '08:00:00')) virtual,
 
     constraint chk_shift_type check (
         (`Name` = 'Morning' and StartTime = '07:00:00') or
@@ -452,6 +452,13 @@ create table `Image`(
     constraint chk_room_association check (
         (RoomID is null and RoomDepartmentID is null) or
         (RoomID is not null and RoomDepartmentID is not null)
+    )
+    -- Constraint 2: THE EXCLUSIVE ARC (Αντικαθιστά πλήρως τους Triggers)
+    constraint chk_image_exactly_one_target check (
+        (ProcRoomId IS NOT NULL) + 
+        (StaffAMK IS NOT NULL) + 
+        (DepartmentID IS NOT NULL) + 
+        (RoomID IS NOT NULL) = 1
     )
 );
 
@@ -610,6 +617,7 @@ begin
 
     -- Check if the patient has been discharged at all
     if v_ExitDateTime is null then
+        SIGNAL SQLSTATE '45000'
         set message_text = "Patient must be discharged before evaluation can be made";
     end if;
 end //
@@ -627,6 +635,7 @@ begin
 
     -- Check if the patient has been discharged at all
     if v_ExitDateTime is null then
+        SIGNAL SQLSTATE '45000'
         set message_text = "Patient must be discharged before evaluation can be made";
     end if;
 end //
@@ -639,6 +648,15 @@ BEGIN
     DECLARE NewDuration INT;
     DECLARE NewEndTime DATETIME;
     DECLARE OverlapCount INT DEFAULT 0;
+    DECLARE v_IsActive BOOLEAN;
+
+    -- Check if the Main Doctor is active
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.MainDocAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Scheduling Error: Cannot assign an inactive doctor to a procedure.';
+    END IF;
 
     -- Read the duration of the procedure type being scheduled
     SELECT ProcDuration INTO NewDuration
@@ -661,6 +679,47 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Error: Procedure overlaps with another procedure for the same room or main doctor';
     END IF;
+END //
+
+CREATE TRIGGER trg_Procedure_Overlap_Update
+BEFORE UPDATE ON ProcedureEvent
+FOR EACH ROW
+BEGIN
+    DECLARE NewDuration INT;
+    DECLARE NewEndTime DATETIME;
+    DECLARE OverlapCount INT DEFAULT 0;
+    DECLARE v_IsActive BOOLEAN;
+
+    -- Check if the Main Doctor is active
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.MainDocAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Scheduling Error: Cannot assign an inactive doctor to a procedure.';
+    END IF;
+
+    -- Read the duration of the procedure type being scheduled
+    SELECT ProcDuration INTO NewDuration
+    FROM ProcedureType
+    WHERE ProcCode = NEW.ProcedureCode;
+
+    -- Find NewEndTime by adding the duration to the start time of the new procedure
+    SET NewEndTime = DATE_ADD(NEW.DateTime, INTERVAL NewDuration MINUTE);
+
+    -- Check for overlapping procedures in the same room or with the same main doctor (excluding the current record)
+    SELECT COUNT(*) INTO OverlapCount
+    FROM ProcedureEvent pe
+    JOIN ProcedureType pt ON pe.ProcedureCode = pt.ProcCode
+    WHERE (pe.ProcRoomID = NEW.ProcRoomID OR pe.MainDocAMK = NEW.MainDocAMK)        -- Check same room or same main doctor
+      AND (NEW.DateTime < DATE_ADD(pe.DateTime, INTERVAL pt.ProcDuration MINUTE))   -- NewStart < OldEnd
+      AND (pe.DateTime < NewEndTime)                                                -- OldStart < NewEnd
+      AND pe.ProcEventID != NEW.ProcEventID;                                        -- Exclude the current record being updated
+
+    -- Check signals an error if there is any overlap
+    IF OverlapCount > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Procedure overlaps with another procedure for the same room or main doctor';
+    END IF;
 
 END //
 
@@ -676,7 +735,17 @@ BEGIN
     declare overlapcnt int unsigned default 0;
     declare v_DoctorRank varchar(20);
     declare v_SeniorCount int default 0;
+    DECLARE v_IsActive BOOLEAN;
 
+    -- ==========================================
+    -- RULE 0: Is the Staff Member Active?
+    -- ==========================================
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.DoctorAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HR Error: Cannot assign a shift to an inactive staff member.';
+    END IF;
     -- Check maximum shifts per month (15 shifts)
     select count(*) into ShiftCount
     from hasDoctor
@@ -753,7 +822,17 @@ BEGIN
     declare overlapcnt int unsigned default 0;
     declare v_DoctorRank varchar(20);
     declare v_SeniorCount int default 0;
+    DECLARE v_IsActive BOOLEAN;
 
+    -- ==========================================
+    -- RULE 0: Is the Staff Member Active?
+    -- ==========================================
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.DoctorAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HR Error: Cannot assign a shift to an inactive staff member.';
+    END IF;
     -- Check maximum shifts per month (15 shifts)
     select count(*) into ShiftCount
     from hasDoctor
@@ -818,6 +897,47 @@ BEGIN
     END IF;
 END//
 
+CREATE TRIGGER trg_hasDoctor_prevent_removing_last_senior
+BEFORE DELETE ON hasDoctor
+FOR EACH ROW
+BEGIN
+    DECLARE v_IsSenior BOOLEAN;
+    DECLARE v_ResidentCount INT DEFAULT 0;
+    DECLARE v_OtherSeniorCount INT DEFAULT 0;
+
+    -- 1. Ήταν "Senior" αυτός που πάμε να διαγράψουμε;
+    SELECT IF(`Rank` IN ('Director', 'Registrar', 'Consultant'), 1, 0) INTO v_IsSenior
+    FROM Doctor WHERE AMK = OLD.DoctorAMK;
+
+    IF v_IsSenior = 1 THEN
+        -- 2. Υπάρχουν Ειδικευόμενοι σε αυτή τη βάρδια;
+        SELECT COUNT(*) INTO v_ResidentCount
+        FROM hasDoctor hd 
+        JOIN Doctor d ON hd.DoctorAMK = d.AMK
+        WHERE hd.DepartmentID = OLD.DepartmentID 
+          AND hd.ShiftTypeName = OLD.ShiftTypeName 
+          AND hd.ShiftDate = OLD.ShiftDate 
+          AND d.`Rank` = 'Resident';
+
+        IF v_ResidentCount > 0 THEN
+            -- 3. Υπάρχει ΑΛΛΟΣ Senior να τους επιβλέπει αν φύγει αυτός;
+            SELECT COUNT(*) INTO v_OtherSeniorCount
+            FROM hasDoctor hd 
+            JOIN Doctor d ON hd.DoctorAMK = d.AMK
+            WHERE hd.DepartmentID = OLD.DepartmentID 
+              AND hd.ShiftTypeName = OLD.ShiftTypeName 
+              AND hd.ShiftDate = OLD.ShiftDate 
+              AND d.`Rank` IN ('Director', 'Registrar', 'Consultant') 
+              AND hd.DoctorAMK != OLD.DoctorAMK; -- Εξαιρούμε αυτόν που διαγράφεται
+
+            IF v_OtherSeniorCount = 0 THEN
+                SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'Staffing Error: Cannot remove the last Senior doctor. A Resident is assigned to this shift.';
+            END IF;
+        END IF;
+    END IF;
+END //
+
 -- ----------------------------- NURSE SHIFT RULES -----------------------------
 -- INSERT NURSE
 CREATE TRIGGER trg_Nurse_Shift_Rules_Insert
@@ -830,7 +950,17 @@ BEGIN
     DECLARE ConsecutiveNights INT UNSIGNED DEFAULT 0;
     DECLARE NewStartTime TIME;
     DECLARE NewStartDateTime DATETIME;
+    DECLARE v_IsActive BOOLEAN;
 
+    -- ==========================================
+    -- RULE 0: Is the Staff Member Active?
+    -- ==========================================
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.NurseAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HR Error: Cannot assign a shift to an inactive staff member.';
+    END IF;
     -- Calculate StartTime and StartDateTime (Done ONLY ONCE to save CPU cycles)
     SELECT StartTime INTO NewStartTime FROM ShiftType WHERE `Name` = NEW.ShiftTypeName;
     SET NewStartDateTime = TIMESTAMP(NEW.ShiftDate, NewStartTime);
@@ -897,7 +1027,18 @@ BEGIN
     DECLARE ConsecutiveNights INT UNSIGNED DEFAULT 0;
     DECLARE NewStartTime TIME;
     DECLARE NewStartDateTime DATETIME;
+    DECLARE v_IsActive BOOLEAN;
 
+    -- ==========================================
+    -- RULE 0: Is the Staff Member Active?
+    -- ==========================================
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.NurseAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HR Error: Cannot assign a shift to an inactive staff member.';
+    END IF;
+    -- Calculate StartTime and StartDateTime
     SELECT StartTime INTO NewStartTime FROM ShiftType WHERE `Name` = NEW.ShiftTypeName;
     SET NewStartDateTime = TIMESTAMP(NEW.ShiftDate, NewStartTime);
 
@@ -966,7 +1107,17 @@ BEGIN
     DECLARE ConsecutiveNights INT UNSIGNED DEFAULT 0;
     DECLARE NewStartTime TIME;
     DECLARE NewStartDateTime DATETIME;
+    DECLARE v_IsActive BOOLEAN;
 
+    -- ==========================================
+    -- RULE 0: Is the Staff Member Active?
+    -- ==========================================
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.AdminAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HR Error: Cannot assign a shift to an inactive staff member.';
+    END IF;
     -- Calculate StartTime and StartDateTime (Done ONLY ONCE to save CPU cycles)
     SELECT StartTime INTO NewStartTime FROM ShiftType WHERE `Name` = NEW.ShiftTypeName;
     SET NewStartDateTime = TIMESTAMP(NEW.ShiftDate, NewStartTime);
@@ -998,7 +1149,7 @@ BEGIN
     IF ViolationCount > 0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = "An Admin staff member cannot have two shifts with less than 8 hours of rest in between.";
-    END IF;
+    END IF;xs
 
     -- ------------------------------------------
     -- RULE 3: Max 3 Consecutive Night Shifts
@@ -1034,7 +1185,18 @@ BEGIN
     DECLARE ConsecutiveNights INT UNSIGNED DEFAULT 0;
     DECLARE NewStartTime TIME;
     DECLARE NewStartDateTime DATETIME;
+    DECLARE v_IsActive BOOLEAN;
 
+    -- ==========================================
+    -- RULE 0: Is the Staff Member Active?
+    -- ==========================================
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.AdminAMK;
+    
+    IF v_IsActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'HR Error: Cannot assign a shift to an inactive staff member.';
+    END IF;
+    -- Calculate StartTime and StartDateTime
     SELECT StartTime INTO NewStartTime FROM ShiftType WHERE `Name` = NEW.ShiftTypeName;
     SET NewStartDateTime = TIMESTAMP(NEW.ShiftDate, NewStartTime);
 
@@ -1195,14 +1357,14 @@ BEGIN
     -- will automatically propagate the new AMK to the Doctor table.
     UPDATE Staff 
     SET AMK = p_NewAMK
-    WHERE AMK = p_OldAMK AND Type = 'Doctor';
+    WHERE AMK = p_OldAMK AND `Type` = 'Doctor';
     
     -- 2. Update the Subclass (Doctor) specific attributes.
     -- We use p_NewAMK here because the cascade has already updated the primary key.
     UPDATE Doctor 
     SET License = p_License,
         Specialty = p_Specialty,
-        Rank = p_Rank,
+        `Rank` = p_Rank,
         SupervisorAMK = p_SupervisorAMK
     WHERE AMK = p_NewAMK;
     
@@ -1239,7 +1401,7 @@ BEGIN
     VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Nurse');
     
     -- 2. Insert into the Subclass (Nurse) utilizing the exact same AMK.
-    INSERT INTO Nurse (AMK, Rank, DepartmentID)
+    INSERT INTO Nurse (AMK, `Rank`, DepartmentID)
     VALUES (p_AMK, p_Rank, p_DepartmentID);
     
     COMMIT;
@@ -1262,7 +1424,7 @@ BEGIN
     
     -- 2. Update the Subclass (Nurse) specific attributes.
     UPDATE Nurse 
-    SET Rank = p_Rank,
+    SET `Rank` = p_Rank,
         DepartmentID = p_DepartmentID
     WHERE AMK = p_NewAMK;
     
@@ -1393,9 +1555,17 @@ CREATE PROCEDURE AdmitPatient (
 )
 BEGIN
     DECLARE v_RoomState VARCHAR(20);
+    DECLARE v_PatientActive BOOLEAN;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
     START TRANSACTION;
+    -- 0. Check if the Patient profile is active
+    SELECT isActive INTO v_PatientActive FROM Patient WHERE AMKA = p_PatientAMKA;
+    
+    IF v_PatientActive = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Admission Error: Patient profile is inactive.';
+    END IF;
     
     -- 1. Proactively verify room availability
     SELECT `State` INTO v_RoomState 
@@ -1512,6 +1682,78 @@ select
     COUNT(r.ID) AS RoomNum
 from Department d
 left join Room r ON d.DepartmentID = r.DepartmentID
-left join Doctor doc ON d.DirectorAMK = doc.AMK
+left join Staff doc ON d.DirectorAMK = doc.AMK
 group by d.DepartmentID, d.Name, d.Floor, d.Building, doc.LastName;
+
+-- isActive Views for easier querying of only active records without having to filter every time
+create view ActiveStaff as
+select AMK, FirstName, LastName, BirthDate, Email, HireDate, `Type`
+from Staff
+where IsActive = 1;
+
+create view ActivePatient as
+select AMKA, FirstName, LastName, FatherName, BirthDate, Gender, `Weight`,
+    `Height`, `Address`, Email, Profession, Nationality, InsuranceProviderName
+from Patient
+where IsActive = 1;
+
+create view ActiveLabTest as
+select LabCode, LabType, LabDescription, LabCost
+from LabTest
+where IsActive = 1;
+
+CREATE VIEW ShiftsAlerts AS
+WITH ShiftStaffCounts AS (
+    SELECT 
+        s.DepartmentID,
+        d.`Name` AS DepartmentName,
+        s.ShiftTypeName,
+        s.`Date` AS ShiftDate,
+        
+        (SELECT COUNT(*) FROM hasDoctor hd 
+         WHERE hd.DepartmentID = s.DepartmentID 
+           AND hd.ShiftTypeName = s.ShiftTypeName 
+           AND hd.ShiftDate = s.`Date`) AS DoctorCount,
+           
+       
+        (SELECT COUNT(*) FROM hasNurse hn 
+         WHERE hn.DepartmentID = s.DepartmentID 
+           AND hn.ShiftTypeName = s.ShiftTypeName 
+           AND hn.ShiftDate = s.`Date`) AS NurseCount,
+           
+        
+        (SELECT COUNT(*) FROM hasAdmin ha 
+         WHERE ha.DepartmentID = s.DepartmentID 
+           AND ha.ShiftTypeName = s.ShiftTypeName 
+           AND ha.ShiftDate = s.`Date`) AS AdminCount
+    FROM 
+        Shift s
+    JOIN 
+        Department d ON s.DepartmentID = d.DepartmentID
+)
+SELECT 
+    ShiftDate,
+    ShiftTypeName,
+    DepartmentName,
+    DoctorCount,
+    NurseCount,
+    AdminCount,
+    CONCAT_WS(', ',
+        IF(DoctorCount < 3, 'Missing Doctors', NULL),
+        IF(NurseCount < 6, 'Missing Nurses', NULL),
+        IF(AdminCount < 2, 'Missing Admins', NULL)
+    ) AS WarningReason
+FROM 
+    ShiftStaffCounts
+WHERE 
+    DoctorCount < 3 OR 
+    NurseCount < 6 OR 
+    AdminCount < 2;
+
+-- =========================
+-- Indexes
+-- =========================
+
+
+
 

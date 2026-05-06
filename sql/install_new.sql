@@ -1,4 +1,4 @@
--- =========================
+ -- =========================
 -- TABLES
 -- =========================
 
@@ -1666,6 +1666,91 @@ BEGIN
 
 END//
 
+-- Peek the next patient in the triage queue
+CREATE PROCEDURE FetchNext()
+BEGIN
+    SELECT 
+        t.TriageID, 
+        p.FirstName, 
+        p.LastName, 
+        t.EmergencyLevel, 
+        t.TriageDateTime
+    FROM TriageEvent t
+    JOIN Patient p ON t.PatientAMKA = p.AMKA
+    WHERE t.Outcome = 'Pending'
+    ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC
+    LIMIT 1;
+END//
+
+-- The Admission Transaction
+CREATE PROCEDURE ProcessTriageAdmission (
+    IN p_TriageID INT,
+    IN p_RoomID SMALLINT,
+    IN p_DepartmentID INT,
+    IN p_KENcode VARCHAR(5),
+    IN p_AdmissionDateTime DATETIME
+)
+BEGIN
+    DECLARE v_PatientAMKA CHAR(11);
+    DECLARE v_RoomState VARCHAR(20);
+    DECLARE v_NewHospitalizationID INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
+    START TRANSACTION;
+
+    SELECT PatientAMKA INTO v_PatientAMKA
+    FROM TriageEvent
+    WHERE TriageID = p_TriageID 
+    FOR UPDATE;
+
+    -- Proactively verify room availability and lock the room row
+    SELECT `State` INTO v_RoomState 
+    FROM Room 
+    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID
+    FOR UPDATE; 
+    
+    IF v_RoomState != 'Available' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The selected room is not available for admission.';
+    END IF;
+
+    -- Mutate the Room state to 'Occupied'
+    UPDATE Room 
+    SET `State` = 'Occupied' 
+    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID;
+
+    -- Insert the Hospitalization record
+    INSERT INTO Hospitalization (AdmissionDateTime, PatientAMKA, RoomID, DepartmentID, KENcode)
+    VALUES (p_AdmissionDateTime, v_PatientAMKA, p_RoomID, p_DepartmentID, p_KENcode);
+
+    SET v_NewHospitalizationID = LAST_INSERT_ID();
+
+    -- Update the TriageEvent outcome and link it to the Hospitalization
+    UPDATE TriageEvent
+    SET Outcome = 'Accepted', HospitalizationID = v_NewHospitalizationID
+    WHERE TriageID = p_TriageID;
+
+    COMMIT;
+END//
+
+-- The Discard Transaction
+CREATE PROCEDURE DiscardTriagePatient (
+    IN p_TriageID INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
+    START TRANSACTION;
+    -- Mutate the state of the abandoned or discharged patient
+    UPDATE TriageEvent
+    SET Outcome = 'Discarded'
+    WHERE TriageID = p_TriageID AND Outcome = 'Pending';
+
+    COMMIT;
+END// 
+
+
 DELIMITER ;
 
 -- =========================
@@ -1751,89 +1836,18 @@ WHERE
     AdminCount < 2;
 
 -- View for the FIFO 
+CREATE VIEW PatientQueue AS
+SELECT 
+    p.FirstName, 
+    p.LastName,
+    t.EmergencyLevel, 
+    t.TriageDateTime,
+    t.Symptoms
+FROM TriageEvent t
+JOIN Patient p ON t.PatientAMKA = p.AMKA
+WHERE t.Outcome = 'Pending' 
+ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC;
 
- create view PatientQueue as
- select p.FirstName, p.LastName,t.EmergencyLevel, t.TriageDateTime, t.Symptoms
- from TriageEvent t 
- join Patient p on t.PatientAMKA = p.AMKA
- order by t.EmergencyLevel asc, t.TriageDateTime asc;
-
-CREATE PROCEDURE FetchNext()
-BEGIN
-    SELECT t.TriageID, p.FirstName, p.LastName, tt.EmergencyLevel, t.TriageDateTime
-    FROM TriageEvent t
-    JOIN Patient p ON t.PatientAMKA = p.AMKA
-    WHERE t.Outcome = 'Pending'
-    ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC
-    LIMIT 1;
-END//
-
-CREATE PROCEDURE ProcessTriageAdmission (
-    IN p_TriageID INT,
-    IN p_RoomID SMALLINT,
-    IN p_DepartmentID INT,
-    IN p_KENcode VARCHAR(5),
-    IN p_AdmissionDateTime DATETIME
-)
-BEGIN
-    DECLARE v_PatientAMKA CHAR(11);
-    DECLARE v_RoomState VARCHAR(20);
-    DECLARE v_NewHospitalizationID INT;
-
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
-
-    START TRANSACTION;
-
-    -- Retrieve the Patient's AMKA from the Triage Event and lock the row
-    SELECT PatientAMKA INTO v_PatientAMKA
-    FROM TriageEvent
-    WHERE TriageID = p_TriageID 
-    FOR UPDATE;
-
-    -- Proactively verify room availability and lock the room row
-    SELECT `State` INTO v_RoomState 
-    FROM Room 
-    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID
-    FOR UPDATE; 
-    
-    IF v_RoomState != 'Available' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'The selected room is not available for admission.';
-    END IF;
-
-    -- Mutate the Room state to 'Occupied'
-    UPDATE Room 
-    SET `State` = 'Occupied' 
-    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID;
-
-    -- Insert the Hospitalization record
-    INSERT INTO Hospitalization (AdmissionDateTime, PatientAMKA, RoomID, DepartmentID, KENcode)
-    VALUES (p_AdmissionDateTime, v_PatientAMKA, p_RoomID, p_DepartmentID, p_KENcode);
-
-    SET v_NewHospitalizationID = LAST_INSERT_ID();
-
-    -- Update the TriageEvent outcome and link it to the Hospitalization
-    UPDATE TriageEvent
-    SET Outcome = 'Accepted', HospitalizationID = v_NewHospitalizationID
-    WHERE TriageID = p_TriageID;
-
-    COMMIT;
-END//
-
-CREATE PROCEDURE DiscardTriagePatient (
-    IN p_TriageID INT
-)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
-
-    START TRANSACTION;
-    -- Mutate the state of the abandoned or discharged patient
-    UPDATE TriageEvent
-    SET Outcome = 'Discarded'
-    WHERE TriageID = p_TriageID AND Outcome = 'Pending';
-
-    COMMIT;
-END//
 
 -- =========================
 -- Indexes

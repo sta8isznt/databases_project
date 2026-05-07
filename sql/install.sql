@@ -1796,7 +1796,7 @@ group by d.DepartmentID, d.Name, d.Floor, d.Building, doc.LastName;
 
 -- isActive Views for easier querying of only active records without having to filter every time
 create view ActiveStaff as
-select AMK, FirstName, LastName, BirthDate, Email, HireDate, `Type`
+select AMK, FirstName, LastName, timestampdiff(year,birthdate,curdate()) as Age, Email, HireDate, `Type`
 from Staff
 where IsActive = 1;
 
@@ -1810,6 +1810,12 @@ create view ActiveLabTest as
 select LabCode, LabType, LabDescription, LabCost
 from LabTest
 where IsActive = 1;
+
+create view DocInfo as
+select d.amk, s.firstname, s.lastname, s.age, s.email, s.hiredate, d.license, d.specialty, d.rank, d.supervisoramk
+from doctor d
+join activestaff s on d.amk = s.amk
+
 
 CREATE VIEW ShiftsAlerts AS
 WITH ShiftStaffCounts AS (
@@ -1871,6 +1877,10 @@ FROM TriageEvent t
 JOIN Patient p ON t.PatientAMKA = p.AMKA
 WHERE t.Outcome = 'Pending' 
 ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC;
+
+
+create view as staffinfo as
+selet
 
 
 -- =========================

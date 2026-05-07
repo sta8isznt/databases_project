@@ -34,6 +34,8 @@
 | 2 | Exactly one `Doctor` must be assigned as director to each `Department`. | This reflects the assignment requirement that every department has one director. |
 | 3 | For `1:N` relationships where the `N` side has total participation, we model the foreign key on the `N` side as mandatory (not null) and keep the default `ON DELETE RESTRICT` behavior instead of `SET NULL`. | This reflects the ER semantics correctly: every child row must always belong to a parent row, so deleting the parent should be blocked until the child rows are reassigned or removed explicitly. This also is important for medical data integrity, as we don't want to lose critical information about hospitalizations or staff assignments due to cascading deletes. |
 | 4 | We apply `ON UPDATE CASCADE` only on foreign keys that reference codes/identifiers which may realistically change during system operation (for example, correction of a wrong value or renewal/re-coding). | This prevents unnecessary update propagation on stable identifiers, while still preserving referential integrity when mutable business codes are corrected. |
+| 5 | We assume that procedure scheduling is independent from regular department shift coverage. Therefore, a `Doctor`, `Nurse`, or `AdminStaff` member may participate in a `ProcedureEvent` even if they are not recorded in `hasDoctor`, `hasNurse`, or `hasAdmin` for a shift covering that exact procedure time. | `Shift` models department staffing coverage, while `ProcedureEvent` models scheduled medical procedures in procedure rooms. These workflows can be planned separately in a hospital. |
+| 6 | For doctor-evaluation analytics, a hospitalization's `Evaluation` is attributed to a doctor only when that doctor appears as `ProcedureEvent.MainDocAMK` in at least one procedure during the hospitalization. Each hospitalization is counted once per doctor, even if the same doctor is the main doctor in multiple procedures during that hospitalization. | `Evaluation` is linked to `Hospitalization`, not directly to `Doctor`. This rule gives a clear and deterministic way to map patient ratings to the doctor with primary procedural responsibility while avoiding duplicate counting of the same evaluation. |
 
 
 ## Indexes:
@@ -96,5 +98,4 @@
 | `AdmitPatient` | Admit a patient to the hospital: create `Hospitalization` and update room state with transactional safety. |
 | `DischargePatient` | Discharge a patient: set exit time, free room, and perform related updates atomically. |
 | `CalculateHospitalizationBill` | Compute the total bill for a hospitalization (derived fees, labs, procedures). |
-
 

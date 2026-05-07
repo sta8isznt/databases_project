@@ -1,0 +1,88 @@
+ImageID,ImageURL,ImageDescription,ProcRoomId,StaffAMK,DepartmentID,RoomID,RoomDepartmentID
+1,https://example.org/hospital/images/0001.jpg,Cardiology department image,,,1,,
+2,https://example.org/hospital/images/0002.jpg,Surgery department image,,,2,,
+3,https://example.org/hospital/images/0003.jpg,ICU department image,,,3,,
+4,https://example.org/hospital/images/0004.jpg,Emergency department image,,,4,,
+5,https://example.org/hospital/images/0005.jpg,Neurology department image,,,5,,
+6,https://example.org/hospital/images/0006.jpg,Orthopedics department image,,,6,,
+7,https://example.org/hospital/images/0007.jpg,Pulmonology department image,,,7,,
+8,https://example.org/hospital/images/0008.jpg,Gastroenterology department image,,,8,,
+9,https://example.org/hospital/images/0009.jpg,Oncology department image,,,9,,
+10,https://example.org/hospital/images/0010.jpg,Pediatrics department image,,,10,,
+11,https://example.org/hospital/images/0011.jpg,Ophthalmology department image,,,11,,
+12,https://example.org/hospital/images/0012.jpg,ENT department image,,,12,,
+13,https://example.org/hospital/images/0013.jpg,Nephrology department image,,,13,,
+14,https://example.org/hospital/images/0014.jpg,Psychiatry department image,,,14,,
+15,https://example.org/hospital/images/0015.jpg,Internal Medicine department image,,,15,,
+16,https://example.org/hospital/images/0016.jpg,Staff portrait for Marios Pavlidis,,10000000000,,,
+17,https://example.org/hospital/images/0017.jpg,Staff portrait for Panagiota Petrou,,10000000001,,,
+18,https://example.org/hospital/images/0018.jpg,Staff portrait for Eleni Theodorou,,10000000002,,,
+19,https://example.org/hospital/images/0019.jpg,Staff portrait for Nikos Konstantinou,,10000000003,,,
+20,https://example.org/hospital/images/0020.jpg,Staff portrait for Marios Theodorou,,10000000004,,,
+21,https://example.org/hospital/images/0021.jpg,Staff portrait for Petros Alexiou,,10000000005,,,
+22,https://example.org/hospital/images/0022.jpg,Staff portrait for Evangelia Vasiliou,,10000000006,,,
+23,https://example.org/hospital/images/0023.jpg,Staff portrait for Sofia Athanasiou,,10000000007,,,
+24,https://example.org/hospital/images/0024.jpg,Staff portrait for Panagiota Georgiou,,10000000008,,,
+25,https://example.org/hospital/images/0025.jpg,Staff portrait for Dimitris Athanasiou,,10000000009,,,
+26,https://example.org/hospital/images/0026.jpg,Staff portrait for Michalis Kostopoulos,,10000000010,,,
+27,https://example.org/hospital/images/0027.jpg,Staff portrait for Georgia Sotiriou,,10000000011,,,
+28,https://example.org/hospital/images/0028.jpg,Staff portrait for Dimitris Petrou,,10000000012,,,
+29,https://example.org/hospital/images/0029.jpg,Staff portrait for Marios Theodorou,,10000000013,,,
+30,https://example.org/hospital/images/0030.jpg,Staff portrait for Nikos Konstantinou,,10000000014,,,
+31,https://example.org/hospital/images/0031.jpg,Staff portrait for Kostas Dimitriou,,10000000015,,,
+32,https://example.org/hospital/images/0032.jpg,Staff portrait for Natalia Lazarou,,10000000016,,,
+33,https://example.org/hospital/images/0033.jpg,Staff portrait for Dimitra Alexiou,,10000000017,,,
+34,https://example.org/hospital/images/0034.jpg,Staff portrait for Katerina Athanasiou,,10000000018,,,
+35,https://example.org/hospital/images/0035.jpg,Staff portrait for Spyros Vasiliou,,10000000019,,,
+36,https://example.org/hospital/images/0036.jpg,Staff portrait for Chrysa Ioannou,,10000000020,,,
+37,https://example.org/hospital/images/0037.jpg,Staff portrait for Evangelia Dimitriou,,10000000021,,,
+38,https://example.org/hospital/images/0038.jpg,Staff portrait for Anastasia Papadopoulos,,10000000022,,,
+39,https://example.org/hospital/images/0039.jpg,Staff portrait for Marios Theodorou,,10000000023,,,
+40,https://example.org/hospital/images/0040.jpg,Staff portrait for Marios Kostopoulos,,10000000024,,,
+41,https://example.org/hospital/images/0041.jpg,Staff portrait for Anastasia Alexiou,,10000000025,,,
+42,https://example.org/hospital/images/0042.jpg,Staff portrait for Eleni Kostopoulos,,10000000026,,,
+43,https://example.org/hospital/images/0043.jpg,Staff portrait for Vasiliki Vasiliou,,10000000027,,,
+44,https://example.org/hospital/images/0044.jpg,Staff portrait for Maria Petrou,,10000000028,,,
+45,https://example.org/hospital/images/0045.jpg,Staff portrait for Stavros Theodorou,,10000000029,,,
+46,https://example.org/hospital/images/0046.jpg,Room 1 department 1 image,,,,1,1
+47,https://example.org/hospital/images/0047.jpg,Room 2 department 1 image,,,,2,1
+48,https://example.org/hospital/images/0048.jpg,Room 3 department 1 image,,,,3,1
+49,https://example.org/hospital/images/0049.jpg,Room 4 department 1 image,,,,4,1
+50,https://example.org/hospital/images/0050.jpg,Room 5 department 1 image,,,,5,1
+51,https://example.org/hospital/images/0051.jpg,Room 6 department 1 image,,,,6,1
+52,https://example.org/hospital/images/0052.jpg,Room 7 department 1 image,,,,7,1
+53,https://example.org/hospital/images/0053.jpg,Room 8 department 1 image,,,,8,1
+54,https://example.org/hospital/images/0054.jpg,Room 9 department 1 image,,,,9,1
+55,https://example.org/hospital/images/0055.jpg,Room 10 department 1 image,,,,10,1
+56,https://example.org/hospital/images/0056.jpg,Room 11 department 1 image,,,,11,1
+57,https://example.org/hospital/images/0057.jpg,Room 12 department 1 image,,,,12,1
+58,https://example.org/hospital/images/0058.jpg,Room 13 department 1 image,,,,13,1
+59,https://example.org/hospital/images/0059.jpg,Room 14 department 1 image,,,,14,1
+60,https://example.org/hospital/images/0060.jpg,Room 15 department 1 image,,,,15,1
+61,https://example.org/hospital/images/0061.jpg,Room 16 department 1 image,,,,16,1
+62,https://example.org/hospital/images/0062.jpg,Room 17 department 1 image,,,,17,1
+63,https://example.org/hospital/images/0063.jpg,Room 18 department 1 image,,,,18,1
+64,https://example.org/hospital/images/0064.jpg,Room 19 department 1 image,,,,19,1
+65,https://example.org/hospital/images/0065.jpg,Room 20 department 1 image,,,,20,1
+66,https://example.org/hospital/images/0066.jpg,Room 21 department 1 image,,,,21,1
+67,https://example.org/hospital/images/0067.jpg,Room 22 department 1 image,,,,22,1
+68,https://example.org/hospital/images/0068.jpg,Room 23 department 1 image,,,,23,1
+69,https://example.org/hospital/images/0069.jpg,Room 24 department 1 image,,,,24,1
+70,https://example.org/hospital/images/0070.jpg,Room 25 department 1 image,,,,25,1
+71,https://example.org/hospital/images/0071.jpg,Room 26 department 1 image,,,,26,1
+72,https://example.org/hospital/images/0072.jpg,Room 1 department 2 image,,,,1,2
+73,https://example.org/hospital/images/0073.jpg,Room 2 department 2 image,,,,2,2
+74,https://example.org/hospital/images/0074.jpg,Room 3 department 2 image,,,,3,2
+75,https://example.org/hospital/images/0075.jpg,Room 4 department 2 image,,,,4,2
+76,https://example.org/hospital/images/0076.jpg,Procedure room 1 image,1,,,,
+77,https://example.org/hospital/images/0077.jpg,Procedure room 2 image,2,,,,
+78,https://example.org/hospital/images/0078.jpg,Procedure room 3 image,3,,,,
+79,https://example.org/hospital/images/0079.jpg,Procedure room 4 image,4,,,,
+80,https://example.org/hospital/images/0080.jpg,Procedure room 5 image,5,,,,
+81,https://example.org/hospital/images/0081.jpg,Procedure room 6 image,6,,,,
+82,https://example.org/hospital/images/0082.jpg,Procedure room 7 image,7,,,,
+83,https://example.org/hospital/images/0083.jpg,Procedure room 8 image,8,,,,
+84,https://example.org/hospital/images/0084.jpg,Procedure room 9 image,9,,,,
+85,https://example.org/hospital/images/0085.jpg,Procedure room 10 image,10,,,,
+86,https://example.org/hospital/images/0086.jpg,Procedure room 11 image,11,,,,
+87,https://example.org/hospital/images/0087.jpg,Procedure room 12 image,12,,,,

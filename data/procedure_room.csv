@@ -1,0 +1,13 @@
+ProcRoomID,ProcRoomType,State
+1,OperatingRoom,Available
+2,OperatingRoom,Available
+3,OperatingRoom,Available
+4,OperatingRoom,Available
+5,OperatingRoom,Available
+6,OperatingRoom,Available
+7,OperatingRoom,Available
+8,OperatingRoom,Available
+9,InterventionRoom,Available
+10,InterventionRoom,Available
+11,InterventionRoom,Available
+12,InterventionRoom,Available

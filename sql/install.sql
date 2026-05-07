@@ -1,4 +1,4 @@
--- =========================
+ -- =========================
 -- TABLES
 -- =========================
 
@@ -188,7 +188,7 @@ create table TriageEvent(
     constraint chk_triage_outcome check (
     (Outcome = 'Accepted' AND HospitalizationID IS NOT NULL) OR
     (Outcome = 'Discarded' AND HospitalizationID IS NULL)
-)
+),
     foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict,
     foreign key (PatientAMKA) REFERENCES Patient(AMKA) on delete restrict on update cascade,
     foreign key (NurseAMK) REFERENCES Nurse(AMK) on delete restrict on update cascade
@@ -232,7 +232,7 @@ create table LabTest(
     LabCode varchar(20) primary key,
     LabType varchar(10) not null,
     LabDescription text not null,
-    LabCost int not null check(LabCost > 0),
+    LabCost int,
     IsActive boolean not null default 1
 );
 
@@ -259,7 +259,7 @@ create table ProcedureType (
     ProcName varchar(50) not null,
     ProcType varchar(20) not null check(ProcType in ('Surgical', 'Diagnostic', 'Therapeutic')),
     ProcDuration int not null check(ProcDuration > 0),
-    ProcCost int not null check(ProcCost > 0)
+    ProcCost int
 );
 
 create table ProcedureRoom (
@@ -452,13 +452,6 @@ create table `Image`(
     constraint chk_room_association check (
         (RoomID is null and RoomDepartmentID is null) or
         (RoomID is not null and RoomDepartmentID is not null)
-    )
-    -- Constraint 2: THE EXCLUSIVE ARC (Αντικαθιστά πλήρως τους Triggers)
-    constraint chk_image_exactly_one_target check (
-        (ProcRoomId IS NOT NULL) + 
-        (StaffAMK IS NOT NULL) + 
-        (DepartmentID IS NOT NULL) + 
-        (RoomID IS NOT NULL) = 1
     )
 );
 
@@ -775,7 +768,7 @@ BEGIN
     end if;
 
     -- Check for 3 consecutive night shifts
-    if new.ShiftTypeName = 'Night'then
+    if new.ShiftTypeName = 'Night' then
         select count(*) into cnt
         from HasDoctor 
         where DoctorAMK = new.DoctorAMK
@@ -862,7 +855,7 @@ BEGIN
     end if;
 
     -- Check for 3 consecutive night shifts
-    if new.ShiftTypeName = 'Night'then
+    if new.ShiftTypeName = 'Night' then
         select count(*) into cnt
         from HasDoctor 
         where DoctorAMK = new.DoctorAMK
@@ -1149,7 +1142,7 @@ BEGIN
     IF ViolationCount > 0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = "An Admin staff member cannot have two shifts with less than 8 hours of rest in between.";
-    END IF;xs
+    END IF;
 
     -- ------------------------------------------
     -- RULE 3: Max 3 Consecutive Night Shifts
@@ -1295,6 +1288,36 @@ BEGIN
         
     END IF;
 END //
+
+create trigger trg_image_exclusive_insert
+before insert on Image
+for each row
+begin
+    declare cnt int;
+    set cnt = (new.ProcRoomId is not null)+
+              (new.StaffAMK is not null)+
+              (new.DepartmentID is not null)+
+              (new.RoomID is not null);
+    if cnt!= 1 then
+        signal sqlstate '45000'
+        set message_text = "Exactly one of ProcRoomID, StaffAMK, DepartmentID, or RoomID must be non-null for an image.";
+    end if;
+end //
+
+create trigger trg_image_exclusive_update
+before update on Image
+for each row
+begin
+    declare cnt int;
+    set cnt = (new.ProcRoomId is not null)+
+              (new.StaffAMK is not null)+
+              (new.DepartmentID is not null)+
+              (new.RoomID is not null);
+    if cnt!= 1 then
+        signal sqlstate '45000'
+        set message_text = "Exactly one of ProcRoomID, StaffAMK, DepartmentID, or RoomID must be non-null for an image.";
+    end if;
+end //
 
 -- =========================
 -- Stored Procedures
@@ -1666,6 +1689,91 @@ BEGIN
 
 END//
 
+-- Peek the next patient in the triage queue
+CREATE PROCEDURE FetchNext()
+BEGIN
+    SELECT 
+        t.TriageID, 
+        p.FirstName, 
+        p.LastName, 
+        t.EmergencyLevel, 
+        t.TriageDateTime
+    FROM TriageEvent t
+    JOIN Patient p ON t.PatientAMKA = p.AMKA
+    WHERE t.Outcome = 'Pending'
+    ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC
+    LIMIT 1;
+END//
+
+-- The Admission Transaction
+CREATE PROCEDURE ProcessTriageAdmission (
+    IN p_TriageID INT,
+    IN p_RoomID SMALLINT,
+    IN p_DepartmentID INT,
+    IN p_KENcode VARCHAR(5),
+    IN p_AdmissionDateTime DATETIME
+)
+BEGIN
+    DECLARE v_PatientAMKA CHAR(11);
+    DECLARE v_RoomState VARCHAR(20);
+    DECLARE v_NewHospitalizationID INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
+    START TRANSACTION;
+
+    SELECT PatientAMKA INTO v_PatientAMKA
+    FROM TriageEvent
+    WHERE TriageID = p_TriageID 
+    FOR UPDATE;
+
+    -- Proactively verify room availability and lock the room row
+    SELECT `State` INTO v_RoomState 
+    FROM Room 
+    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID
+    FOR UPDATE; 
+    
+    IF v_RoomState != 'Available' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The selected room is not available for admission.';
+    END IF;
+
+    -- Mutate the Room state to 'Occupied'
+    UPDATE Room 
+    SET `State` = 'Occupied' 
+    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID;
+
+    -- Insert the Hospitalization record
+    INSERT INTO Hospitalization (AdmissionDateTime, PatientAMKA, RoomID, DepartmentID, KENcode)
+    VALUES (p_AdmissionDateTime, v_PatientAMKA, p_RoomID, p_DepartmentID, p_KENcode);
+
+    SET v_NewHospitalizationID = LAST_INSERT_ID();
+
+    -- Update the TriageEvent outcome and link it to the Hospitalization
+    UPDATE TriageEvent
+    SET Outcome = 'Accepted', HospitalizationID = v_NewHospitalizationID
+    WHERE TriageID = p_TriageID;
+
+    COMMIT;
+END//
+
+-- The Discard Transaction
+CREATE PROCEDURE DiscardTriagePatient (
+    IN p_TriageID INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
+    START TRANSACTION;
+    -- Mutate the state of the abandoned or discharged patient
+    UPDATE TriageEvent
+    SET Outcome = 'Discarded'
+    WHERE TriageID = p_TriageID AND Outcome = 'Pending';
+
+    COMMIT;
+END// 
+
+
 DELIMITER ;
 
 -- =========================
@@ -1751,94 +1859,21 @@ WHERE
     AdminCount < 2;
 
 -- View for the FIFO 
+CREATE VIEW PatientQueue AS
+SELECT 
+    p.FirstName, 
+    p.LastName,
+    t.EmergencyLevel, 
+    t.TriageDateTime,
+    t.Symptoms
+FROM TriageEvent t
+JOIN Patient p ON t.PatientAMKA = p.AMKA
+WHERE t.Outcome = 'Pending' 
+ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC;
 
- create view PatientQueue as
- select p.FirstName, p.LastName,t.EmergencyLevel, t.TriageDateTime, t.Symptoms
- from TriageEvent t 
- join Patient p on t.PatientAMKA = p.AMKA
- order by t.EmergencyLevel asc, t.TriageDateTime asc;
-
-CREATE PROCEDURE FetchNext()
-BEGIN
-    SELECT t.TriageID, p.FirstName, p.LastName, tt.EmergencyLevel, t.TriageDateTime
-    FROM TriageEvent t
-    JOIN Patient p ON t.PatientAMKA = p.AMKA
-    WHERE t.Outcome = 'Pending'
-    ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC
-    LIMIT 1;
-END//
-
-CREATE PROCEDURE ProcessTriageAdmission (
-    IN p_TriageID INT,
-    IN p_RoomID SMALLINT,
-    IN p_DepartmentID INT,
-    IN p_KENcode VARCHAR(5),
-    IN p_AdmissionDateTime DATETIME
-)
-BEGIN
-    DECLARE v_PatientAMKA CHAR(11);
-    DECLARE v_RoomState VARCHAR(20);
-    DECLARE v_NewHospitalizationID INT;
-
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
-
-    START TRANSACTION;
-
-    -- Retrieve the Patient's AMKA from the Triage Event and lock the row
-    SELECT PatientAMKA INTO v_PatientAMKA
-    FROM TriageEvent
-    WHERE TriageID = p_TriageID 
-    FOR UPDATE;
-
-    -- Proactively verify room availability and lock the room row
-    SELECT `State` INTO v_RoomState 
-    FROM Room 
-    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID
-    FOR UPDATE; 
-    
-    IF v_RoomState != 'Available' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'The selected room is not available for admission.';
-    END IF;
-
-    -- Mutate the Room state to 'Occupied'
-    UPDATE Room 
-    SET `State` = 'Occupied' 
-    WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID;
-
-    -- Insert the Hospitalization record
-    INSERT INTO Hospitalization (AdmissionDateTime, PatientAMKA, RoomID, DepartmentID, KENcode)
-    VALUES (p_AdmissionDateTime, v_PatientAMKA, p_RoomID, p_DepartmentID, p_KENcode);
-
-    SET v_NewHospitalizationID = LAST_INSERT_ID();
-
-    -- Update the TriageEvent outcome and link it to the Hospitalization
-    UPDATE TriageEvent
-    SET Outcome = 'Accepted', HospitalizationID = v_NewHospitalizationID
-    WHERE TriageID = p_TriageID;
-
-    COMMIT;
-END//
-
-CREATE PROCEDURE DiscardTriagePatient (
-    IN p_TriageID INT
-)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
-
-    START TRANSACTION;
-    -- Mutate the state of the abandoned or discharged patient
-    UPDATE TriageEvent
-    SET Outcome = 'Discarded'
-    WHERE TriageID = p_TriageID AND Outcome = 'Pending';
-
-    COMMIT;
-END//
 
 -- =========================
 -- Indexes
 -- =========================
-
-
 
 

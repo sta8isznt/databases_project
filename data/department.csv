@@ -1,16 +1,16 @@
 DepartmentID,Name,Description,Floor,Building,DirectorAMK
 1,Cardiology,Cardiology department of Ygeiopolis General Hospital,1,Building A,10000000000
-2,Surgery,Surgery department of Ygeiopolis General Hospital,2,Building A,10000000012
-3,ICU,ICU department of Ygeiopolis General Hospital,3,Building A,10000000024
-4,Emergency,Emergency department of Ygeiopolis General Hospital,0,Building B,10000000036
-5,Neurology,Neurology department of Ygeiopolis General Hospital,2,Building B,10000000048
-6,Orthopedics,Orthopedics department of Ygeiopolis General Hospital,3,Building B,10000000060
-7,Pulmonology,Pulmonology department of Ygeiopolis General Hospital,4,Building A,10000000072
-8,Gastroenterology,Gastroenterology department of Ygeiopolis General Hospital,4,Building B,10000000084
-9,Oncology,Oncology department of Ygeiopolis General Hospital,5,Building C,10000000096
-10,Pediatrics,Pediatrics department of Ygeiopolis General Hospital,1,Building C,10000000108
-11,Ophthalmology,Ophthalmology department of Ygeiopolis General Hospital,2,Building C,10000000120
-12,ENT,ENT department of Ygeiopolis General Hospital,2,Building C,10000000132
-13,Nephrology,Nephrology department of Ygeiopolis General Hospital,3,Building C,10000000144
-14,Psychiatry,Psychiatry department of Ygeiopolis General Hospital,4,Building C,10000000156
-15,Internal Medicine,Internal Medicine department of Ygeiopolis General Hospital,5,Building A,10000000168
+2,Surgery,Surgery department of Ygeiopolis General Hospital,2,Building A,10000000020
+3,ICU,ICU department of Ygeiopolis General Hospital,3,Building A,10000000040
+4,Emergency,Emergency department of Ygeiopolis General Hospital,0,Building B,10000000060
+5,Neurology,Neurology department of Ygeiopolis General Hospital,2,Building B,10000000080
+6,Orthopedics,Orthopedics department of Ygeiopolis General Hospital,3,Building B,10000000100
+7,Pulmonology,Pulmonology department of Ygeiopolis General Hospital,4,Building A,10000000120
+8,Gastroenterology,Gastroenterology department of Ygeiopolis General Hospital,4,Building B,10000000140
+9,Oncology,Oncology department of Ygeiopolis General Hospital,5,Building C,10000000160
+10,Pediatrics,Pediatrics department of Ygeiopolis General Hospital,1,Building C,10000000180
+11,Ophthalmology,Ophthalmology department of Ygeiopolis General Hospital,2,Building C,10000000200
+12,ENT,ENT department of Ygeiopolis General Hospital,2,Building C,10000000220
+13,Nephrology,Nephrology department of Ygeiopolis General Hospital,3,Building C,10000000240
+14,Psychiatry,Psychiatry department of Ygeiopolis General Hospital,4,Building C,10000000260
+15,Internal Medicine,Internal Medicine department of Ygeiopolis General Hospital,5,Building A,10000000280

@@ -1,3 +1,5 @@
+-- Active: 1778170419470@@localhost@3306
+-- Active: 1778170419470@@localhost@3306@HospitalDB
  -- =========================
 -- TABLES
 -- =========================
@@ -1686,7 +1688,6 @@ BEGIN
 
     -- Calculate Final Total Fees
     SET p_TotalFees = v_BaseCost + p_AdditionalFees + v_LabFees + v_ProcedureFees;
-
 END//
 
 -- Peek the next patient in the triage queue

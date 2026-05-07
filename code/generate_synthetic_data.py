@@ -15,6 +15,30 @@ SEED = 20260507
 AS_OF_DATE = date(2026, 5, 7)
 SHIFT_WEEK_START = date(2026, 3, 9)
 
+# Scale targets for the operational synthetic dataset. Reference catalogs
+# (diagnosis, cost, procedure_type, lab_test, drug_type, drug_support_phone)
+# are read as fixed inputs and are not regenerated here.
+DOCTORS_PER_DEPARTMENT = 20
+NURSES_PER_DEPARTMENT = 36
+ADMINS_PER_DEPARTMENT = 12
+ROOMS_PER_DEPARTMENT = 50
+PROCEDURE_ROOM_COUNT = 20
+
+SYNTHETIC_PATIENT_COUNT = 900
+SYNTHETIC_HOSPITALIZATION_COUNT = 3600
+SYNTHETIC_TRIAGE_COUNT = 4200
+SYNTHETIC_ACCEPTED_TRIAGE_COUNT = 2600
+SYNTHETIC_EVALUATION_COUNT = 2800
+SYNTHETIC_LAB_EVENT_COUNT = 2600
+SYNTHETIC_PROCEDURE_EVENT_COUNT = 1200
+SYNTHETIC_PRESCRIPTION_COUNT = 3000
+SYNTHETIC_ALLERGY_PATIENT_COUNT = 220
+SYNTHETIC_PAIRED_PRESCRIPTION_COUNT = 500
+SYNTHETIC_STAFF_IMAGE_COUNT = 90
+SYNTHETIC_ROOM_IMAGE_COUNT = 90
+
+DEPARTMENT_KEN_POOL_SIZE = 6
+
 DEPARTMENTS = [
     ("Cardiology", "Cardiology", 1, "Building A", ["I21", "I25", "I50", "I48", "I20"]),
     ("Surgery", "Surgery", 2, "Building A", ["K35", "K40", "K80", "T81", "S72"]),
@@ -92,7 +116,7 @@ FALLBACK_SUBSTANCES = [name for _, name in SUBSTANCE_PATTERNS[:12]]
 def parse_args() -> argparse.Namespace:
     script = Path(__file__).resolve()
     project_root = script.parents[1]
-    parser = argparse.ArgumentParser(description="Generate loadable synthetic data for sql/install_new.sql.")
+    parser = argparse.ArgumentParser(description="Generate loadable operational synthetic data for sql/install.sql.")
     parser.add_argument("--project-root", default=str(project_root), help="Project root containing data/, code/, generated/.")
     parser.add_argument("--output-dir", default=None, help="Directory where CSV outputs are written. Defaults to <project-root>/data.")
     parser.add_argument("--seed", type=int, default=SEED, help="Deterministic random seed.")
@@ -284,9 +308,6 @@ def build_reference_tables(project_root: Path, output_dir: Path) -> dict:
     lab_tests = load_lab_tests(output_dir / "lab_test.csv")
     procedure_types = load_procedure_types(output_dir / "procedure_type.csv")
 
-    write_csv(output_dir / "diagnosis.csv", ["ICDCode", "Description"], diagnosis)
-    write_csv(output_dir / "cost.csv", ["KENCode", "Description", "BaseCost", "PredictedAvgTime"], cost)
-
     return {
         "diagnosis": diagnosis,
         "cost": cost,
@@ -404,7 +425,9 @@ def build_staff_and_departments(output_dir: Path) -> dict:
         "Consultant", "Registrar", "Resident",
         "Consultant", "Registrar", "Resident",
         "Consultant", "Registrar", "Resident",
-    ]
+        "Consultant", "Registrar", "Consultant", "Resident",
+        "Consultant", "Registrar", "Consultant", "Resident",
+    ][:DOCTORS_PER_DEPARTMENT]
 
     for dept_id, (dept_name, specialty, floor, building, _) in enumerate(DEPARTMENTS, start=1):
         local_doctors = []
@@ -482,13 +505,13 @@ def build_staff_and_departments(output_dir: Path) -> dict:
 
     for dept_id in range(1, len(DEPARTMENTS) + 1):
         nurses = []
-        for idx in range(24):
+        for idx in range(NURSES_PER_DEPARTMENT):
             gender = choose(["M", "F"])
             first = choose(FIRST_NAMES_M if gender == "M" else FIRST_NAMES_F)
             last = choose(LAST_NAMES)
             amk = f"{staff_counter:011d}"
             staff_counter += 1
-            rank = "HeadNurse" if idx == 0 else ("AssistantNurse" if idx < 7 else "Nurse")
+            rank = "HeadNurse" if idx == 0 else ("AssistantNurse" if idx < max(7, NURSES_PER_DEPARTMENT // 4) else "Nurse")
             age = random.randint(42, 58) if rank == "HeadNurse" else random.randint(24, 50)
             birth = birth_date_for_age(age)
             hire_date = random_date_between(max(date(birth.year + 21, 1, 1), date(2012, 1, 1)), date(2025, 9, 30))
@@ -511,7 +534,7 @@ def build_staff_and_departments(output_dir: Path) -> dict:
 
     for dept_id in range(1, len(DEPARTMENTS) + 1):
         admins = []
-        for idx in range(8):
+        for idx in range(ADMINS_PER_DEPARTMENT):
             gender = choose(["M", "F"])
             first = choose(FIRST_NAMES_M if gender == "M" else FIRST_NAMES_F)
             last = choose(LAST_NAMES)
@@ -543,7 +566,7 @@ def build_staff_and_departments(output_dir: Path) -> dict:
         admins_by_department[dept_id] = admins
 
     for dept_id, (dept_name, _, _, _, _) in enumerate(DEPARTMENTS, start=1):
-        for room_id in range(1, 27):
+        for room_id in range(1, ROOMS_PER_DEPARTMENT + 1):
             room_type = "ICU" if dept_name == "ICU" or room_id <= 2 else ("Single" if room_id % 5 == 0 else "MultiBed")
             room_rows.append({
                 "ID": room_id,
@@ -577,7 +600,7 @@ def build_staff_and_departments(output_dir: Path) -> dict:
     }
 
 
-def build_patients(output_dir: Path, count: int = 230) -> dict:
+def build_patients(output_dir: Path, count: int = SYNTHETIC_PATIENT_COUNT) -> dict:
     used_phones: set[str] = set()
     patient_rows = []
     patient_phone_rows = []
@@ -741,9 +764,16 @@ def build_hospitalizations(output_dir: Path, ref: dict, org: dict, patients: dic
     available_prefixes = sorted(by_prefix)
     cost_rows = ref["cost"]
     patient_ids = [row["AMKA"] for row in patients["patient"]]
+    patients_by_insurance: dict[str, list[str]] = defaultdict(list)
+    for row in patients["patient"]:
+        patients_by_insurance[row["InsuranceProviderName"]].append(row["AMKA"])
     room_count_by_dept = defaultdict(int)
     for row in org["room"]:
         room_count_by_dept[row["DepartmentID"]] += 1
+    department_ken_pools: dict[int, list[dict]] = {
+        dept_id: random.sample(cost_rows, min(DEPARTMENT_KEN_POOL_SIZE, len(cost_rows)))
+        for dept_id in range(1, len(DEPARTMENTS) + 1)
+    }
 
     hospitalizations = []
     admission_diag = []
@@ -761,7 +791,21 @@ def build_hospitalizations(output_dir: Path, ref: dict, org: dict, patients: dic
         non_q14 = [p for p in available_prefixes if p not in Q14_PREFIXES]
         return choose(non_q14 or available_prefixes)
 
-    def add_hospitalization(patient_amka: str, dept_id: int, admission: datetime, stay_days: int, forced_prefix: str | None = None) -> None:
+    def choose_ken(dept_id: int) -> dict:
+        pool = department_ken_pools[dept_id]
+        weights = [9 if idx < 2 else 4 if idx < 4 else 2 for idx, _ in enumerate(pool)]
+        return random.choices(pool, weights=weights, k=1)[0]
+
+    def choose_patient_for_insurance(insurance_name: str) -> str:
+        return choose(patients_by_insurance.get(insurance_name) or patient_ids)
+
+    def generated_stay_days(predicted_days: int) -> int:
+        if random.random() < 0.45:
+            return predicted_days + random.randint(1, max(2, min(8, predicted_days + 2)))
+        reduction = random.randint(0, max(0, min(3, predicted_days - 1)))
+        return max(1, predicted_days - reduction + random.randint(0, 2))
+
+    def add_hospitalization(patient_amka: str, dept_id: int, admission: datetime, stay_days: int | None = None, forced_prefix: str | None = None) -> None:
         nonlocal hosp_id
         admission_key = admission.strftime("%Y-%m-%d %H:%M:%S")
         while (patient_amka, admission_key) in used_patient_admissions:
@@ -772,10 +816,10 @@ def build_hospitalizations(output_dir: Path, ref: dict, org: dict, patients: dic
         prefix = pick_prefix(dept_id, forced_prefix)
         adm_code = choose(by_prefix[prefix])
         out_code = adm_code if random.random() < 0.65 else choose(by_prefix[prefix])
-        ken = choose(cost_rows)
+        ken = choose_ken(dept_id)
         predicted = int(ken["PredictedAvgTime"])
-        if stay_days <= 0:
-            stay_days = max(1, predicted + random.randint(-2, 4))
+        if stay_days is None or stay_days <= 0:
+            stay_days = generated_stay_days(predicted)
         exit_dt = admission + timedelta(days=stay_days, hours=random.randint(2, 10))
         room_id = ((hosp_id + dept_id) % room_count_by_dept[dept_id]) + 1
         hospitalizations.append({
@@ -794,6 +838,7 @@ def build_hospitalizations(output_dir: Path, ref: dict, org: dict, patients: dic
             "department": dept_id,
             "admission": admission,
             "exit": exit_dt,
+            "ken": ken["KENCode"],
             "admission_icd": adm_code,
             "exit_icd": out_code,
         }
@@ -827,11 +872,17 @@ def build_hospitalizations(output_dir: Path, ref: dict, org: dict, patients: dic
                     forced_prefix=prefix,
                 )
 
-    while len(hospitalizations) < 550:
-        dept_id = random.randint(1, len(DEPARTMENTS))
-        year = random.choice([2025, 2026])
-        admission = datetime(year, random.randint(1, 12), random.randint(1, 24), random.randint(7, 18), 0, 0)
-        add_hospitalization(choose(patient_ids), dept_id, admission, random.randint(1, 12))
+    filler_seq = 0
+    while len(hospitalizations) < SYNTHETIC_HOSPITALIZATION_COUNT:
+        dept_id = (filler_seq % len(DEPARTMENTS)) + 1
+        year = 2025 + ((filler_seq // len(DEPARTMENTS)) % 2)
+        month = ((filler_seq // (len(DEPARTMENTS) * 2)) % 12) + 1
+        day = (filler_seq % 24) + 1
+        hour = 7 + (filler_seq % 12)
+        insurance_name = INSURANCE_PROVIDERS[(filler_seq // (len(DEPARTMENTS) * 2 * 3)) % len(INSURANCE_PROVIDERS)]
+        admission = datetime(year, month, day, hour, 0, 0)
+        add_hospitalization(choose_patient_for_insurance(insurance_name), dept_id, admission)
+        filler_seq += 1
 
     write_csv(output_dir / "hospitalization.csv", [
         "HospitalizationID", "AdmissionDateTime", "PatientAMKA", "ExitDateTime", "RoomID", "DepartmentID", "KENcode",
@@ -880,18 +931,19 @@ def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, cl
         })
         triage_id += 1
 
-    for hosp in clinical["hospitalization"][:400]:
+    accepted_count = min(SYNTHETIC_ACCEPTED_TRIAGE_COUNT, len(clinical["hospitalization"]))
+    for hosp in clinical["hospitalization"][:accepted_count]:
         level = random.choices([1, 2, 3, 4, 5], weights=[8, 20, 35, 25, 12])[0]
         admission = clinical["hospitalization_meta"][hosp["HospitalizationID"]]["admission"]
         add_triage(hosp["PatientAMKA"], admission - timedelta(hours=random.randint(1, 7)), level, "Accepted", hosp["HospitalizationID"])
 
-    while len(triage_rows) < 650:
+    while len(triage_rows) < SYNTHETIC_TRIAGE_COUNT:
         level = random.choices([1, 2, 3, 4, 5], weights=[5, 15, 30, 32, 18])[0]
         arrival = datetime(2025, 1, 1, 8, 0, 0) + timedelta(days=random.randint(0, 720), minutes=random.randint(0, 1439))
         add_triage(choose(patient_ids), arrival, level, "Discarded", "")
 
     eval_rows = []
-    for hosp in random.sample(clinical["hospitalization"], 410):
+    for hosp in random.sample(clinical["hospitalization"], min(SYNTHETIC_EVALUATION_COUNT, len(clinical["hospitalization"]))):
         exit_dt = clinical["hospitalization_meta"][hosp["HospitalizationID"]]["exit"]
         eval_rows.append({
             "HospitalizationID": hosp["HospitalizationID"],
@@ -916,19 +968,32 @@ def build_labs(output_dir: Path, ref: dict, org: dict, clinical: dict) -> dict:
     doctor_by_dept = doctor_pool_by_dept(org)
     lab_codes = [row["LabCode"] for row in ref["lab_test"]]
     lab_rows = []
-    for idx, hosp in enumerate(random.sample(clinical["hospitalization"], 260), start=1):
+    used_lab_events: set[tuple[int, str, str]] = set()
+    lab_id = 1
+    attempts = 0
+    max_attempts = SYNTHETIC_LAB_EVENT_COUNT * 30
+    while len(lab_rows) < SYNTHETIC_LAB_EVENT_COUNT and attempts < max_attempts:
+        attempts += 1
+        hosp = choose(clinical["hospitalization"])
         info = clinical["hospitalization_meta"][hosp["HospitalizationID"]]
         hours_span = max(8, int((info["exit"] - info["admission"]).total_seconds() // 3600) - 4)
         lab_dt = info["admission"] + timedelta(hours=random.randint(3, hours_span))
+        lab_dt_text = lab_dt.strftime("%Y-%m-%d %H:%M:%S")
+        lab_code = choose(lab_codes)
+        key = (hosp["HospitalizationID"], lab_code, lab_dt_text)
+        if key in used_lab_events:
+            continue
+        used_lab_events.add(key)
         lab_rows.append({
-            "Id": idx,
+            "Id": lab_id,
             "HospitalizationID": hosp["HospitalizationID"],
-            "LabCode": choose(lab_codes),
-            "LabDateTime": lab_dt.strftime("%Y-%m-%d %H:%M:%S"),
+            "LabCode": lab_code,
+            "LabDateTime": lab_dt_text,
             "LabResult": choose(["Normal", "Mildly abnormal", "Follow up required", "Improved", "Critical value reviewed"]),
             "PendingResult": 0,
             "DoctorAMK": choose(doctor_by_dept[info["department"]]),
         })
+        lab_id += 1
 
     write_csv(output_dir / "hosp_lab_test.csv", [
         "Id", "HospitalizationID", "LabCode", "LabDateTime", "LabResult", "PendingResult", "DoctorAMK",
@@ -938,10 +1003,11 @@ def build_labs(output_dir: Path, ref: dict, org: dict, clinical: dict) -> dict:
 
 def procedure_room_rows() -> list[dict]:
     rows = []
-    for room_id in range(1, 13):
+    operating_room_limit = max(1, int(PROCEDURE_ROOM_COUNT * 0.7))
+    for room_id in range(1, PROCEDURE_ROOM_COUNT + 1):
         rows.append({
             "ProcRoomID": room_id,
-            "ProcRoomType": "OperatingRoom" if room_id <= 8 else "InterventionRoom",
+            "ProcRoomType": "OperatingRoom" if room_id <= operating_room_limit else "InterventionRoom",
             "State": "Available",
         })
     return rows
@@ -971,12 +1037,12 @@ def build_procedures(output_dir: Path, ref: dict, org: dict, clinical: dict) -> 
     proc_event_id = 1
 
     candidates = [h for h in clinical["hospitalization"] if h["AdmissionDateTime"].startswith("2026")]
-    if len(candidates) < 180:
+    if len(candidates) < SYNTHETIC_PROCEDURE_EVENT_COUNT:
         candidates = clinical["hospitalization"]
     random.shuffle(candidates)
 
     for hosp in candidates:
-        if len(procedure_rows) >= 180:
+        if len(procedure_rows) >= SYNTHETIC_PROCEDURE_EVENT_COUNT:
             break
         info = clinical["hospitalization_meta"][hosp["HospitalizationID"]]
         code = choose(surgical_codes if random.random() < 0.78 else other_codes)
@@ -1058,7 +1124,7 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
     patient_ids = [row["AMKA"] for row in patients["patient"]]
     allergy_rows = []
     allergy_by_patient: dict[str, set[str]] = defaultdict(set)
-    for patient_amka in random.sample(patient_ids, 75):
+    for patient_amka in random.sample(patient_ids, min(SYNTHETIC_ALLERGY_PATIENT_COUNT, len(patient_ids))):
         for substance in random.sample(list(substance_id_by_name), random.randint(1, 3)):
             allergy_by_patient[patient_amka].add(substance)
     for patient_amka, substances in allergy_by_patient.items():
@@ -1109,7 +1175,7 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
     random.shuffle(hospitalizations)
     planted = 0
     for hosp in hospitalizations:
-        if planted >= 90:
+        if planted >= SYNTHETIC_PAIRED_PRESCRIPTION_COUNT:
             break
         info = clinical["hospitalization_meta"][hosp["HospitalizationID"]]
         start_date = min(info["exit"].date(), info["admission"].date() + timedelta(days=1))
@@ -1125,7 +1191,7 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
 
     all_drug_ids = list(drug_to_substances)
     attempts = 0
-    while len(prescription_rows) < 360 and attempts < 4000:
+    while len(prescription_rows) < SYNTHETIC_PRESCRIPTION_COUNT and attempts < SYNTHETIC_PRESCRIPTION_COUNT * 30:
         attempts += 1
         hosp = choose(hospitalizations)
         info = clinical["hospitalization_meta"][hosp["HospitalizationID"]]
@@ -1163,9 +1229,9 @@ def build_images(output_dir: Path, org: dict, procedures: dict) -> dict:
 
     for dept in org["department"]:
         add_image(f"{dept['Name']} department image", dept=dept["DepartmentID"])
-    for staff in org["staff"][:30]:
+    for staff in org["staff"][:SYNTHETIC_STAFF_IMAGE_COUNT]:
         add_image(f"Staff portrait for {staff['FirstName']} {staff['LastName']}", staff=staff["AMK"])
-    for room in org["room"][:30]:
+    for room in org["room"][:SYNTHETIC_ROOM_IMAGE_COUNT]:
         add_image(f"Room {room['ID']} department {room['DepartmentID']} image", room=room["ID"], room_dept=room["DepartmentID"])
     for proc_room in procedures["procedure_room"]:
         add_image(f"Procedure room {proc_room['ProcRoomID']} image", proc_room=proc_room["ProcRoomID"])
@@ -1195,6 +1261,10 @@ def write_summary(output_dir: Path, sections: dict[str, dict], seed: int) -> Non
             "procedure_rooms_at_least_10": counts.get("procedure_room", 0) >= 10,
             "procedure_events_at_least_150": counts.get("procedure_event", 0) >= 150,
             "lab_events_at_least_200": counts.get("hosp_lab_test", 0) >= 200,
+            "richer_patients_at_least_target": counts.get("patient", 0) >= SYNTHETIC_PATIENT_COUNT,
+            "richer_hospitalizations_at_least_target": counts.get("hospitalization", 0) >= SYNTHETIC_HOSPITALIZATION_COUNT,
+            "richer_procedures_at_least_target": counts.get("procedure_event", 0) >= SYNTHETIC_PROCEDURE_EVENT_COUNT,
+            "richer_prescriptions_at_least_target": counts.get("prescription_event", 0) >= SYNTHETIC_PRESCRIPTION_COUNT,
         },
     }
     (output_dir / "dataset_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -1210,7 +1280,7 @@ def main() -> None:
     ref = build_reference_tables(project_root, output_dir)
     drug_ref = build_drug_tables(project_root, output_dir)
     org = build_staff_and_departments(output_dir)
-    patients = build_patients(output_dir)
+    patients = build_patients(output_dir, count=SYNTHETIC_PATIENT_COUNT)
     shifts = build_shifts(output_dir, org)
     clinical = build_hospitalizations(output_dir, ref, org, patients)
     triage_eval = build_triage_and_evaluations(output_dir, org, patients, clinical)

@@ -1,4 +1,5 @@
 -- Active: 1778170419470@@localhost@3306@HospitalDB
+explain analyze
 with departmentcnt as (
     select t.EmergencyLevel, d.`Name` as DepartmentName, count(t.TriageID) AS CasesPerDept
     from TriageEvent t
@@ -24,4 +25,4 @@ select t.EmergencyLevel, count(t.TriageID) AS TotalTriages,
 from TriageEvent t
 left join DepartmentDistribution dd using (EmergencyLevel)
 group by t.EmergencyLevel, dd.ReferralDistribution
-order by  t.EmergencyLevel asc;
+order by  t.EmergencyLevel asc; 

@@ -189,9 +189,10 @@ create table TriageEvent(
 
     unique(PatientAMKA, TriageDateTime),
     constraint chk_triage_outcome check (
-    (Outcome = 'Accepted' AND HospitalizationID IS NOT NULL) OR
-    (Outcome = 'Discarded' AND HospitalizationID IS NULL)
-),
+        (Outcome = 'Pending' AND HospitalizationID IS NULL AND AssessmentDateTime IS NULL) OR
+        (Outcome = 'Accepted' AND HospitalizationID IS NOT NULL AND AssessmentDateTime IS NOT NULL) OR
+        (Outcome = 'Discarded' AND HospitalizationID IS NULL AND AssessmentDateTime IS NOT NULL)
+    ),
     foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict,
     foreign key (PatientAMKA) REFERENCES Patient(AMKA) on delete restrict on update cascade,
     foreign key (NurseAMK) REFERENCES Nurse(AMK) on delete restrict on update cascade
@@ -1866,9 +1867,11 @@ WHERE
     NurseCount < 6 OR 
     AdminCount < 2;
 
--- View for the FIFO 
+-- Priority FIFO queue: triaged patients waiting for a doctor decision.
 CREATE VIEW PatientQueue AS
 SELECT 
+    t.TriageID,
+    p.AMKA AS PatientAMKA,
     p.FirstName, 
     p.LastName,
     t.EmergencyLevel, 
@@ -1886,3 +1889,11 @@ ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC;
 create index idx_doc_specialty on Doctor(Specialty);
 
 create index idx_age on Staff(BirthDate);
+
+create index idx_pat_days_in_hospital on Hospitalization(PatientAMKA,AdmissionDateTime, ExitDateTime);
+
+create index idx_hasdoc_shiftdate   on hasDoctor(ShiftDate);
+create index idx_hasnurse_shiftdate on hasNurse(ShiftDate);
+create index idx_hasadmin_shiftdate on hasAdmin(ShiftDate);
+
+create index idx_triage_emergency on TriageEvent(EmergencyLavel);

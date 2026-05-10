@@ -8,7 +8,7 @@ select
 from hasDoctor hd
 join doctor d on hd.DoctorAMK = d.AMK
 join department dep on hd.DepartmentID = dep.DepartmentID
-where hd.ShiftDate between '2025-05-11' and '2025-05-17'
+where hd.ShiftDate between '2026-03-10' and '2026-03-17'
 group by hd.ShiftDate, hd.ShiftTypeName, dep.Name, d.Specialty
 
 union all
@@ -23,7 +23,7 @@ select
 from hasNurse hn
 join nurse n on hn.NurseAMK = n.AMK
 join department dep on hn.DepartmentID = dep.DepartmentID
-where hn.ShiftDate between '2025-05-11' and '2025-05-17'
+where hn.ShiftDate between '2026-03-10' and '2026-03-17'
 group by hn.ShiftDate, hn.ShiftTypeName, dep.Name, n.Rank
 
 union all

@@ -5,8 +5,6 @@ with docvolumes as (
     and year(pev.`datetime`) = year(curdate())
     group by d.amk,d.firstname,d.lastname
 )
-
-
 select dv.amk,dv.firstname,dv.lastname,totalproc
 from docvolumes dv
 where totalproc <= (

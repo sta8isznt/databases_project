@@ -7,7 +7,6 @@ with YearStats as (
  group by h.PatientAMKA, YEAR(h.AdmissionDateTime)
  having TotalDays > 15
 )
-
 select 
     ys.HospitalYear as `Year`,
     ys.TotalDays as `Total Hospitalization Days`,

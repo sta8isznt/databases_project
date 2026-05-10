@@ -38,7 +38,6 @@ select
 from hasAdmin ha
 join AdminStaff a on ha.AdminAMK = a.AMK
 join department dep on ha.DepartmentID = dep.DepartmentID
-where ha.ShiftDate between '2025-05-11' and '2025-05-17'
+where ha.ShiftDate between '2026-03-10' and '2026-03-17'
 group by ha.ShiftDate, ha.ShiftTypeName, dep.Name, a.Role
-
 order by `Date`, `Department`, `ShiftType`, `StaffCategory`;

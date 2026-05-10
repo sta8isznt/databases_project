@@ -40,6 +40,10 @@
 
 ## Indexes:
 
+* Secondary Index for Specialty Filtering : `idx_doc_specialty`
+
+> This index speeds up queries that filter doctors by specialty (for example, searching or aggregating doctors in one clinical specialty). Without it, MySQL may scan the whole Doctor table; with it, the optimizer can use an index lookup or range scan on Specialty. This is a good choice for specialty-based filtering and grouping workloads, especially when the predicate is selective.
+
 * Composite Index for Doctor Surgical Analytics (Q2, Q5, Q11) : `idx_proc_maindoc_date`
 
 > Several of our queries revolve around counting the number of procedures a specific doctor (**MainDocAMK**) performed within the current year. This composite index isolates the doctor first (an attribute with high selectivity and cardinality) and then sorts by DateTime. This allows the database to execute an "Index Range Scan", skipping the data blocks of procedures performed in previous years entirely.
@@ -51,6 +55,8 @@
 * Index for Hierarchical Traversal (Q13) : `idx_doctor_supervisor`
 
 > To trace a doctor's hierarchy up to the Director, the database must use a Recursive Common Table Expression. Internally, a recursive CTE performs an iterative self-join on the Doctor table. If the `SupervisorAMK` is not indexed, every single iteration (step up the hierarchy) forces a full table scan. This index guarantees logarithmic time complexity O(logn) for hierarchical traversals.
+
+
 
 * Index for Triage Analytics (Q15): `Index for Triage Analytics`
  

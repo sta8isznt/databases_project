@@ -1883,3 +1883,6 @@ ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC;
 -- =========================
 -- Indexes
 -- =========================
+create index idx_doc_specialty on Doctor(Specialty);
+
+create index idx_age on Staff(BirthDate);

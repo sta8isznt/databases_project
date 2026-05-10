@@ -10,4 +10,3 @@ join `Hospitalization` h using(`HospitalizationID`)
 join `Evaluation` e using(`HospitalizationID`)
 where d.AMK = '10000000000'
 group by d.`AMK`, s.`FirstName`, s.`LastName`;
-

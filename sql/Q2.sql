@@ -23,5 +23,3 @@ select d.amk, d.firstname, d.lastname,
     left join surgcnt sc on d.amk = sc.maindocamk
     where d.specialty = 'Cardiology'; -- Example specialty, change as needed
 
-
-select distinct Proctype from proceduretype;

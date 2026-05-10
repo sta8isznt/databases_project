@@ -1,3 +1,4 @@
+-- Active: 1778170419470@@localhost@3306@HospitalDB
 select s.`Name`, count(distinct a.`PatientAMKA`) as TotalPatients, count(distinct h.`DrugID`) as TotalDrugs
 from `Substances` s
 left join allergic_to a on s.`ID` = a.`SubstanceID`

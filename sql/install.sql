@@ -183,6 +183,7 @@ create table TriageEvent(
     Outcome varchar(30) not null  default 'Pending' check(Outcome in ("Accepted", "Discarded","Pending")),
     TriageDateTime datetime not null,
     HospitalizationID int,
+    AssesmentDateTime datetime,
     PatientAMKA char(11) not null,
     NurseAMK char(11) not null,
 
@@ -377,17 +378,17 @@ create table hasAdmin (
 
 create table DrugType(
     DrugID int auto_increment primary key,
-    `Name` varchar(40) not null,
-    `Route` varchar(30) not null,
-    AuthCountry varchar(30) not null,
-    AuthHolder varchar(50) not null,
-    MasterFileLocation varchar(30) not null,
-    Email varchar(30) not null
+    `Name` varchar(300) not null,
+    `Route` varchar(255) not null,
+    AuthCountry varchar(50) not null,
+    AuthHolder varchar(120) not null,
+    MasterFileLocation varchar(50) not null,
+    Email varchar(120) not null
 );
 
 create table Substances(
     ID int auto_increment primary key,
-    `Name` varchar(30) not null unique
+    `Name` varchar(255) not null unique
 );
 
 create table HasSubstances (
@@ -1752,7 +1753,7 @@ BEGIN
 
     -- Update the TriageEvent outcome and link it to the Hospitalization
     UPDATE TriageEvent
-    SET Outcome = 'Accepted', HospitalizationID = v_NewHospitalizationID
+    SET Outcome = 'Accepted', HospitalizationID = v_NewHospitalizationID,  AssessmentDateTime = p_AdmissionDateTime 
     WHERE TriageID = p_TriageID;
 
     COMMIT;
@@ -1760,7 +1761,8 @@ END//
 
 -- The Discard Transaction
 CREATE PROCEDURE DiscardTriagePatient (
-    IN p_TriageID INT
+    IN p_TriageID INT,
+    IN p_AssessmentDateTime DATETIME
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
@@ -1768,7 +1770,7 @@ BEGIN
     START TRANSACTION;
     -- Mutate the state of the abandoned or discharged patient
     UPDATE TriageEvent
-    SET Outcome = 'Discarded'
+    SET Outcome = 'Discarded', AssessmentDateTime = p_AssessmentDateTime
     WHERE TriageID = p_TriageID AND Outcome = 'Pending';
 
     COMMIT;
@@ -1814,8 +1816,7 @@ where IsActive = 1;
 create view DocInfo as
 select d.amk, s.firstname, s.lastname, s.age, s.email, s.hiredate, d.license, d.specialty, d.rank, d.supervisoramk
 from doctor d
-join activestaff s on d.amk = s.amk
-
+join activestaff s on d.amk = s.amk;
 
 CREATE VIEW ShiftsAlerts AS
 WITH ShiftStaffCounts AS (
@@ -1879,12 +1880,6 @@ WHERE t.Outcome = 'Pending'
 ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC;
 
 
-create view as staffinfo as
-selet
-
-
 -- =========================
 -- Indexes
 -- =========================
-
-

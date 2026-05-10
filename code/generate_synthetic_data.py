@@ -6,6 +6,7 @@ import csv
 import json
 import random
 import re
+from collections.abc import Sequence
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -16,7 +17,7 @@ AS_OF_DATE = date(2026, 5, 7)
 SHIFT_WEEK_START = date(2026, 3, 9)
 
 # Scale targets for the operational synthetic dataset. Reference catalogs
-# (diagnosis, cost, procedure_type, lab_test, drug_type, drug_support_phone)
+# (diagnosis, cost, procedure_type, lab_test, and Article 57 drug references)
 # are read as fixed inputs and are not regenerated here.
 DOCTORS_PER_DEPARTMENT = 20
 NURSES_PER_DEPARTMENT = 36
@@ -93,26 +94,6 @@ COMMON_SUBSTANCE_PAIRS = [
     ("Metformin", "Atorvastatin"),
 ]
 
-SUBSTANCE_PATTERNS = [
-    ("ACETYLSALICYLIC", "Acetylsalicylic Acid"),
-    ("PARACETAMOL", "Paracetamol"),
-    ("COFFE", "Caffeine"),
-    ("IBUPROFEN", "Ibuprofen"),
-    ("AMOXICILLIN", "Amoxicillin"),
-    ("CLAVULANIC", "Clavulanic Acid"),
-    ("OMEPRAZOLE", "Omeprazole"),
-    ("ESOMEPRAZOLE", "Omeprazole"),
-    ("METFORMIN", "Metformin"),
-    ("ATORVASTAT", "Atorvastatin"),
-    ("LOSARTAN", "Losartan"),
-    ("CEFUROX", "Cefuroxime"),
-    ("AZITHROMYCIN", "Azithromycin"),
-    ("INSULIN", "Insulin"),
-    ("CLOPIDOGREL", "Clopidogrel"),
-]
-FALLBACK_SUBSTANCES = [name for _, name in SUBSTANCE_PATTERNS[:12]]
-
-
 def parse_args() -> argparse.Namespace:
     script = Path(__file__).resolve()
     project_root = script.parents[1]
@@ -141,7 +122,9 @@ def write_csv(path: Path, fieldnames: list[str], rows: list[dict]) -> None:
 
 
 def choose(seq):
-    return random.choice(list(seq))
+    if not isinstance(seq, Sequence):
+        seq = tuple(seq)
+    return random.choice(seq)
 
 
 def random_date_between(start: date, end: date) -> date:
@@ -316,84 +299,48 @@ def build_reference_tables(project_root: Path, output_dir: Path) -> dict:
     }
 
 
-def detect_substances(product_name: str) -> list[str]:
-    upper = product_name.upper()
-    out = []
-    for pattern, substance in SUBSTANCE_PATTERNS:
-        if pattern in upper and substance not in out:
-            out.append(substance)
-    return out
-
-
 def build_drug_tables(project_root: Path, output_dir: Path) -> dict:
-    drug_type_rows: list[dict] = []
     drug_path = output_dir / "drug_type.csv"
-    with drug_path.open(encoding="utf-8-sig", newline="") as handle:
-        reader = csv.DictReader(handle)
-        expected = ["DrugID", "Name", "Route", "AuthCountry", "AuthHolder", "MasterFileLocation", "Email"]
-        if reader.fieldnames != expected:
-            raise ValueError(f"{drug_path} must have columns {expected}; found {reader.fieldnames}")
-        for row in reader:
-            if not re.fullmatch(r"[0-9]+", clean(row["DrugID"])):
-                raise ValueError(f"Invalid DrugID in {drug_path}: {row}")
-            drug_type_rows.append({
-                "DrugID": int(row["DrugID"]),
-                "Name": clean(row["Name"], 40),
-                "Route": clean(row["Route"], 30),
-                "AuthCountry": clean(row["AuthCountry"], 30),
-                "AuthHolder": clean(row["AuthHolder"], 50),
-                "MasterFileLocation": clean(row["MasterFileLocation"], 30),
-                "Email": clean(row["Email"], 30),
-            })
-
-    support_rows: list[dict] = []
-    drug_ids = {row["DrugID"] for row in drug_type_rows}
     phone_path = output_dir / "drug_support_phone.csv"
-    with phone_path.open(encoding="utf-8-sig", newline="") as handle:
-        reader = csv.DictReader(handle)
-        expected = ["DrugID", "Phone"]
-        if reader.fieldnames != expected:
-            raise ValueError(f"{phone_path} must have columns {expected}; found {reader.fieldnames}")
-        for row in reader:
-            drug_id = int(row["DrugID"])
-            drug_phone = clean(row["Phone"])
-            if drug_id not in drug_ids or not re.fullmatch(r"[0-9]{10,14}", drug_phone):
-                raise ValueError(f"Invalid drug support phone row in {phone_path}: {row}")
-            support_rows.append({"DrugID": drug_id, "Phone": drug_phone})
+    substance_path = output_dir / "substances.csv"
+    has_substance_path = output_dir / "has_substances.csv"
 
-    selected: list[dict] = []
-    selected_ids: set[int] = set()
-    for pattern, _ in SUBSTANCE_PATTERNS:
-        matches = [row for row in drug_type_rows if pattern in row["Name"].upper()]
-        for row in matches[:4]:
-            if row["DrugID"] not in selected_ids:
-                selected.append(row)
-                selected_ids.add(row["DrugID"])
+    drug_type_rows = load_table_csv(drug_path, ["DrugID", "Name", "Route", "AuthCountry", "AuthHolder", "MasterFileLocation", "Email"])
+    substance_rows = load_table_csv(substance_path, ["ID", "Name"])
+    has_substance_rows = load_table_csv(has_substance_path, ["SubID", "DrugID"])
+    support_rows = load_table_csv(phone_path, ["DrugID", "Phone"])
+
+    drug_ids = {row["DrugID"] for row in drug_type_rows}
 
     for row in drug_type_rows:
-        if len(selected) >= 500:
-            break
-        if row["DrugID"] not in selected_ids:
-            selected.append(row)
-            selected_ids.add(row["DrugID"])
+        if not re.fullmatch(r"[0-9]+", clean(row["DrugID"])):
+            raise ValueError(f"Invalid DrugID in {drug_path}: {row}")
+        row["DrugID"] = int(row["DrugID"])
 
-    substance_names = sorted(set(FALLBACK_SUBSTANCES + [name for _, name in SUBSTANCE_PATTERNS]))
-    substance_id = {name: idx for idx, name in enumerate(substance_names, start=1)}
+    for row in substance_rows:
+        if not re.fullmatch(r"[0-9]+", clean(row["ID"])):
+            raise ValueError(f"Invalid substance ID in {substance_path}: {row}")
+        if not clean(row["Name"]):
+            raise ValueError(f"Invalid substance row in {substance_path}: {row}")
+        row["ID"] = int(row["ID"])
 
-    has_substance_rows = []
-    for idx, row in enumerate(selected, start=1):
+    drug_ids_int = {row["DrugID"] for row in drug_type_rows}
+    substance_ids_int = {row["ID"] for row in substance_rows}
+    for row in has_substance_rows:
         drug_id = int(row["DrugID"])
-        name = clean(row["Name"], 40)
-        substances = detect_substances(name)
-        if not substances:
-            substances = [substance_names[idx % len(substance_names)]]
-        for substance in substances:
-            has_substance_rows.append({"SubID": substance_id[substance], "DrugID": drug_id})
+        sub_id = int(row["SubID"])
+        if drug_id not in drug_ids_int or sub_id not in substance_ids_int:
+            raise ValueError(f"Invalid drug-substance row in {has_substance_path}: {row}")
+        row["DrugID"] = drug_id
+        row["SubID"] = sub_id
 
-    substance_rows = [{"ID": sid, "Name": name} for name, sid in sorted(substance_id.items(), key=lambda item: item[1])]
-
-    write_csv(output_dir / "substances.csv", ["ID", "Name"], substance_rows)
-    write_csv(output_dir / "has_substances.csv", ["SubID", "DrugID"], has_substance_rows)
+    for row in support_rows:
+        drug_id = int(row["DrugID"])
+        drug_phone = clean(row["Phone"])
+        if str(drug_id) not in drug_ids or not re.fullmatch(r"[0-9]{10,14}", drug_phone):
+            raise ValueError(f"Invalid drug support phone row in {phone_path}: {row}")
+        row["DrugID"] = drug_id
+        row["Phone"] = drug_phone
 
     return {
         "drug_type": drug_type_rows,
@@ -1121,6 +1068,10 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
         drug_to_substances[drug_id].add(name)
         drugs_by_substance[name].append(drug_id)
 
+    all_drug_ids = tuple(drug_to_substances)
+    if not all_drug_ids:
+        raise RuntimeError("No drug-substance mappings are available for prescription generation.")
+
     patient_ids = [row["AMKA"] for row in patients["patient"]]
     allergy_rows = []
     allergy_by_patient: dict[str, set[str]] = defaultdict(set)
@@ -1135,15 +1086,34 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
     prescription_rows = []
     used_unique: set[tuple[str, int, int, str]] = set()
     presc_id = 1
+    eligible_cache: dict[frozenset[str], tuple[int, ...]] = {}
+    substance_cache: dict[tuple[str, frozenset[str]], tuple[int, ...]] = {}
 
-    def safe_drugs(patient_amka: str, substance: str | None = None) -> list[int]:
-        banned = allergy_by_patient.get(patient_amka, set())
-        out = []
-        candidates = drugs_by_substance[substance] if substance else list(drug_to_substances)
-        for drug_id in candidates:
-            if not (drug_to_substances[drug_id] & banned):
-                out.append(drug_id)
-        return out
+    def banned_key(patient_amka: str) -> frozenset[str]:
+        return frozenset(allergy_by_patient.get(patient_amka, set()))
+
+    def eligible_drugs(patient_amka: str) -> tuple[int, ...]:
+        banned = banned_key(patient_amka)
+        if not banned:
+            return all_drug_ids
+        cached = eligible_cache.get(banned)
+        if cached is None:
+            cached = tuple(drug_id for drug_id in all_drug_ids if drug_to_substances[drug_id].isdisjoint(banned))
+            eligible_cache[banned] = cached
+        return cached
+
+    def safe_drugs(patient_amka: str, substance: str) -> tuple[int, ...]:
+        banned = banned_key(patient_amka)
+        cache_key = (substance, banned)
+        cached = substance_cache.get(cache_key)
+        if cached is None:
+            cached = tuple(
+                drug_id
+                for drug_id in drugs_by_substance.get(substance, [])
+                if drug_to_substances[drug_id].isdisjoint(banned)
+            )
+            substance_cache[cache_key] = cached
+        return cached
 
     def add_prescription(hosp: dict, drug_id: int, start_date: date) -> bool:
         nonlocal presc_id
@@ -1181,21 +1151,23 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
         start_date = min(info["exit"].date(), info["admission"].date() + timedelta(days=1))
         pair = COMMON_SUBSTANCE_PAIRS[planted % len(COMMON_SUBSTANCE_PAIRS)]
         d1 = safe_drugs(hosp["PatientAMKA"], pair[0])
-        d2 = [d for d in safe_drugs(hosp["PatientAMKA"], pair[1]) if d not in d1]
-        if not d1 or not d2:
+        if not d1:
             continue
-        ok1 = add_prescription(hosp, choose(d1), start_date)
+        drug1 = choose(d1)
+        d2 = tuple(drug_id for drug_id in safe_drugs(hosp["PatientAMKA"], pair[1]) if drug_id != drug1)
+        if not d2:
+            continue
+        ok1 = add_prescription(hosp, drug1, start_date)
         ok2 = add_prescription(hosp, choose(d2), start_date)
         if ok1 and ok2:
             planted += 1
 
-    all_drug_ids = list(drug_to_substances)
     attempts = 0
     while len(prescription_rows) < SYNTHETIC_PRESCRIPTION_COUNT and attempts < SYNTHETIC_PRESCRIPTION_COUNT * 30:
         attempts += 1
         hosp = choose(hospitalizations)
         info = clinical["hospitalization_meta"][hosp["HospitalizationID"]]
-        candidates = [drug_id for drug_id in all_drug_ids if not (drug_to_substances[drug_id] & allergy_by_patient.get(hosp["PatientAMKA"], set()))]
+        candidates = eligible_drugs(hosp["PatientAMKA"])
         if not candidates:
             continue
         day_span = max(0, (info["exit"].date() - info["admission"].date()).days)

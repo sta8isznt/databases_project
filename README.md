@@ -40,10 +40,6 @@
 
 ## Indexes:
 
-* Composite Index for Financial Aggregation (Q1) : `idx_hosp_patient`
-
-> Q1 requires grouping massive amounts of data by Department and filtering by Year. A standard single-column index is insufficient here. We utilized a Composite Index taking advantage of MySQL's leftmost prefix rule. Because the query engine processes indexes left-to-right, placing DepartmentID first allows the optimizer to instantly isolate the department's records, and the secondary AdmissionDateTime attribute allows it to swiftly resolve the date-range constraints.
-
 * Composite Index for Doctor Surgical Analytics (Q2, Q5, Q11) : `idx_proc_maindoc_date`
 
 > Several of our queries revolve around counting the number of procedures a specific doctor (**MainDocAMK**) performed within the current year. This composite index isolates the doctor first (an attribute with high selectivity and cardinality) and then sorts by DateTime. This allows the database to execute an "Index Range Scan", skipping the data blocks of procedures performed in previous years entirely.

@@ -859,13 +859,30 @@ def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, cl
     used_triage_times: set[tuple[str, str]] = set()
     triage_id = 1
 
-    def add_triage(patient_amka: str, triage_dt: datetime, level: int, outcome: str, hosp_id: int | str) -> None:
+    def add_triage(patient_amka: str, triage_dt: datetime, level: int, outcome: str, hosp_id: int | str, admission_dt: datetime | None = None) -> None:
         nonlocal triage_id
         key = (patient_amka, triage_dt.strftime("%Y-%m-%d %H:%M:%S"))
         while key in used_triage_times:
             triage_dt += timedelta(minutes=1)
             key = (patient_amka, triage_dt.strftime("%Y-%m-%d %H:%M:%S"))
         used_triage_times.add(key)
+        
+        # Generate AssesmentDateTime
+        if outcome == "Accepted" and admission_dt is not None:
+            # For accepted triages: AssesmentDateTime should be between TriageDateTime and AdmissionDateTime
+            # Typically assessment happens 30 minutes to 2 hours after triage
+            time_gap_minutes = random.randint(30, 120)
+            assesment_dt = triage_dt + timedelta(minutes=time_gap_minutes)
+            # Ensure it doesn't exceed admission time
+            if assesment_dt > admission_dt:
+                assesment_dt = admission_dt - timedelta(minutes=random.randint(5, 30))
+        else:
+            # For discarded triages: AssesmentDateTime should be after TriageDateTime (30 min to 4 hours)
+            time_gap_minutes = random.randint(30, 240)
+            assesment_dt = triage_dt + timedelta(minutes=time_gap_minutes)
+        
+        assesment_str = assesment_dt.strftime("%Y-%m-%d %H:%M:%S")
+        
         triage_rows.append({
             "TriageID": triage_id,
             "Symptoms": choose(SYMPTOMS_BY_LEVEL[level]),
@@ -873,6 +890,7 @@ def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, cl
             "Outcome": outcome,
             "TriageDateTime": key[1],
             "HospitalizationID": hosp_id,
+            "AssesmentDateTime": assesment_str,
             "PatientAMKA": patient_amka,
             "NurseAMK": choose(triage_nurses),
         })
@@ -882,7 +900,8 @@ def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, cl
     for hosp in clinical["hospitalization"][:accepted_count]:
         level = random.choices([1, 2, 3, 4, 5], weights=[8, 20, 35, 25, 12])[0]
         admission = clinical["hospitalization_meta"][hosp["HospitalizationID"]]["admission"]
-        add_triage(hosp["PatientAMKA"], admission - timedelta(hours=random.randint(1, 7)), level, "Accepted", hosp["HospitalizationID"])
+        triage_time = admission - timedelta(hours=random.randint(1, 7))
+        add_triage(hosp["PatientAMKA"], triage_time, level, "Accepted", hosp["HospitalizationID"], admission)
 
     while len(triage_rows) < SYNTHETIC_TRIAGE_COUNT:
         level = random.choices([1, 2, 3, 4, 5], weights=[5, 15, 30, 32, 18])[0]
@@ -903,7 +922,7 @@ def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, cl
         })
 
     write_csv(output_dir / "triage_event.csv", [
-        "TriageID", "Symptoms", "EmergencyLevel", "Outcome", "TriageDateTime", "HospitalizationID", "PatientAMKA", "NurseAMK",
+        "TriageID", "Symptoms", "EmergencyLevel", "Outcome", "TriageDateTime", "HospitalizationID", "PatientAMKA", "AssesmentDateTime", "NurseAMK",
     ], triage_rows)
     write_csv(output_dir / "evaluation.csv", [
         "HospitalizationID", "QoDoctorS", "QoNurseS", "Cleanliness", "Food", "GeneralExperience", "EvaluationDate",

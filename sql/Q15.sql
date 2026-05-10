@@ -1,3 +1,4 @@
+-- Active: 1778170419470@@localhost@3306@HospitalDB
 with departmentcnt as (
     select t.EmergencyLevel, d.`Name` as DepartmentName, count(t.TriageID) AS CasesPerDept
     from TriageEvent t
@@ -18,9 +19,9 @@ select t.EmergencyLevel, count(t.TriageID) AS TotalTriages,
         end
     ), 2) as AvgWaitingTimeMinutes,
     round((sum(case when t.Outcome = 'Accepted' then 1 else 0 end) / 
-    sum(case when t.Outcome in ('Accepted', 'Discarded') then 1 else 0 0)) * 100, 2) as AcceptanceRate,
+    sum(case when t.Outcome in ('Accepted', 'Discarded') then 1 else 0 end)) * 100, 2) as AcceptanceRate,
     COALESCE(dd.ReferralDistribution, 'No Admissions') AS DepartmentReferrals
 from TriageEvent t
 left join DepartmentDistribution dd using (EmergencyLevel)
 group by t.EmergencyLevel, dd.ReferralDistribution
-order by  t.EmergencyLevel asc; 
+order by  t.EmergencyLevel asc;

@@ -268,8 +268,8 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(TriageID, Symptoms, EmergencyLevel, Outcome, TriageDateTime, @HospitalizationID, PatientAMKA, NurseAMK)
-SET HospitalizationID = NULLIF(@HospitalizationID, '');
+(TriageID, Symptoms, EmergencyLevel, Outcome, TriageDateTime, @HospitalizationID, PatientAMKA, @AssessmentDateTime, NurseAMK)
+SET HospitalizationID = NULLIF(@HospitalizationID, ''), AssessmentDateTime = NULLIF(@AssessmentDateTime, '');
 
 LOAD DATA LOCAL INFILE 'data/evaluation.csv'
 INTO TABLE Evaluation

@@ -183,7 +183,7 @@ create table TriageEvent(
     Outcome varchar(30) not null  default 'Pending' check(Outcome in ("Accepted", "Discarded","Pending")),
     TriageDateTime datetime not null,
     HospitalizationID int,
-    AssesmentDateTime datetime,
+    AssessmentDateTime datetime,
     PatientAMKA char(11) not null,
     NurseAMK char(11) not null,
 

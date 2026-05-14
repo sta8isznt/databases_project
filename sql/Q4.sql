@@ -1,12 +1,10 @@
--- We consider a hospitalization to belong to a doctor only when the doctor is
--- the MainDocAMK of at least one ProcedureEvent during that hospitalization.
--- For this query we examine the doctor with AMK = '10000000000'.
+-- For this query we examine the doctor with AMKA = '10000000000'.
 
-select d.AMKA, s.`FirstName`, s.`LastName`, avg(e.`QoDoctorS`) as AverageDoctorService, avg(e.`GeneralExperience`) as AverageGeneralExperience
-from Doctor d
-join ActiveStaff s using(`AMKA`)
-join ProcedureEvent pe on pe.`MainDocAMKA` = d.`AMKA`
-join `Hospitalization` h using(`HospitalizationID`)
-join `Evaluation` e using(`HospitalizationID`)
-where d.AMKA = '10000000000'
-group by d.`AMKA`, s.`FirstName`, s.`LastName`;  
+SELECT de.DoctorAMKA, s.FirstName, s.LastName,
+    ROUND(AVG(de.QoDoctorS), 2) AS AvgDoctorQuality,
+    ROUND(AVG(he.GeneralExperience), 2) AS AvgHospitalExperience
+FROM DoctorEvaluation de
+JOIN HospEvaluation he ON de.HospitalizationID = he.HospitalizationID
+JOIN ActiveStaff s ON de.DoctorAMKA = s.AMKA
+WHERE de.DoctorAMKA = '10000000000' 
+GROUP BY de.DoctorAMKA, s.FirstName, s.LastName;

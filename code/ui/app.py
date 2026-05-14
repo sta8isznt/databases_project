@@ -335,13 +335,13 @@ def query_parameter_inputs(
         doctors = rows_as_options(
             config,
             """
-            SELECT d.AMK, s.FirstName, s.LastName, d.Specialty
+            SELECT d.AMKA, s.FirstName, s.LastName, d.Specialty
             FROM Doctor d
-            JOIN Staff s ON d.AMK = s.AMK
+            JOIN Staff s ON d.AMKA = s.AMKA
             ORDER BY s.LastName, s.FirstName
             """,
-            ["LastName", "FirstName", "Specialty", "AMK"],
-            "AMK",
+            ["LastName", "FirstName", "Specialty", "AMKA"],
+            "AMKA",
         )
         selected = st.selectbox("Doctor", [label for label, _ in doctors] or ["10000000000"])
         amk = option_value(doctors, selected) or selected
@@ -482,14 +482,14 @@ def page_triage(config: DatabaseConfig) -> None:
         nurses = rows_as_options(
             config,
             """
-            SELECT n.AMK, s.FirstName, s.LastName, n.Rank
+            SELECT n.AMKA, s.FirstName, s.LastName, n.Rank
             FROM Nurse n
-            JOIN Staff s ON n.AMK = s.AMK
+            JOIN Staff s ON n.AMKA = s.AMKA
             WHERE s.IsActive = 1
             ORDER BY s.LastName, s.FirstName
             """,
-            ["LastName", "FirstName", "Rank", "AMK"],
-            "AMK",
+            ["LastName", "FirstName", "Rank", "AMKA"],
+            "AMKA",
         )
 
         patient_source = st.radio(
@@ -604,7 +604,7 @@ def page_triage(config: DatabaseConfig) -> None:
                 """
                 INSERT INTO TriageEvent
                     (Symptoms, EmergencyLevel, Outcome, TriageDateTime, HospitalizationID,
-                     AssessmentDateTime, PatientAMKA, NurseAMK)
+                     AssessmentDateTime, PatientAMKA, NurseAMKA)
                 VALUES (%s, %s, 'Pending', %s, NULL, NULL, %s, %s)
                 """,
                 (
@@ -649,7 +649,7 @@ def page_triage(config: DatabaseConfig) -> None:
                         """
                         INSERT INTO TriageEvent
                             (Symptoms, EmergencyLevel, Outcome, TriageDateTime, HospitalizationID,
-                             AssessmentDateTime, PatientAMKA, NurseAMK)
+                             AssessmentDateTime, PatientAMKA, NurseAMKA)
                         VALUES (%s, %s, 'Pending', %s, NULL, NULL, %s, %s)
                         """,
                         (
@@ -1118,7 +1118,7 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
     with register_tab:
         staff_type = st.radio("Staff type", ["Doctor", "Nurse", "AdminStaff"], horizontal=True)
         with st.form("register_staff"):
-            amk = st.text_input("AMK")
+            amk = st.text_input("AMKA")
             first_name = st.text_input("First name")
             last_name = st.text_input("Last name")
             birth_date = st.date_input("Birth date", value=date(1990, 1, 1))
@@ -1132,13 +1132,13 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
                 supervisors = rows_as_options(
                     config,
                     """
-                    SELECT d.AMK, s.FirstName, s.LastName, d.Rank
+                    SELECT d.AMKA, s.FirstName, s.LastName, d.Rank
                     FROM Doctor d
-                    JOIN Staff s ON d.AMK = s.AMK
+                    JOIN Staff s ON d.AMKA = s.AMKA
                     ORDER BY s.LastName, s.FirstName
                     """,
-                    ["LastName", "FirstName", "Rank", "AMK"],
-                    "AMK",
+                    ["LastName", "FirstName", "Rank", "AMKA"],
+                    "AMKA",
                 )
                 supervisor_labels = ["None"] + [label for label, _ in supervisors]
                 supervisor_label = st.selectbox("Supervisor", supervisor_labels)
@@ -1249,40 +1249,40 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
                 staff_options = rows_as_options(
                     config,
                     """
-                    SELECT d.AMK, s.FirstName, s.LastName, d.Specialty
+                    SELECT d.AMKA, s.FirstName, s.LastName, d.Specialty
                     FROM Doctor d
-                    JOIN Staff s ON d.AMK = s.AMK
+                    JOIN Staff s ON d.AMKA = s.AMKA
                     WHERE s.IsActive = 1
                     ORDER BY s.LastName, s.FirstName
                     """,
-                    ["LastName", "FirstName", "Specialty", "AMK"],
-                    "AMK",
+                    ["LastName", "FirstName", "Specialty", "AMKA"],
+                    "AMKA",
                 )
             elif staff_kind == "Nurse":
                 staff_options = rows_as_options(
                     config,
                     """
-                    SELECT n.AMK, s.FirstName, s.LastName, n.Rank
+                    SELECT n.AMKA, s.FirstName, s.LastName, n.Rank
                     FROM Nurse n
-                    JOIN Staff s ON n.AMK = s.AMK
+                    JOIN Staff s ON n.AMKA = s.AMKA
                     WHERE s.IsActive = 1
                     ORDER BY s.LastName, s.FirstName
                     """,
-                    ["LastName", "FirstName", "Rank", "AMK"],
-                    "AMK",
+                    ["LastName", "FirstName", "Rank", "AMKA"],
+                    "AMKA",
                 )
             else:
                 staff_options = rows_as_options(
                     config,
                     """
-                    SELECT a.AMK, s.FirstName, s.LastName, a.Role
+                    SELECT a.AMKA, s.FirstName, s.LastName, a.Role
                     FROM AdminStaff a
-                    JOIN Staff s ON a.AMK = s.AMK
+                    JOIN Staff s ON a.AMKA = s.AMKA
                     WHERE s.IsActive = 1
                     ORDER BY s.LastName, s.FirstName
                     """,
-                    ["LastName", "FirstName", "Role", "AMK"],
-                    "AMK",
+                    ["LastName", "FirstName", "Role", "AMKA"],
+                    "AMKA",
                 )
             staff_label = (
                 st.selectbox("Staff member", [label for label, _ in staff_options])
@@ -1299,11 +1299,11 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
 
         if submitted and shift_row is not None:
             if staff_kind == "Doctor":
-                sql = "INSERT INTO hasDoctor (DepartmentID, ShiftTypeName, ShiftDate, DoctorAMK) VALUES (%s, %s, %s, %s)"
+                sql = "INSERT INTO hasDoctor (DepartmentID, ShiftTypeName, ShiftDate, DoctorAMKA) VALUES (%s, %s, %s, %s)"
             elif staff_kind == "Nurse":
-                sql = "INSERT INTO hasNurse (DepartmentID, ShiftTypeName, ShiftDate, NurseAMK) VALUES (%s, %s, %s, %s)"
+                sql = "INSERT INTO hasNurse (DepartmentID, ShiftTypeName, ShiftDate, NurseAMKA) VALUES (%s, %s, %s, %s)"
             else:
-                sql = "INSERT INTO hasAdmin (DepartmentID, ShiftTypeName, ShiftDate, AdminAMK) VALUES (%s, %s, %s, %s)"
+                sql = "INSERT INTO hasAdmin (DepartmentID, ShiftTypeName, ShiftDate, AdminAMKA) VALUES (%s, %s, %s, %s)"
             run_write_action(
                 config,
                 sql,
@@ -1334,14 +1334,14 @@ def page_prescriptions(config: DatabaseConfig) -> None:
     doctors = rows_as_options(
         config,
         """
-        SELECT d.AMK, s.FirstName, s.LastName, d.Specialty
+        SELECT d.AMKA, s.FirstName, s.LastName, d.Specialty
         FROM Doctor d
-        JOIN Staff s ON d.AMK = s.AMK
+        JOIN Staff s ON d.AMKA = s.AMKA
         WHERE s.IsActive = 1
         ORDER BY s.LastName, s.FirstName
         """,
-        ["LastName", "FirstName", "Specialty", "AMK"],
-        "AMK",
+        ["LastName", "FirstName", "Specialty", "AMKA"],
+        "AMKA",
     )
 
     if not hospitalizations:
@@ -1384,7 +1384,7 @@ def page_prescriptions(config: DatabaseConfig) -> None:
             config,
             """
             INSERT INTO PrescriptionEvent
-                (HospitalizationID, DoctorAMK, DrugID, Dosage, Frequency, PrescriptionDate, StartDate, EndDate)
+                (HospitalizationID, DoctorAMKA, DrugID, Dosage, Frequency, PrescriptionDate, StartDate, EndDate)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (
@@ -1409,9 +1409,9 @@ def page_media(config: DatabaseConfig) -> None:
             ImageID,
             ImageDescription,
             ImageURL,
-            COALESCE(StaffAMK, DepartmentID, ProcRoomID, RoomID) AS TargetID,
+            COALESCE(StaffAMKA, DepartmentID, ProcRoomID, RoomID) AS TargetID,
             CASE
-                WHEN StaffAMK IS NOT NULL THEN 'Staff'
+                WHEN StaffAMKA IS NOT NULL THEN 'Staff'
                 WHEN DepartmentID IS NOT NULL THEN 'Department'
                 WHEN ProcRoomID IS NOT NULL THEN 'ProcedureRoom'
                 WHEN RoomID IS NOT NULL THEN 'Room'

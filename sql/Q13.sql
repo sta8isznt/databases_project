@@ -4,7 +4,7 @@ with recursive doctor_hierarchy as (
         d.AMKA as RootDoctorAMKA,
         concat(d.FirstName, ' ', d.LastName) as RootDoctorName,
 
-        d.AMK as CurrentDoctorAMKA,
+        d.AMKA as CurrentDoctorAMKA,
         concat(d.FirstName, ' ', d.LastName) as CurrentDoctorName,
         d.`Rank` as CurrentDoctorRank,
 

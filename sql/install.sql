@@ -609,43 +609,6 @@ begin
     end if;
 end //
 
--- ------------------------------ Evaluation Triggers ----------------
-create trigger trg_evaluation_before_insert
-before insert on Evaluation
-for each row
-begin
-    declare v_ExitDateTime datetime;
-
-    -- Get the ExitDateTime for the given HospitalizationID
-    select ExitDateTime into v_ExitDateTime
-    from Hospitalization
-    where HospitalizationID = new.HospitalizationID;
-
-    -- Check if the patient has been discharged at all
-    if v_ExitDateTime is null then
-        SIGNAL SQLSTATE '45000'
-        set message_text = "Patient must be discharged before evaluation can be made";
-    end if;
-end //
-
-create trigger trg_evaluation_before_update
-before update on Evaluation
-for each row
-begin
-    declare v_ExitDateTime datetime;
-
-    -- Get the ExitDateTime for the given HospitalizationID
-    select ExitDateTime into v_ExitDateTime
-    from Hospitalization
-    where HospitalizationID = new.HospitalizationID;
-
-    -- Check if the patient has been discharged at all
-    if v_ExitDateTime is null then
-        SIGNAL SQLSTATE '45000'
-        set message_text = "Patient must be discharged before evaluation can be made";
-    end if;
-end //
-
 -- ------------------------------ ProcedureEvent Triggers ----------------
 CREATE TRIGGER trg_Procedure_Overlap_Insert
 BEFORE INSERT ON ProcedureEvent
@@ -1332,6 +1295,101 @@ begin
     end if;
 end //
 
+--  Protect the HospEvaluation Table
+CREATE TRIGGER trg_hosp_eval_insert 
+BEFORE INSERT ON HospEvaluation 
+FOR EACH ROW 
+BEGIN
+    DECLARE v_ExitDate DATETIME;
+    
+    -- Verify the hospitalization is completed
+    SELECT ExitDateTime INTO v_ExitDate 
+    FROM Hospitalization 
+    WHERE HospitalizationID = NEW.HospitalizationID;
+    
+    IF v_ExitDate IS NULL THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Evaluation error: Hospitalization is not yet completed (ExitDateTime is NULL).';
+    END IF;
+END //
+
+CREATE TRIGGER trg_hosp_eval_update 
+BEFORE UPDATE ON HospEvaluation 
+FOR EACH ROW 
+BEGIN
+    DECLARE v_ExitDate DATETIME;
+    
+    -- Verify the hospitalization is completed
+    SELECT ExitDateTime INTO v_ExitDate 
+    FROM Hospitalization 
+    WHERE HospitalizationID = NEW.HospitalizationID;
+    
+    IF v_ExitDate IS NULL THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Evaluation error: Hospitalization is not yet completed (ExitDateTime is NULL).';
+    END IF;
+END //
+
+
+-- Protect the DoctorEvaluation Table
+CREATE TRIGGER trg_doc_eval_insert 
+BEFORE INSERT ON DoctorEvaluation 
+FOR EACH ROW 
+BEGIN
+    DECLARE v_ExitDate DATETIME;
+    DECLARE v_PrescriptionCount INT DEFAULT 0;
+    
+    -- Verify the hospitalization is completed
+    SELECT ExitDateTime INTO v_ExitDate 
+    FROM Hospitalization 
+    WHERE HospitalizationID = NEW.HospitalizationID;
+    
+    IF v_ExitDate IS NULL THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Evaluation error: Hospitalization is not yet completed.';
+    END IF;
+
+    -- A patient may evaluate only doctors who prescribed during this hospitalization.
+    SELECT COUNT(*) INTO v_PrescriptionCount
+    FROM PrescriptionEvent
+    WHERE HospitalizationID = NEW.HospitalizationID
+      AND DoctorAMKA = NEW.DoctorAMKA;
+
+    IF v_PrescriptionCount = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Evaluation error: This doctor did not prescribe medication during this hospitalization.';
+    END IF;
+END //
+
+CREATE TRIGGER trg_doc_eval_update 
+BEFORE UPDATE ON DoctorEvaluation 
+FOR EACH ROW 
+BEGIN
+    DECLARE v_ExitDate DATETIME;
+    DECLARE v_PrescriptionCount INT DEFAULT 0;
+    
+    -- Verify the hospitalization is completed
+    SELECT ExitDateTime INTO v_ExitDate 
+    FROM Hospitalization 
+    WHERE HospitalizationID = NEW.HospitalizationID;
+    
+    IF v_ExitDate IS NULL THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Evaluation error: Hospitalization is not yet completed.';
+    END IF;
+
+    -- A patient may evaluate only doctors who prescribed during this hospitalization.
+    SELECT COUNT(*) INTO v_PrescriptionCount
+    FROM PrescriptionEvent
+    WHERE HospitalizationID = NEW.HospitalizationID
+      AND DoctorAMKA = NEW.DoctorAMKA;
+
+    IF v_PrescriptionCount = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Evaluation error: This doctor did not prescribe medication during this hospitalization.';
+    END IF;
+END //
+
 -- =========================
 -- Stored Procedures
 -- =========================
@@ -1363,12 +1421,12 @@ BEGIN
         set message_text = "HireDate cannot be in the future";
     end if;
     
-    -- 1. Insert into the Superclass (Staff). 
+    --  Insert into the Superclass (Staff). 
     -- We explicitly hardcode the Type as 'Doctor' to enforce subtype disjointness.
     INSERT INTO Staff (AMKA, FirstName, LastName, BirthDate, Email, HireDate, `Type`)
     VALUES (p_AMKA, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Doctor');
     
-    -- 2. Insert into the Subclass (Doctor) utilizing the exact same AMKA.
+    --  Insert into the Subclass (Doctor) utilizing the exact same AMKA.
     INSERT INTO Doctor (AMKA, License, Specialty, `Rank`, SupervisorAMKA)
     VALUES (p_AMKA, p_License, p_Specialty, p_Rank, p_SupervisorAMKA);
     
@@ -1387,7 +1445,7 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     START TRANSACTION;
     
-    -- 1. Update the Superclass (Staff).
+    --  Update the Superclass (Staff).
     -- By appending "AND Type = 'Doctor'", we intrinsically enforce subtype disjointness.
     -- Because of our ON UPDATE CASCADE constraint, changing the AMKA here 
     -- will automatically propagate the new AMKA to the Doctor table.
@@ -1395,7 +1453,7 @@ BEGIN
     SET AMKA = p_NewAMKA
     WHERE AMKA = p_OldAMKA AND `Type` = 'Doctor';
     
-    -- 2. Update the Subclass (Doctor) specific attributes.
+    -- Update the Subclass (Doctor) specific attributes.
     -- We use p_NewAMKA here because the cascade has already updated the primary key.
     UPDATE Doctor 
     SET License = p_License,
@@ -1432,11 +1490,11 @@ BEGIN
         SET MESSAGE_TEXT = 'HireDate cannot be in the future';
     END IF;
     
-    -- 1. Insert into the Superclass (Staff). 
+    --  Insert into the Superclass (Staff). 
     INSERT INTO Staff (AMKA, FirstName, LastName, BirthDate, Email, HireDate, Type)
     VALUES (p_AMKA, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Nurse');
     
-    -- 2. Insert into the Subclass (Nurse) utilizing the exact same AMKA.
+    -- Insert into the Subclass (Nurse) utilizing the exact same AMKA.
     INSERT INTO Nurse (AMKA, `Rank`, DepartmentID)
     VALUES (p_AMKA, p_Rank, p_DepartmentID);
     
@@ -1453,12 +1511,12 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     START TRANSACTION;
     
-    -- 1. Update the Superclass (Staff).
+    -- Update the Superclass (Staff).
     UPDATE Staff 
     SET AMKA = p_NewAMKA
     WHERE AMKA = p_OldAMKA AND Type = 'Nurse';
     
-    -- 2. Update the Subclass (Nurse) specific attributes.
+    -- Update the Subclass (Nurse) specific attributes.
     UPDATE Nurse 
     SET `Rank` = p_Rank,
         DepartmentID = p_DepartmentID
@@ -1492,11 +1550,11 @@ BEGIN
         SET MESSAGE_TEXT = 'HireDate cannot be in the future';
     END IF;
     
-    -- 1. Insert into the Superclass (Staff). 
+    -- Insert into the Superclass (Staff). 
     INSERT INTO Staff (AMKA, FirstName, LastName, BirthDate, Email, HireDate, Type)
     VALUES (p_AMKA, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'AdminStaff');
     
-    -- 2. Insert into the Subclass (AdminStaff) utilizing the exact same AMKA.
+    -- Insert into the Subclass (AdminStaff) utilizing the exact same AMKA.
     INSERT INTO AdminStaff (AMKA, Role, Office, DepartmentID)
     VALUES (p_AMKA, p_Role, p_Office, p_DepartmentID);
     
@@ -1514,12 +1572,12 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     START TRANSACTION;
     
-    -- 1. Update the Superclass (Staff).
+    -- Update the Superclass (Staff).
     UPDATE Staff 
     SET AMKA = p_NewAMKA
     WHERE AMKA = p_OldAMKA AND Type = 'AdminStaff';
     
-    -- 2. Update the Subclass (AdminStaff) specific attributes.
+    -- Update the Subclass (AdminStaff) specific attributes.
     UPDATE AdminStaff 
     SET Role = p_Role,
         Office = p_Office,
@@ -1544,14 +1602,14 @@ BEGIN
     -- Start a transaction to ensure atomicity
     START TRANSACTION;
     
-    -- 1. Insert the department (assuming the constraint is temporarily bypassed or relaxed)
+    -- Insert the department (assuming the constraint is temporarily bypassed or relaxed)
     INSERT INTO Department (Name, Description, Floor, Building, DirectorAMKA)
     VALUES (p_Name, p_Description, p_Floor, p_Building, p_DirectorAMKA);
     
     -- Get the auto-generated DepartmentID of the newly inserted department
     SET v_DeptID = LAST_INSERT_ID();
     
-    -- 2. Insert the relational mapping immediately after
+    -- Insert the relational mapping immediately after
     INSERT INTO DoctorDepartment (DoctorAMKA, DepartmentID)
     VALUES (p_DirectorAMKA, v_DeptID);
     
@@ -1573,7 +1631,7 @@ BEGIN
         VALUES (p_DirectorAMKA, p_DeptID);
     END IF;
     
-    -- 2. Update the department's director safely
+    -- Update the department's director safely
     UPDATE Department
     SET DirectorAMKA = p_DirectorAMKA
     WHERE DepartmentID = p_DeptID;
@@ -1595,7 +1653,7 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
     START TRANSACTION;
-    -- 0. Check if the Patient profile is active
+    -- Check if the Patient profile is active
     SELECT isActive INTO v_PatientActive FROM Patient WHERE AMKA = p_PatientAMKA;
     
     IF v_PatientActive = 0 THEN
@@ -1603,7 +1661,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Admission Error: Patient profile is inactive.';
     END IF;
     
-    -- 1. Proactively verify room availability
+    -- Proactively verify room availability
     SELECT `State` INTO v_RoomState 
     FROM Room 
     WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID
@@ -1614,12 +1672,12 @@ BEGIN
         SET MESSAGE_TEXT = 'The selected room is not available for admission.';
     END IF;
     
-    -- 2. Mutate the Room state
+    -- Mutate the Room state
     UPDATE Room 
     SET `State` = 'Occupied' 
     WHERE ID = p_RoomID AND DepartmentID = p_DepartmentID;
     
-    -- 3. Insert the Hospitalization record
+    -- Insert the Hospitalization record
     INSERT INTO Hospitalization (AdmissionDateTime, PatientAMKA, RoomID, DepartmentID, KENcode)
     VALUES (p_AdmissionDateTime, p_PatientAMKA, p_RoomID, p_DepartmentID, p_KENcode);
     COMMIT;
@@ -1636,17 +1694,17 @@ BEGIN
 
     START TRANSACTION;
     
-    -- 1. Retrieve the room associated with this hospitalization
+    --  Retrieve the room associated with this hospitalization
     SELECT RoomID, DepartmentID INTO v_RoomID, v_DepartmentID
     FROM Hospitalization
     WHERE HospitalizationID = p_HospitalizationID;
     
-    -- 2. Update the Hospitalization record with the discharge timestamp
+    --  Update the Hospitalization record with the discharge timestamp
     UPDATE Hospitalization
     SET ExitDateTime = p_ExitDateTime
     WHERE HospitalizationID = p_HospitalizationID;
     
-    -- 3. Release the room
+    --  Release the room
     UPDATE Room 
     SET State = 'Available' 
     WHERE ID = v_RoomID AND DepartmentID = v_DepartmentID;
@@ -1813,7 +1871,7 @@ from Staff
 where IsActive = 1;
 
 create view ActivePatient as
-select AMKA, FirstName, LastName, FatherName, BirthDate, Gender, `Weight`,
+select AMKA, FirstName, LastName, FatherName, timestampdiff(year,birthdate,curdate()) as Age, Gender, `Weight`,
     `Height`, `Address`, Email, Profession, Nationality, InsuranceProviderName
 from Patient
 where IsActive = 1;
@@ -1895,6 +1953,10 @@ ORDER BY t.EmergencyLevel ASC, t.TriageDateTime ASC;
 -- =========================
 -- Indexes
 -- =========================
+create index idx_staff_name on Staff(LastName, FirstName);
+
+create index idx_patient_name on Patient(LastName, FirstName);
+
 create index idx_doc_specialty on Doctor(Specialty);
 
 create index idx_age on Staff(BirthDate);
@@ -1905,4 +1967,4 @@ create index idx_hasdoc_shiftdate   on hasDoctor(ShiftDate);
 create index idx_hasnurse_shiftdate on hasNurse(ShiftDate);
 create index idx_hasadmin_shiftdate on hasAdmin(ShiftDate);
 
-create index idx_triage_emergency on TriageEvent(EmergencyLevel);
+create index idx_triage_queue on TriageEvent(Outcome, EmergencyLevel, TriageDateTime);

@@ -398,7 +398,7 @@ def build_staff_and_departments(output_dir: Path) -> dict:
             hire_start = max(date(birth.year + 25, 1, 1), date(2009, 1, 1))
             hire_date = random_date_between(hire_start, date(2025, 9, 30))
             staff_rows.append({
-                "AMK": amk,
+                "AMKA": amk,
                 "FirstName": first,
                 "LastName": last,
                 "BirthDate": birth.isoformat(),
@@ -407,13 +407,13 @@ def build_staff_and_departments(output_dir: Path) -> dict:
                 "IsActive": 1,
                 "Type": "Doctor",
             })
-            staff_phone_rows.append({"StaffAMK": amk, "Phone": phone(used_phones)})
+            staff_phone_rows.append({"StaffAMKA": amk, "Phone": phone(used_phones)})
             staff_birthdates[amk] = birth
             if rank == "Director":
                 director_amk = amk
             else:
                 senior_supervisors.append(amk)
-            local_doctors.append({"AMK": amk, "Rank": rank, "local_idx": local_idx, "Specialty": specialty})
+            local_doctors.append({"AMKA": amk, "Rank": rank, "local_idx": local_idx, "Specialty": specialty})
             person_index += 1
 
         assert director_amk is not None
@@ -424,31 +424,31 @@ def build_staff_and_departments(output_dir: Path) -> dict:
             "Description": f"{dept_name} department of Ygeiopolis General Hospital",
             "Floor": floor,
             "Building": building,
-            "DirectorAMK": director_amk,
+            "DirectorAMKA": director_amk,
         })
 
         for doctor in local_doctors:
             if doctor["Rank"] == "Director":
                 supervisor = ""
             elif doctor["Rank"] == "Resident":
-                supervisor = choose([d["AMK"] for d in local_doctors if d["Rank"] in ("Consultant", "Registrar")])
+                supervisor = choose([d["AMKA"] for d in local_doctors if d["Rank"] in ("Consultant", "Registrar")])
             else:
                 supervisor = director_amk
             doctor_rows.append({
-                "AMK": doctor["AMK"],
-                "License": f"LIC{dept_id:02d}{doctor['local_idx']:02d}{doctor['AMK'][-4:]}",
+                "AMKA": doctor["AMKA"],
+                "License": f"LIC{dept_id:02d}{doctor['local_idx']:02d}{doctor['AMKA'][-4:]}",
                 "Specialty": specialty,
                 "Rank": doctor["Rank"],
-                "SupervisorAMK": supervisor,
+                "SupervisorAMKA": supervisor,
             })
-            doctor_department_rows.append({"DoctorAMK": doctor["AMK"], "DepartmentID": dept_id})
+            doctor_department_rows.append({"DoctorAMKA": doctor["AMKA"], "DepartmentID": dept_id})
 
     # A few cross-department doctor memberships for M:N coverage.
     for dept_id, doctors in doctors_by_department.items():
         for doctor in doctors:
             if doctor["Rank"] in ("Consultant", "Registrar") and random.random() < 0.12:
                 other_dept = random.choice([i for i in range(1, len(DEPARTMENTS) + 1) if i != dept_id])
-                doctor_department_rows.append({"DoctorAMK": doctor["AMK"], "DepartmentID": other_dept})
+                doctor_department_rows.append({"DoctorAMKA": doctor["AMKA"], "DepartmentID": other_dept})
 
     for dept_id in range(1, len(DEPARTMENTS) + 1):
         nurses = []
@@ -463,7 +463,7 @@ def build_staff_and_departments(output_dir: Path) -> dict:
             birth = birth_date_for_age(age)
             hire_date = random_date_between(max(date(birth.year + 21, 1, 1), date(2012, 1, 1)), date(2025, 9, 30))
             staff_rows.append({
-                "AMK": amk,
+                "AMKA": amk,
                 "FirstName": first,
                 "LastName": last,
                 "BirthDate": birth.isoformat(),
@@ -472,9 +472,9 @@ def build_staff_and_departments(output_dir: Path) -> dict:
                 "IsActive": 1,
                 "Type": "Nurse",
             })
-            staff_phone_rows.append({"StaffAMK": amk, "Phone": phone(used_phones)})
+            staff_phone_rows.append({"StaffAMKA": amk, "Phone": phone(used_phones)})
             staff_birthdates[amk] = birth
-            nurse_rows.append({"AMK": amk, "Rank": rank, "DepartmentID": dept_id})
+            nurse_rows.append({"AMKA": amk, "Rank": rank, "DepartmentID": dept_id})
             nurses.append(amk)
             person_index += 1
         nurses_by_department[dept_id] = nurses
@@ -491,7 +491,7 @@ def build_staff_and_departments(output_dir: Path) -> dict:
             birth = birth_date_for_age(age)
             hire_date = random_date_between(max(date(birth.year + 21, 1, 1), date(2013, 1, 1)), date(2025, 9, 30))
             staff_rows.append({
-                "AMK": amk,
+                "AMKA": amk,
                 "FirstName": first,
                 "LastName": last,
                 "BirthDate": birth.isoformat(),
@@ -500,10 +500,10 @@ def build_staff_and_departments(output_dir: Path) -> dict:
                 "IsActive": 1,
                 "Type": "AdminStaff",
             })
-            staff_phone_rows.append({"StaffAMK": amk, "Phone": phone(used_phones)})
+            staff_phone_rows.append({"StaffAMKA": amk, "Phone": phone(used_phones)})
             staff_birthdates[amk] = birth
             admin_rows.append({
-                "AMK": amk,
+                "AMKA": amk,
                 "Role": ADMIN_ROLES[idx % len(ADMIN_ROLES)],
                 "Office": OFFICES[idx % len(OFFICES)],
                 "DepartmentID": dept_id,
@@ -522,13 +522,13 @@ def build_staff_and_departments(output_dir: Path) -> dict:
                 "State": "Available",
             })
 
-    write_csv(output_dir / "staff.csv", ["AMK", "FirstName", "LastName", "BirthDate", "Email", "HireDate", "IsActive", "Type"], staff_rows)
-    write_csv(output_dir / "staff_phone.csv", ["StaffAMK", "Phone"], staff_phone_rows)
-    write_csv(output_dir / "doctor.csv", ["AMK", "License", "Specialty", "Rank", "SupervisorAMK"], doctor_rows)
-    write_csv(output_dir / "department.csv", ["DepartmentID", "Name", "Description", "Floor", "Building", "DirectorAMK"], department_rows)
-    write_csv(output_dir / "doctor_department.csv", ["DoctorAMK", "DepartmentID"], sorted(doctor_department_rows, key=lambda r: (r["DepartmentID"], r["DoctorAMK"])))
-    write_csv(output_dir / "nurse.csv", ["AMK", "Rank", "DepartmentID"], nurse_rows)
-    write_csv(output_dir / "admin_staff.csv", ["AMK", "Role", "Office", "DepartmentID"], admin_rows)
+    write_csv(output_dir / "staff.csv", ["AMKA", "FirstName", "LastName", "BirthDate", "Email", "HireDate", "IsActive", "Type"], staff_rows)
+    write_csv(output_dir / "staff_phone.csv", ["StaffAMKA", "Phone"], staff_phone_rows)
+    write_csv(output_dir / "doctor.csv", ["AMKA", "License", "Specialty", "Rank", "SupervisorAMKA"], doctor_rows)
+    write_csv(output_dir / "department.csv", ["DepartmentID", "Name", "Description", "Floor", "Building", "DirectorAMKA"], department_rows)
+    write_csv(output_dir / "doctor_department.csv", ["DoctorAMKA", "DepartmentID"], sorted(doctor_department_rows, key=lambda r: (r["DepartmentID"], r["DoctorAMKA"])))
+    write_csv(output_dir / "nurse.csv", ["AMKA", "Rank", "DepartmentID"], nurse_rows)
+    write_csv(output_dir / "admin_staff.csv", ["AMKA", "Role", "Office", "DepartmentID"], admin_rows)
     write_csv(output_dir / "room.csv", ["ID", "DepartmentID", "Type", "State"], room_rows)
 
     return {
@@ -665,28 +665,28 @@ def build_shifts(output_dir: Path, org: dict) -> dict:
                         "DepartmentID": dept_id,
                         "ShiftTypeName": shift_name,
                         "ShiftDate": shift_date.isoformat(),
-                        "DoctorAMK": doctor["AMK"],
+                        "DoctorAMKA": doctor["AMKA"],
                     })
                 for nurse_amk in nurse_groups[group_key]:
                     has_nurse_rows.append({
                         "DepartmentID": dept_id,
                         "ShiftTypeName": shift_name,
                         "ShiftDate": shift_date.isoformat(),
-                        "NurseAMK": nurse_amk,
+                        "NurseAMKA": nurse_amk,
                     })
                 for admin_amk in admin_groups[group_key]:
                     has_admin_rows.append({
                         "DepartmentID": dept_id,
                         "ShiftTypeName": shift_name,
                         "ShiftDate": shift_date.isoformat(),
-                        "AdminAMK": admin_amk,
+                        "AdminAMKA": admin_amk,
                     })
 
     write_csv(output_dir / "shift_type.csv", ["Name", "StartTime"], shift_types)
     write_csv(output_dir / "shift.csv", ["DepartmentID", "ShiftTypeName", "Date"], shift_rows)
-    write_csv(output_dir / "has_doctor.csv", ["DepartmentID", "ShiftTypeName", "ShiftDate", "DoctorAMK"], has_doctor_rows)
-    write_csv(output_dir / "has_nurse.csv", ["DepartmentID", "ShiftTypeName", "ShiftDate", "NurseAMK"], has_nurse_rows)
-    write_csv(output_dir / "has_admin.csv", ["DepartmentID", "ShiftTypeName", "ShiftDate", "AdminAMK"], has_admin_rows)
+    write_csv(output_dir / "has_doctor.csv", ["DepartmentID", "ShiftTypeName", "ShiftDate", "DoctorAMKA"], has_doctor_rows)
+    write_csv(output_dir / "has_nurse.csv", ["DepartmentID", "ShiftTypeName", "ShiftDate", "NurseAMKA"], has_nurse_rows)
+    write_csv(output_dir / "has_admin.csv", ["DepartmentID", "ShiftTypeName", "ShiftDate", "AdminAMKA"], has_admin_rows)
     return {
         "shift_type": shift_types,
         "shift": shift_rows,
@@ -846,12 +846,12 @@ def build_hospitalizations(output_dir: Path, ref: dict, org: dict, patients: dic
 
 def doctor_pool_by_dept(org: dict) -> dict[int, list[str]]:
     return {
-        dept_id: [doctor["AMK"] for doctor in doctors]
+        dept_id: [doctor["AMKA"] for doctor in doctors]
         for dept_id, doctors in org["doctors_by_department"].items()
     }
 
 
-def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, clinical: dict) -> dict:
+def build_triage_events(output_dir: Path, org: dict, patients: dict, clinical: dict) -> dict:
     emergency_dept_id = next(idx for idx, row in enumerate(DEPARTMENTS, start=1) if row[0] == "Emergency")
     triage_nurses = org["nurses_by_department"][emergency_dept_id]
     patient_ids = [row["AMKA"] for row in patients["patient"]]
@@ -892,7 +892,7 @@ def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, cl
             "HospitalizationID": hosp_id,
             "AssesmentDateTime": assesment_str,
             "PatientAMKA": patient_amka,
-            "NurseAMK": choose(triage_nurses),
+            "NurseAMKA": choose(triage_nurses),
         })
         triage_id += 1
 
@@ -908,26 +908,55 @@ def build_triage_and_evaluations(output_dir: Path, org: dict, patients: dict, cl
         arrival = datetime(2025, 1, 1, 8, 0, 0) + timedelta(days=random.randint(0, 720), minutes=random.randint(0, 1439))
         add_triage(choose(patient_ids), arrival, level, "Discarded", "")
 
-    eval_rows = []
-    for hosp in random.sample(clinical["hospitalization"], min(SYNTHETIC_EVALUATION_COUNT, len(clinical["hospitalization"]))):
-        exit_dt = clinical["hospitalization_meta"][hosp["HospitalizationID"]]["exit"]
-        eval_rows.append({
-            "HospitalizationID": hosp["HospitalizationID"],
-            "QoDoctorS": random.choices([2, 3, 4, 5], weights=[5, 15, 40, 40])[0],
+    write_csv(output_dir / "triage_event.csv", [
+        "TriageID", "Symptoms", "EmergencyLevel", "Outcome", "TriageDateTime", "HospitalizationID", "PatientAMKA", "AssesmentDateTime", "NurseAMKA",
+    ], triage_rows)
+    return {"triage_event": triage_rows}
+
+
+def build_evaluations(output_dir: Path, clinical: dict, prescriptions: dict) -> dict:
+    doctors_by_hospitalization: dict[int, set[str]] = defaultdict(set)
+    for row in prescriptions["prescription_event"]:
+        doctors_by_hospitalization[int(row["HospitalizationID"])].add(row["DoctorAMKA"])
+
+    candidate_ids = [
+        row["HospitalizationID"]
+        for row in clinical["hospitalization"]
+        if row["HospitalizationID"] in doctors_by_hospitalization
+    ]
+    if not candidate_ids:
+        raise RuntimeError("Cannot generate DoctorEvaluation rows without prescription events.")
+
+    selected_ids = random.sample(candidate_ids, min(SYNTHETIC_EVALUATION_COUNT, len(candidate_ids)))
+    hosp_eval_rows = []
+    doctor_eval_rows = []
+    for hospitalization_id in selected_ids:
+        hosp_eval_rows.append({
+            "HospitalizationID": hospitalization_id,
             "QoNurseS": random.choices([2, 3, 4, 5], weights=[4, 16, 38, 42])[0],
             "Cleanliness": random.choices([2, 3, 4, 5], weights=[6, 20, 36, 38])[0],
             "Food": random.choices([1, 2, 3, 4, 5], weights=[5, 12, 25, 35, 23])[0],
             "GeneralExperience": random.choices([2, 3, 4, 5], weights=[5, 15, 40, 40])[0],
-            "EvaluationDate": (exit_dt.date() + timedelta(days=random.randint(1, 20))).isoformat(),
         })
+        for doctor_amka in sorted(doctors_by_hospitalization[hospitalization_id]):
+            doctor_eval_rows.append({
+                "HospitalizationID": hospitalization_id,
+                "DoctorAMKA": doctor_amka,
+                "QoDoctorS": random.choices([2, 3, 4, 5], weights=[5, 15, 40, 40])[0],
+            })
 
-    write_csv(output_dir / "triage_event.csv", [
-        "TriageID", "Symptoms", "EmergencyLevel", "Outcome", "TriageDateTime", "HospitalizationID", "PatientAMKA", "AssesmentDateTime", "NurseAMK",
-    ], triage_rows)
-    write_csv(output_dir / "evaluation.csv", [
-        "HospitalizationID", "QoDoctorS", "QoNurseS", "Cleanliness", "Food", "GeneralExperience", "EvaluationDate",
-    ], eval_rows)
-    return {"triage_event": triage_rows, "evaluation": eval_rows}
+    write_csv(output_dir / "hosp_evaluation.csv", [
+        "HospitalizationID", "QoNurseS", "Cleanliness", "Food", "GeneralExperience",
+    ], hosp_eval_rows)
+    write_csv(output_dir / "doctor_evaluation.csv", [
+        "HospitalizationID", "DoctorAMKA", "QoDoctorS",
+    ], doctor_eval_rows)
+
+    legacy_path = output_dir / "evaluation.csv"
+    if legacy_path.exists():
+        legacy_path.unlink()
+
+    return {"hosp_evaluation": hosp_eval_rows, "doctor_evaluation": doctor_eval_rows}
 
 
 def build_labs(output_dir: Path, ref: dict, org: dict, clinical: dict) -> dict:
@@ -957,12 +986,12 @@ def build_labs(output_dir: Path, ref: dict, org: dict, clinical: dict) -> dict:
             "LabDateTime": lab_dt_text,
             "LabResult": choose(["Normal", "Mildly abnormal", "Follow up required", "Improved", "Critical value reviewed"]),
             "PendingResult": 0,
-            "DoctorAMK": choose(doctor_by_dept[info["department"]]),
+            "DoctorAMKA": choose(doctor_by_dept[info["department"]]),
         })
         lab_id += 1
 
     write_csv(output_dir / "hosp_lab_test.csv", [
-        "Id", "HospitalizationID", "LabCode", "LabDateTime", "LabResult", "PendingResult", "DoctorAMK",
+        "Id", "HospitalizationID", "LabCode", "LabDateTime", "LabResult", "PendingResult", "DoctorAMKA",
     ], lab_rows)
     return {"hosp_lab_test": lab_rows}
 
@@ -990,8 +1019,8 @@ def build_procedures(output_dir: Path, ref: dict, org: dict, clinical: dict) -> 
     other_codes = [row["ProcCode"] for row in ref["procedure_type"] if row["ProcType"] != "Surgical"]
     doctor_by_dept = doctor_pool_by_dept(org)
     young_doctors = [
-        row["AMK"] for row in org["doctor"]
-        if (AS_OF_DATE.year - org["staff_birthdates"][row["AMK"]].year) < 35
+        row["AMKA"] for row in org["doctor"]
+        if (AS_OF_DATE.year - org["staff_birthdates"][row["AMKA"]].year) < 35
     ]
 
     procedure_rows = []
@@ -1045,15 +1074,15 @@ def build_procedures(output_dir: Path, ref: dict, org: dict, clinical: dict) -> 
                 "ProcEventID": proc_event_id,
                 "ProcRoomID": room_id,
                 "DateTime": start.strftime("%Y-%m-%d %H:%M:%S"),
-                "MainDocAMK": main_doc,
+                "MainDocAMKA": main_doc,
                 "ProcedureCode": code,
                 "HospitalizationID": hosp["HospitalizationID"],
             })
             assistant_pool = [d for d in dept_doctors if d != main_doc]
             if assistant_pool:
-                operates_rows.append({"DoctorAMK": choose(assistant_pool), "ProcEventID": proc_event_id})
-            assists_rows.append({"NurseAMK": choose(org["nurses_by_department"][info["department"]]), "ProcEventID": proc_event_id})
-            helps_rows.append({"AdminStaffAMK": choose(org["admins_by_department"][info["department"]]), "ProcEventID": proc_event_id})
+                operates_rows.append({"DoctorAMKA": choose(assistant_pool), "ProcEventID": proc_event_id})
+            assists_rows.append({"NurseAMKA": choose(org["nurses_by_department"][info["department"]]), "ProcEventID": proc_event_id})
+            helps_rows.append({"AdminStaffAMKA": choose(org["admins_by_department"][info["department"]]), "ProcEventID": proc_event_id})
             proc_event_id += 1
             placed = True
             break
@@ -1062,11 +1091,11 @@ def build_procedures(output_dir: Path, ref: dict, org: dict, clinical: dict) -> 
 
     write_csv(output_dir / "procedure_room.csv", ["ProcRoomID", "ProcRoomType", "State"], proc_rooms)
     write_csv(output_dir / "procedure_event.csv", [
-        "ProcEventID", "ProcRoomID", "DateTime", "MainDocAMK", "ProcedureCode", "HospitalizationID",
+        "ProcEventID", "ProcRoomID", "DateTime", "MainDocAMKA", "ProcedureCode", "HospitalizationID",
     ], procedure_rows)
-    write_csv(output_dir / "operates_in.csv", ["DoctorAMK", "ProcEventID"], operates_rows)
-    write_csv(output_dir / "assists_in.csv", ["NurseAMK", "ProcEventID"], assists_rows)
-    write_csv(output_dir / "helps_in.csv", ["AdminStaffAMK", "ProcEventID"], helps_rows)
+    write_csv(output_dir / "operates_in.csv", ["DoctorAMKA", "ProcEventID"], operates_rows)
+    write_csv(output_dir / "assists_in.csv", ["NurseAMKA", "ProcEventID"], assists_rows)
+    write_csv(output_dir / "helps_in.csv", ["AdminStaffAMKA", "ProcEventID"], helps_rows)
     return {
         "procedure_room": proc_rooms,
         "procedure_event": procedure_rows,
@@ -1149,7 +1178,7 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
         prescription_rows.append({
             "PrescriptionID": presc_id,
             "HospitalizationID": hosp["HospitalizationID"],
-            "DoctorAMK": doctor_amk,
+            "DoctorAMKA": doctor_amk,
             "DrugID": drug_id,
             "Dosage": choose(["1 tablet", "500 mg", "1 vial", "40 mg", "1 capsule"]),
             "frequency": choose(["QD", "BID", "TID", "Q6H", "Q8H"]),
@@ -1195,7 +1224,7 @@ def build_allergies_and_prescriptions(output_dir: Path, drug_ref: dict, org: dic
 
     write_csv(output_dir / "allergic_to.csv", ["PatientAMKA", "SubstanceID"], allergy_rows)
     write_csv(output_dir / "prescription_event.csv", [
-        "PrescriptionID", "HospitalizationID", "DoctorAMK", "DrugID", "Dosage", "frequency", "PrescriptionDate", "StartDate", "EndDate",
+        "PrescriptionID", "HospitalizationID", "DoctorAMKA", "DrugID", "Dosage", "frequency", "PrescriptionDate", "StartDate", "EndDate",
     ], prescription_rows)
     return {"allergic_to": allergy_rows, "prescription_event": prescription_rows}
 
@@ -1211,7 +1240,7 @@ def build_images(output_dir: Path, org: dict, procedures: dict) -> dict:
             "ImageURL": f"https://example.org/hospital/images/{image_id:04d}.jpg",
             "ImageDescription": description,
             "ProcRoomId": proc_room,
-            "StaffAMK": staff,
+            "StaffAMKA": staff,
             "DepartmentID": dept,
             "RoomID": room,
             "RoomDepartmentID": room_dept,
@@ -1221,14 +1250,14 @@ def build_images(output_dir: Path, org: dict, procedures: dict) -> dict:
     for dept in org["department"]:
         add_image(f"{dept['Name']} department image", dept=dept["DepartmentID"])
     for staff in org["staff"][:SYNTHETIC_STAFF_IMAGE_COUNT]:
-        add_image(f"Staff portrait for {staff['FirstName']} {staff['LastName']}", staff=staff["AMK"])
+        add_image(f"Staff portrait for {staff['FirstName']} {staff['LastName']}", staff=staff["AMKA"])
     for room in org["room"][:SYNTHETIC_ROOM_IMAGE_COUNT]:
         add_image(f"Room {room['ID']} department {room['DepartmentID']} image", room=room["ID"], room_dept=room["DepartmentID"])
     for proc_room in procedures["procedure_room"]:
         add_image(f"Procedure room {proc_room['ProcRoomID']} image", proc_room=proc_room["ProcRoomID"])
 
     write_csv(output_dir / "image.csv", [
-        "ImageID", "ImageURL", "ImageDescription", "ProcRoomId", "StaffAMK", "DepartmentID", "RoomID", "RoomDepartmentID",
+        "ImageID", "ImageURL", "ImageDescription", "ProcRoomId", "StaffAMKA", "DepartmentID", "RoomID", "RoomDepartmentID",
     ], rows)
     return {"image": rows}
 
@@ -1274,10 +1303,11 @@ def main() -> None:
     patients = build_patients(output_dir, count=SYNTHETIC_PATIENT_COUNT)
     shifts = build_shifts(output_dir, org)
     clinical = build_hospitalizations(output_dir, ref, org, patients)
-    triage_eval = build_triage_and_evaluations(output_dir, org, patients, clinical)
+    triage = build_triage_events(output_dir, org, patients, clinical)
     labs = build_labs(output_dir, ref, org, clinical)
     procedures = build_procedures(output_dir, ref, org, clinical)
     prescriptions = build_allergies_and_prescriptions(output_dir, drug_ref, org, patients, clinical)
+    evaluations = build_evaluations(output_dir, clinical, prescriptions)
     images = build_images(output_dir, org, procedures)
 
     write_summary(output_dir, {
@@ -1287,10 +1317,11 @@ def main() -> None:
         "patients": patients,
         "shifts": shifts,
         "clinical": clinical,
-        "triage_eval": triage_eval,
+        "triage": triage,
         "labs": labs,
         "procedures": procedures,
         "prescriptions": prescriptions,
+        "evaluations": evaluations,
         "images": images,
     }, args.seed)
     print((output_dir / "dataset_summary.json").read_text(encoding="utf-8"))

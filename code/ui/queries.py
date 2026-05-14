@@ -41,45 +41,43 @@ def load_sql(filename: str) -> str:
 PARAMETERIZED_SQL = {
     "Q2.sql": """
 WITH shiftcnt AS (
-    SELECT DoctorAMK, COUNT(*) AS ShiftTotal
+    SELECT DoctorAMKA, COUNT(*) AS ShiftTotal
     FROM hasDoctor
     WHERE YEAR(ShiftDate) = YEAR(CURDATE())
-    GROUP BY DoctorAMK
+    GROUP BY DoctorAMKA
 ),
 surgcnt AS (
-    SELECT pe.MainDocAMK, COUNT(pe.ProcEventID) AS SurgTotal
+    SELECT pe.MainDocAMKA, COUNT(pe.ProcEventID) AS SurgTotal
     FROM ProcedureEvent pe
     JOIN ProcedureType pt ON pe.ProcedureCode = pt.ProcCode
     WHERE pt.ProcType = 'Surgical'
       AND YEAR(pe.`DateTime`) = YEAR(CURDATE())
-    GROUP BY pe.MainDocAMK
+    GROUP BY pe.MainDocAMKA
 )
 SELECT
-    d.AMK,
+    d.AMKA,
     d.FirstName,
     d.LastName,
     CASE WHEN COALESCE(sc.ShiftTotal, 0) > 0 THEN 'yes' ELSE 'no' END AS HadShift,
     COALESCE(su.SurgTotal, 0) AS TotalProcedures
 FROM DocInfo d
-LEFT JOIN shiftcnt sc ON d.AMK = sc.DoctorAMK
-LEFT JOIN surgcnt su ON d.AMK = su.MainDocAMK
+LEFT JOIN shiftcnt sc ON d.AMKA = sc.DoctorAMKA
+LEFT JOIN surgcnt su ON d.AMKA = su.MainDocAMKA
 WHERE d.Specialty = %s
 ORDER BY TotalProcedures DESC, d.LastName, d.FirstName
 """,
     "Q4.sql": """
 SELECT
-    d.AMK,
+    de.DoctorAMKA AS AMKA,
     s.FirstName,
     s.LastName,
-    AVG(e.QoDoctorS) AS AverageDoctorService,
-    AVG(e.GeneralExperience) AS AverageGeneralExperience
-FROM Doctor d
-JOIN ActiveStaff s USING (AMK)
-JOIN ProcedureEvent pe ON pe.MainDocAMK = d.AMK
-JOIN Hospitalization h USING (HospitalizationID)
-JOIN Evaluation e USING (HospitalizationID)
-WHERE d.AMK = %s
-GROUP BY d.AMK, s.FirstName, s.LastName
+    AVG(de.QoDoctorS) AS AverageDoctorService,
+    AVG(he.GeneralExperience) AS AverageGeneralExperience
+FROM DoctorEvaluation de
+JOIN HospEvaluation he ON de.HospitalizationID = he.HospitalizationID
+JOIN ActiveStaff s ON de.DoctorAMKA = s.AMKA
+WHERE de.DoctorAMKA = %s
+GROUP BY de.DoctorAMKA, s.FirstName, s.LastName
 """,
     "Q6.sql": """
 SELECT
@@ -98,9 +96,14 @@ SELECT
         * c.ChargePerDay
     ) AS TotalCost,
     (
-        SELECT (e.QoDoctorS + e.QoNurseS + e.Cleanliness + e.Food + e.GeneralExperience) / 5.0
-        FROM Evaluation e
-        WHERE e.HospitalizationID = h.HospitalizationID
+        SELECT (dq.AvgDoctorService + he.QoNurseS + he.Cleanliness + he.Food + he.GeneralExperience) / 5.0
+        FROM HospEvaluation he
+        JOIN (
+            SELECT HospitalizationID, AVG(QoDoctorS) AS AvgDoctorService
+            FROM DoctorEvaluation
+            GROUP BY HospitalizationID
+        ) dq USING (HospitalizationID)
+        WHERE he.HospitalizationID = h.HospitalizationID
     ) AS AvgRating
 FROM Hospitalization h
 JOIN Cost c ON h.KENCode = c.KENCode
@@ -109,27 +112,27 @@ ORDER BY h.AdmissionDateTime
 """,
     "Q8.sql": """
 WITH scheduled AS (
-    SELECT DoctorAMK AS AMK
+    SELECT DoctorAMKA AS AMKA
     FROM hasDoctor
     WHERE ShiftDate = %s
       AND DepartmentID = (SELECT DepartmentID FROM Department WHERE Name = %s)
     UNION
-    SELECT NurseAMK AS AMK
+    SELECT NurseAMKA AS AMKA
     FROM hasNurse
     WHERE ShiftDate = %s
       AND DepartmentID = (SELECT DepartmentID FROM Department WHERE Name = %s)
     UNION
-    SELECT AdminAMK AS AMK
+    SELECT AdminAMKA AS AMKA
     FROM hasAdmin
     WHERE ShiftDate = %s
       AND DepartmentID = (SELECT DepartmentID FROM Department WHERE Name = %s)
 )
-SELECT s.AMK, s.FirstName, s.LastName, s.Age, s.Type
+SELECT s.AMKA, s.FirstName, s.LastName, s.Age, s.Type
 FROM ActiveStaff s
 WHERE NOT EXISTS (
     SELECT 1
     FROM scheduled sch
-    WHERE sch.AMK = s.AMK
+    WHERE sch.AMKA = s.AMKA
 )
 ORDER BY s.Type, s.LastName, s.FirstName
 """,
@@ -140,9 +143,9 @@ SELECT
     dep.Name AS Department,
     'Doctor' AS StaffCategory,
     d.Specialty AS SubClass,
-    COUNT(hd.DoctorAMK) AS StaffCount
+    COUNT(hd.DoctorAMKA) AS StaffCount
 FROM hasDoctor hd
-JOIN Doctor d ON hd.DoctorAMK = d.AMK
+JOIN Doctor d ON hd.DoctorAMKA = d.AMKA
 JOIN Department dep ON hd.DepartmentID = dep.DepartmentID
 WHERE hd.ShiftDate BETWEEN %s AND %s
 GROUP BY hd.ShiftDate, hd.ShiftTypeName, dep.Name, d.Specialty
@@ -155,9 +158,9 @@ SELECT
     dep.Name,
     'Nurse',
     n.Rank,
-    COUNT(hn.NurseAMK)
+    COUNT(hn.NurseAMKA)
 FROM hasNurse hn
-JOIN Nurse n ON hn.NurseAMK = n.AMK
+JOIN Nurse n ON hn.NurseAMKA = n.AMKA
 JOIN Department dep ON hn.DepartmentID = dep.DepartmentID
 WHERE hn.ShiftDate BETWEEN %s AND %s
 GROUP BY hn.ShiftDate, hn.ShiftTypeName, dep.Name, n.Rank
@@ -170,9 +173,9 @@ SELECT
     dep.Name,
     'Admin',
     a.Role,
-    COUNT(ha.AdminAMK)
+    COUNT(ha.AdminAMKA)
 FROM hasAdmin ha
-JOIN AdminStaff a ON ha.AdminAMK = a.AMK
+JOIN AdminStaff a ON ha.AdminAMKA = a.AMKA
 JOIN Department dep ON ha.DepartmentID = dep.DepartmentID
 WHERE ha.ShiftDate BETWEEN %s AND %s
 GROUP BY ha.ShiftDate, ha.ShiftTypeName, dep.Name, a.Role

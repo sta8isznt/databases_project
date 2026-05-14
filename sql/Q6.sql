@@ -12,9 +12,14 @@ select
      greatest(ifnull(h.ActualDays, datediff(curdate(), h.AdmissionDateTime))- c.PredictedAvgTime, 0)
      * c.ChargePerDay) as TotalCost,
 
-    (select (e.QoDoctorS + e.QoNurseS + e.Cleanliness + e.Food + e.GeneralExperience) / 5.0
-     from Evaluation e
-     where e.HospitalizationID = h.HospitalizationID) as AvgRating
+    (select (dq.AvgDoctorService + he.QoNurseS + he.Cleanliness + he.Food + he.GeneralExperience) / 5.0
+     from HospEvaluation he
+     join (
+         select HospitalizationID, avg(QoDoctorS) as AvgDoctorService
+         from DoctorEvaluation
+         group by HospitalizationID
+     ) dq using (HospitalizationID)
+     where he.HospitalizationID = h.HospitalizationID) as AvgRating
 
 from Hospitalization h
 join Cost c on h.KENcode = c.KENcode

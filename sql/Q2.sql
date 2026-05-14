@@ -1,5 +1,5 @@
 -- specialty = 'Cardiology'
--- AMK, FistName, LastName, yes or no if had shift the cur year.# procedures as surgeon 
+-- AMKA, FistName, LastName, yes or no if had shift the cur year.# procedures as surgeon 
 
 with shiftcnt as (
     select doctoramka, count(*) as shifttotal

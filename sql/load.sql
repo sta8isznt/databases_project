@@ -271,13 +271,13 @@ IGNORE 1 LINES
 (TriageID, Symptoms, EmergencyLevel, Outcome, TriageDateTime, @HospitalizationID, PatientAMKA, @AssessmentDateTime, NurseAMKA)
 SET HospitalizationID = NULLIF(@HospitalizationID, ''), AssessmentDateTime = NULLIF(@AssessmentDateTime, '');
 
-LOAD DATA LOCAL INFILE 'data/evaluation.csv'
-INTO TABLE Evaluation
+LOAD DATA LOCAL INFILE 'data/hosp_evaluation.csv'
+INTO TABLE HospEvaluation
 CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(HospitalizationID, QoDoctorS, QoNurseS, Cleanliness, Food, GeneralExperience, @EvaluationDate);
+(HospitalizationID, QoNurseS, Cleanliness, Food, GeneralExperience);
 
 LOAD DATA LOCAL INFILE 'data/hosp_lab_test.csv'
 INTO TABLE HospLabTest
@@ -351,6 +351,32 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (PrescriptionID, HospitalizationID, DoctorAMKA, DrugID, Dosage, frequency, PrescriptionDate, StartDate, @EndDate)
 SET EndDate = NULLIF(@EndDate, '');
+
+DROP TEMPORARY TABLE IF EXISTS DoctorEvaluationLoad;
+CREATE TEMPORARY TABLE DoctorEvaluationLoad (
+    HospitalizationID INT NOT NULL,
+    DoctorAMKA CHAR(11) NOT NULL,
+    QoDoctorS TINYINT NOT NULL,
+    PRIMARY KEY (HospitalizationID, DoctorAMKA)
+);
+
+LOAD DATA LOCAL INFILE 'data/doctor_evaluation.csv'
+INTO TABLE DoctorEvaluationLoad
+CHARACTER SET utf8mb4
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(HospitalizationID, DoctorAMKA, QoDoctorS);
+
+INSERT INTO DoctorEvaluation (HospitalizationID, DoctorAMKA, QoDoctorS)
+SELECT del.HospitalizationID, del.DoctorAMKA, del.QoDoctorS
+FROM DoctorEvaluationLoad del
+WHERE EXISTS (
+    SELECT 1
+    FROM PrescriptionEvent pe
+    WHERE pe.HospitalizationID = del.HospitalizationID
+      AND pe.DoctorAMKA = del.DoctorAMKA
+);
 
 -- ===============================
 -- Images

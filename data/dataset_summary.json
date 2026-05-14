@@ -32,15 +32,16 @@
     "admission_diagnosis": 3600,
     "exit_diagnosis": 3600,
     "triage_event": 4200,
-    "evaluation": 2800,
     "hosp_lab_test": 2600,
     "procedure_room": 20,
     "procedure_event": 1200,
     "operates_in": 1200,
     "assists_in": 1200,
     "helps_in": 1200,
-    "allergic_to": 437,
+    "allergic_to": 439,
     "prescription_event": 3000,
+    "hosp_evaluation": 1841,
+    "doctor_evaluation": 2923,
     "image": 215
   },
   "requirements_check": {

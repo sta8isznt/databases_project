@@ -1,4 +1,4 @@
-DepartmentID,Name,Description,Floor,Building,DirectorAMK
+DepartmentID,Name,Description,Floor,Building,DirectorAMKA
 1,Cardiology,Cardiology department of Ygeiopolis General Hospital,1,Building A,10000000000
 2,Surgery,Surgery department of Ygeiopolis General Hospital,2,Building A,10000000020
 3,ICU,ICU department of Ygeiopolis General Hospital,3,Building A,10000000040

@@ -1,4 +1,4 @@
-Id,HospitalizationID,LabCode,LabDateTime,LabResult,PendingResult,DoctorAMK
+Id,HospitalizationID,LabCode,LabDateTime,LabResult,PendingResult,DoctorAMKA
 1,2316,B313859,2026-01-24 10:00:00,Follow up required,0,10000000045
 2,1205,K514815,2026-12-17 14:00:00,Follow up required,0,10000000037
 3,2019,K516911,2026-03-11 02:00:00,Critical value reviewed,0,10000000118

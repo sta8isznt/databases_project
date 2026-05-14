@@ -12,7 +12,7 @@ use HospitalDB;
 
 -- ------STAFF PART ----------------------------------- 
 create table Staff(
-    AMK char(11) primary key check(AMK regexp '^[0-9]{11}$'),
+    AMKA char(11) primary key check(AMKA regexp '^[0-9]{11}$'),
     FirstName varchar(20) not null,
     LastName varchar(20) not null,
     BirthDate date not null,
@@ -25,22 +25,22 @@ create table Staff(
 );
 
 create table StaffPhone(
-    StaffAMK char(11),
+    StaffAMKA char(11),
     Phone char(10) not null check(Phone regexp '^[0-9]{10}$'),
 
-    primary key(StaffAMK, Phone),
-    foreign key (StaffAMK) references Staff(AMK) on delete cascade on update cascade
+    primary key(StaffAMKA, Phone),
+    foreign key (StaffAMKA) references Staff(AMKA) on delete cascade on update cascade
 );
 
 create table Doctor(
-    AMK char(11) primary key,
+    AMKA char(11) primary key,
     License varchar(20) not null UNIQUE,
     Specialty varchar(20) not null,
     `Rank` varchar(20) not null check (`Rank` in ('Resident', 'Director', 'Registrar', 'Consultant')),
-    SupervisorAMK char(11),     -- SupervisorAMK can be null (e.g. for Directors)
+    SupervisorAMKA char(11),     -- SupervisorAMKA can be null (e.g. for Directors)
 
-    foreign key (AMK) references Staff(AMK) on delete restrict on update cascade,
-    foreign key(SupervisorAMK) references Doctor(AMK) on delete restrict on update cascade
+    foreign key (AMKA) references Staff(AMKA) on delete restrict on update cascade,
+    foreign key(SupervisorAMKA) references Doctor(AMKA) on delete restrict on update cascade
 );
 
 create table Department(
@@ -49,39 +49,39 @@ create table Department(
     `Description` text not null,
     Floor tinyint not null check(Floor >= 0),
     Building varchar(50) not null,
-    DirectorAMK char(11) not null UNIQUE,
+    DirectorAMKA char(11) not null UNIQUE,
 
-    foreign key (DirectorAMK) references Doctor(AMK) on delete restrict on update cascade
+    foreign key (DirectorAMKA) references Doctor(AMKA) on delete restrict on update cascade
 );
 
 create table Nurse(
-    AMK char(11) primary key,
+    AMKA char(11) primary key,
     `Rank` varchar(20) not null check(`Rank` in ("AssistantNurse", "Nurse", "HeadNurse")),
     DepartmentID int not null,
 
-    foreign key (AMK) references Staff(AMK) on delete restrict on update cascade,
+    foreign key (AMKA) references Staff(AMKA) on delete restrict on update cascade,
     foreign key (DepartmentID) references Department(DepartmentID),
-    unique (AMK, DepartmentID)
+    unique (AMKA, DepartmentID)
 );
 
 create table AdminStaff(
-    AMK char(11) primary key,
+    AMKA char(11) primary key,
     `Role` varchar(20) not null,
     Office varchar(20) not null,
     DepartmentID int not null,
 
-    foreign key(AMK) references Staff(AMK) on delete restrict on update cascade,
+    foreign key(AMKA) references Staff(AMKA) on delete restrict on update cascade,
     foreign key (DepartmentID) references Department(DepartmentID),
-    unique (AMK, DepartmentID)
+    unique (AMKA, DepartmentID)
 );
 
 -- ----DEPARTMENT PART -----------------------------------
 create table DoctorDepartment(
-    DoctorAMK char(11),
+    DoctorAMKA char(11),
     DepartmentID int,
 
-    primary key(DoctorAMK, DepartmentID),
-    foreign key (DoctorAMK) references Doctor(AMK) on delete cascade on update cascade,
+    primary key(DoctorAMKA, DepartmentID),
+    foreign key (DoctorAMKA) references Doctor(AMKA) on delete cascade on update cascade,
     foreign key (DepartmentID) references Department(DepartmentID) on delete cascade
 );
 
@@ -185,7 +185,7 @@ create table TriageEvent(
     HospitalizationID int,
     AssessmentDateTime datetime,
     PatientAMKA char(11) not null,
-    NurseAMK char(11) not null,
+    NurseAMKA char(11) not null,
 
     unique(PatientAMKA, TriageDateTime),
     constraint chk_triage_outcome check (
@@ -195,19 +195,28 @@ create table TriageEvent(
     ),
     foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict,
     foreign key (PatientAMKA) REFERENCES Patient(AMKA) on delete restrict on update cascade,
-    foreign key (NurseAMK) REFERENCES Nurse(AMK) on delete restrict on update cascade
+    foreign key (NurseAMKA) REFERENCES Nurse(AMKA) on delete restrict on update cascade
 );
 
-create table Evaluation(
-    HospitalizationID int primary key,
-    QoDoctorS tinyint check(QoDoctorS between 1 and 5),
-    QoNurseS tinyint check(QoNurseS between 1 and 5),
-    Cleanliness tinyint  check(Cleanliness between 1 and 5),
-    Food tinyint check(Food between 1 and 5),
-    GeneralExperience tinyint check(GeneralExperience between 1 and 5),
-
-    foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict
+CREATE TABLE HospEvaluation (
+    HospitalizationID INT PRIMARY KEY,
+    QoNurseS TINYINT CHECK (QoNurseS BETWEEN 1 AND 5),
+    Cleanliness TINYINT CHECK (Cleanliness BETWEEN 1 AND 5),
+    Food TINYINT CHECK (Food BETWEEN 1 AND 5),
+    GeneralExperience TINYINT CHECK (GeneralExperience BETWEEN 1 AND 5),
+    FOREIGN KEY (HospitalizationID) REFERENCES Hospitalization(HospitalizationID) ON DELETE CASCADE
 );
+
+CREATE TABLE DoctorEvaluation (
+    HospitalizationID INT,
+    DoctorAMKA CHAR(11),
+    QoDoctorS TINYINT CHECK (QoDoctorS BETWEEN 1 AND 5),
+    PRIMARY KEY (HospitalizationID, DoctorAMKA),
+    FOREIGN KEY (HospitalizationID) REFERENCES Hospitalization(HospitalizationID) ON DELETE CASCADE,
+    FOREIGN KEY (DoctorAMKA) REFERENCES Doctor(AMKA) ON DELETE CASCADE
+);
+
+
 
 create table Diagnosis(
     ICDCode varchar(10) primary key,
@@ -247,11 +256,11 @@ create table HospLabTest(
     LabDateTime datetime not null,
     LabResult text,
     PendingResult boolean not null default 1,
-    DoctorAMK char(11) not null,
+    DoctorAMKA char(11) not null,
 
     foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict,
     foreign key (LabCode) references LabTest(LabCode) on delete restrict on update cascade,
-    foreign key (DoctorAMK) references Doctor(AMK) on delete restrict on update cascade,
+    foreign key (DoctorAMKA) references Doctor(AMKA) on delete restrict on update cascade,
     unique(HospitalizationID, LabCode, LabDateTime),
     constraint chk_pending_or_result check ((PendingResult = 1) OR (LabResult is not null)),
     constraint chk_no_result_when_pending check (PendingResult = 0 OR LabResult is null)
@@ -276,41 +285,41 @@ create table ProcedureEvent (
     ProcEventID int auto_increment primary key,
     ProcRoomID smallint not null, 
     `DateTime` datetime not null,
-    MainDocAMK char(11) not null,
+    MainDocAMKA char(11) not null,
     ProcedureCode varchar(20) not null,
     HospitalizationID int not null,
 
     UNIQUE (ProcRoomID, DateTime), -- A procedure room cannot have more than one procedure event at the same date and time
     Foreign Key (ProcRoomID) REFERENCES ProcedureRoom(ProcRoomID) on delete restrict, 
     Foreign Key (ProcedureCode) REFERENCES ProcedureType(ProcCode) on delete restrict on update cascade,
-    Foreign Key (MainDocAMK) REFERENCES Doctor(AMK) on delete restrict on update cascade,
+    Foreign Key (MainDocAMKA) REFERENCES Doctor(AMKA) on delete restrict on update cascade,
     foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict
 );
 
 create table operates_in (
-    DoctorAMK char(11),
+    DoctorAMKA char(11),
     ProcEventID int,
 
-    primary key (DoctorAMK, ProcEventID),
-    foreign key (DoctorAMK) references Doctor(AMK) on delete cascade on update cascade,
+    primary key (DoctorAMKA, ProcEventID),
+    foreign key (DoctorAMKA) references Doctor(AMKA) on delete cascade on update cascade,
     foreign key (ProcEventID) references ProcedureEvent(ProcEventID) on delete cascade
 );
 
 create table assists_in (
-    NurseAMK char(11),
+    NurseAMKA char(11),
     ProcEventID int,
 
-    primary key (NurseAMK, ProcEventID),
-    foreign key (NurseAMK) references Nurse(AMK) on delete cascade on update cascade,
+    primary key (NurseAMKA, ProcEventID),
+    foreign key (NurseAMKA) references Nurse(AMKA) on delete cascade on update cascade,
     foreign key (ProcEventID) references ProcedureEvent(ProcEventID) on delete cascade
 );
 
 create table helps_in (
-    AdminStaffAMK char(11),
+    AdminStaffAMKA char(11),
     ProcEventID int,
 
-    primary key (AdminStaffAMK, ProcEventID),
-    foreign key (AdminStaffAMK) references AdminStaff(AMK) on delete cascade on update cascade,
+    primary key (AdminStaffAMKA, ProcEventID),
+    foreign key (AdminStaffAMKA) references AdminStaff(AMKA) on delete cascade on update cascade,
     foreign key (ProcEventID) references ProcedureEvent(ProcEventID) on delete cascade
 );
                    
@@ -341,40 +350,40 @@ create table hasDoctor (
     DepartmentID int,
     ShiftTypeName varchar(20),
     ShiftDate date,
-    DoctorAMK char(11),
+    DoctorAMKA char(11),
 
-    primary key (DepartmentID, ShiftTypeName, ShiftDate, DoctorAMK),
-    unique (DoctorAMK, ShiftDate, ShiftTypeName), -- A doctor cannot have more than one shift of the same type on the same day
+    primary key (DepartmentID, ShiftTypeName, ShiftDate, DoctorAMKA),
+    unique (DoctorAMKA, ShiftDate, ShiftTypeName), -- A doctor cannot have more than one shift of the same type on the same day
     foreign key (DepartmentID, ShiftTypeName, ShiftDate) references Shift(DepartmentID, ShiftTypeName, `Date`) on delete cascade,
-    foreign key (DoctorAMK) references Doctor(AMK) on delete cascade on update cascade,
+    foreign key (DoctorAMKA) references Doctor(AMKA) on delete cascade on update cascade,
     -- A doctor can only work in a shift for a department they are associated with through DoctorDepartment
-    foreign key (DoctorAMK, DepartmentID) references DoctorDepartment(DoctorAMK, DepartmentID) on delete restrict on update cascade
+    foreign key (DoctorAMKA, DepartmentID) references DoctorDepartment(DoctorAMKA, DepartmentID) on delete restrict on update cascade
 );
 
 create table hasNurse (
     DepartmentID int,
     ShiftTypeName varchar(20),
     ShiftDate date,
-    NurseAMK char(11),
+    NurseAMKA char(11),
 
-    primary key (DepartmentID, ShiftTypeName, ShiftDate, NurseAMK),
-    unique (NurseAMK, ShiftDate, ShiftTypeName), -- A nurse cannot have more than one shift of the same type on the same day
+    primary key (DepartmentID, ShiftTypeName, ShiftDate, NurseAMKA),
+    unique (NurseAMKA, ShiftDate, ShiftTypeName), -- A nurse cannot have more than one shift of the same type on the same day
     foreign key (DepartmentID, ShiftTypeName, ShiftDate) references Shift(DepartmentID, ShiftTypeName, `Date`) on delete cascade,
     -- Nurses can only work in a shift for the department they belong to
-    foreign key (NurseAMK, DepartmentID) references Nurse(AMK, DepartmentID) on delete restrict on update cascade
+    foreign key (NurseAMKA, DepartmentID) references Nurse(AMKA, DepartmentID) on delete restrict on update cascade
 );
 
 create table hasAdmin (
     DepartmentID int,
     ShiftTypeName varchar(20),
     ShiftDate date,
-    AdminAMK char(11),
+    AdminAMKA char(11),
 
-    primary key (DepartmentID, ShiftTypeName, ShiftDate, AdminAMK),
-    unique (AdminAMK, ShiftDate, ShiftTypeName), -- An admin staff cannot have more than one shift of the same type on the same day
+    primary key (DepartmentID, ShiftTypeName, ShiftDate, AdminAMKA),
+    unique (AdminAMKA, ShiftDate, ShiftTypeName), -- An admin staff cannot have more than one shift of the same type on the same day
     foreign key (DepartmentID, ShiftTypeName, ShiftDate) references Shift(DepartmentID, ShiftTypeName, `Date`) on delete cascade,
     -- Admin Staff can only work in a shift for the department they belong to   
-    foreign key (AdminAMK, DepartmentID) references AdminStaff(AMK, DepartmentID) on delete cascade on update cascade
+    foreign key (AdminAMKA, DepartmentID) references AdminStaff(AMKA, DepartmentID) on delete cascade on update cascade
 );
 
 create table DrugType(
@@ -421,7 +430,7 @@ create table allergic_to(
 create table PrescriptionEvent (
     PrescriptionID int auto_increment primary key,
     HospitalizationID int not null,
-    DoctorAMK char(11) not null,
+    DoctorAMKA char(11) not null,
     DrugID int not null,
     Dosage varchar(30) not null,
     frequency varchar(30) not null,
@@ -429,9 +438,9 @@ create table PrescriptionEvent (
     StartDate date not null,
     EndDate date,
 
-    unique(DoctorAMK, HospitalizationID, DrugID, PrescriptionDate), -- A doctor cannot prescribe the same drug to the same patient on the same day
+    unique(DoctorAMKA, HospitalizationID, DrugID, PrescriptionDate), -- A doctor cannot prescribe the same drug to the same patient on the same day
     foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict,
-    foreign key (DoctorAMK) references Doctor(AMK) on delete restrict on update cascade,
+    foreign key (DoctorAMKA) references Doctor(AMKA) on delete restrict on update cascade,
     foreign key (DrugID) references DrugType(DrugID) on delete restrict,
     constraint chk_end_date check (EndDate is null or EndDate >= StartDate)
 );
@@ -442,13 +451,13 @@ create table `Image`(
     ImageDescription text not null,
 
     ProcRoomId smallint, 
-    StaffAMK char(11),
+    StaffAMKA char(11),
     DepartmentID int,
     RoomID smallint,
     RoomDepartmentID int,
 
     foreign key(ProcRoomId) references ProcedureRoom(ProcRoomID) on delete restrict,
-    foreign key(StaffAMK) references Staff(AMK) on delete restrict on update cascade,
+    foreign key(StaffAMKA) references Staff(AMKA) on delete restrict on update cascade,
     foreign key(DepartmentID) references Department(DepartmentID) on delete restrict,
     Foreign Key (RoomID, RoomDepartmentID) REFERENCES Room(ID, DepartmentID) on delete restrict,
 
@@ -472,32 +481,32 @@ BEGIN
     DECLARE cnt int unsigned default 0;
 
     --  Check Supervisor Rules
-    IF NEW.Rank = 'Resident' AND NEW.SupervisorAMK IS NULL THEN 
+    IF NEW.Rank = 'Resident' AND NEW.SupervisorAMKA IS NULL THEN 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Resident doctors must have a supervisor'; 
     END IF; 
     
-    IF NEW.Rank = 'Director' AND NEW.SupervisorAMK IS NOT NULL THEN 
+    IF NEW.Rank = 'Director' AND NEW.SupervisorAMKA IS NOT NULL THEN 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Director doctors cannot have a supervisor'; 
     END IF;
 
     -- Check for Supervision Cycles
-    IF NEW.SupervisorAMK = NEW.AMK THEN
+    IF NEW.SupervisorAMKA = NEW.AMKA THEN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'A doctor cannot supervise themselves';
     END IF;  
 
-    if new.SupervisorAMK is not null then 
-        with recursive superchain(SupervisorAMK) as(
-                select SupervisorAMK 
+    if new.SupervisorAMKA is not null then 
+        with recursive superchain(SupervisorAMKA) as(
+                select SupervisorAMKA 
                 from Doctor
-                where AMK = new.SupervisorAMK
+                where AMKA = new.SupervisorAMKA
             union all
-                select doc.SupervisorAMK
+                select doc.SupervisorAMKA
                 from Doctor doc
-                join superchain sc on doc.AMK = sc.SupervisorAMK
-                where doc.SupervisorAMK is not null
+                join superchain sc on doc.AMKA = sc.SupervisorAMKA
+                where doc.SupervisorAMKA is not null
         ) 
-        select count(*) into cnt from superchain where SupervisorAMK = new.AMK;
+        select count(*) into cnt from superchain where SupervisorAMKA = new.AMKA;
     end if;
     if cnt > 0 then
         signal sqlstate '45000' 
@@ -512,32 +521,32 @@ BEGIN
     DECLARE cnt int unsigned default 0;
 
     --  Check Supervisor Rules
-    IF NEW.Rank = 'Resident' AND NEW.SupervisorAMK IS NULL THEN 
+    IF NEW.Rank = 'Resident' AND NEW.SupervisorAMKA IS NULL THEN 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Resident doctors must have a supervisor'; 
     END IF; 
     
-    IF NEW.Rank = 'Director' AND NEW.SupervisorAMK IS NOT NULL THEN 
+    IF NEW.Rank = 'Director' AND NEW.SupervisorAMKA IS NOT NULL THEN 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Director doctors cannot have a supervisor'; 
     END IF;
 
     -- Check for Supervision Cycles
-    IF NEW.SupervisorAMK = NEW.AMK THEN
+    IF NEW.SupervisorAMKA = NEW.AMKA THEN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'A doctor cannot supervise themselves';
     END IF;  
 
-    if new.SupervisorAMK is not null then 
-        with recursive superchain(SupervisorAMK) as(
-                select SupervisorAMK 
+    if new.SupervisorAMKA is not null then 
+        with recursive superchain(SupervisorAMKA) as(
+                select SupervisorAMKA 
                 from Doctor
-                where AMK = new.SupervisorAMK
+                where AMKA = new.SupervisorAMKA
             union all
-                select doc.SupervisorAMK
+                select doc.SupervisorAMKA
                 from Doctor doc
-                join superchain sc on doc.AMK = sc.SupervisorAMK
-                where doc.SupervisorAMK is not null
+                join superchain sc on doc.AMKA = sc.SupervisorAMKA
+                where doc.SupervisorAMKA is not null
         ) 
-        select count(*) into cnt from superchain where SupervisorAMK = new.AMK;
+        select count(*) into cnt from superchain where SupervisorAMKA= new.AMKA;
     end if;
     if cnt > 0 then
         signal sqlstate '45000' 
@@ -648,7 +657,7 @@ BEGIN
     DECLARE v_IsActive BOOLEAN;
 
     -- Check if the Main Doctor is active
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.MainDocAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.MainDocAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -667,7 +676,7 @@ BEGIN
     SELECT COUNT(*) INTO OverlapCount
     FROM ProcedureEvent pe
     JOIN ProcedureType pt ON pe.ProcedureCode = pt.ProcCode
-    WHERE (pe.ProcRoomID = NEW.ProcRoomID OR pe.MainDocAMK = NEW.MainDocAMK)        -- Check same room or same main doctor
+    WHERE (pe.ProcRoomID = NEW.ProcRoomID OR pe.MainDocAMKA = NEW.MainDocAMKA)        -- Check same room or same main doctor
       AND (NEW.DateTime < DATE_ADD(pe.DateTime, INTERVAL pt.ProcDuration MINUTE))   -- NewStart < OldEnd
       AND (pe.DateTime < NewEndTime);                                               -- OldStart < NewEnd
 
@@ -688,7 +697,7 @@ BEGIN
     DECLARE v_IsActive BOOLEAN;
 
     -- Check if the Main Doctor is active
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.MainDocAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.MainDocAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -707,7 +716,7 @@ BEGIN
     SELECT COUNT(*) INTO OverlapCount
     FROM ProcedureEvent pe
     JOIN ProcedureType pt ON pe.ProcedureCode = pt.ProcCode
-    WHERE (pe.ProcRoomID = NEW.ProcRoomID OR pe.MainDocAMK = NEW.MainDocAMK)        -- Check same room or same main doctor
+    WHERE (pe.ProcRoomID = NEW.ProcRoomID OR pe.MainDocAMKA = NEW.MainDocAMKA)        -- Check same room or same main doctor
       AND (NEW.DateTime < DATE_ADD(pe.DateTime, INTERVAL pt.ProcDuration MINUTE))   -- NewStart < OldEnd
       AND (pe.DateTime < NewEndTime)                                                -- OldStart < NewEnd
       AND pe.ProcEventID != NEW.ProcEventID;                                        -- Exclude the current record being updated
@@ -737,7 +746,7 @@ BEGIN
     -- ==========================================
     -- RULE 0: Is the Staff Member Active?
     -- ==========================================
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.DoctorAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.DoctorAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -746,7 +755,7 @@ BEGIN
     -- Check maximum shifts per month (15 shifts)
     select count(*) into ShiftCount
     from hasDoctor
-    where DoctorAMK = new.DoctorAMK
+    where DoctorAMKA = new.DoctorAMKA
     and month(ShiftDate) = month(new.ShiftDate)
     and year(ShiftDate) = year(new.ShiftDate);
 
@@ -764,7 +773,7 @@ BEGIN
     select count(*) into overlapcnt
     from hasDoctor hd
     join ShiftType st on hd.ShiftTypeName = st.`Name`
-    where hd.DoctorAMK = new.DoctorAMK
+    where hd.DoctorAMKA = new.DoctorAMKA
     and abs(timestampdiff(hour, NewStartDateTime, timestamp(hd.ShiftDate, st.StartTime))) < 16;
     if overlapcnt > 0 then
         signal sqlstate '45000'
@@ -775,7 +784,7 @@ BEGIN
     if new.ShiftTypeName = 'Night' then
         select count(*) into cnt
         from HasDoctor 
-        where DoctorAMK = new.DoctorAMK
+        where DoctorAMKA = new.DoctorAMKA
         and ShiftTypeName = 'Night'
         and ShiftDate in (
             date_sub(new.ShiftDate, interval 1 day),
@@ -789,13 +798,13 @@ BEGIN
     end if;
 
     -- Find the rank of the doctor trying to be inserted
-    SELECT `Rank` INTO v_DoctorRank FROM Doctor WHERE AMK = NEW.DoctorAMK;
+    SELECT `Rank` INTO v_DoctorRank FROM Doctor WHERE AMKA = NEW.DoctorAMKA;
 
     -- If they are a Resident, check the shift for a senior
     IF v_DoctorRank = 'Resident' THEN
         SELECT COUNT(*) INTO v_SeniorCount
         FROM hasDoctor hd
-        JOIN Doctor d ON hd.DoctorAMK = d.AMK
+        JOIN Doctor d ON hd.DoctorAMKA = d.AMKA
         WHERE hd.DepartmentID = NEW.DepartmentID
           AND hd.ShiftTypeName = NEW.ShiftTypeName
           AND hd.ShiftDate = NEW.ShiftDate
@@ -824,7 +833,7 @@ BEGIN
     -- ==========================================
     -- RULE 0: Is the Staff Member Active?
     -- ==========================================
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.DoctorAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.DoctorAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -833,7 +842,7 @@ BEGIN
     -- Check maximum shifts per month (15 shifts)
     select count(*) into ShiftCount
     from hasDoctor
-    where DoctorAMK = new.DoctorAMK
+    where DoctorAMKA = new.DoctorAMKA
     and month(ShiftDate) = month(new.ShiftDate)
     and year(ShiftDate) = year(new.ShiftDate);
 
@@ -851,7 +860,7 @@ BEGIN
     select count(*) into  overlapcnt
     from hasDoctor hd
     join ShiftType st on hd.ShiftTypeName = st.`Name`
-    where hd.DoctorAMK = new.DoctorAMK
+    where hd.DoctorAMKA = new.DoctorAMKA
     and abs(timestampdiff(hour, NewStartDateTime, timestamp(hd.ShiftDate, st.StartTime))) < 16;
     if overlapcnt > 0 then
         signal sqlstate '45000'
@@ -862,7 +871,7 @@ BEGIN
     if new.ShiftTypeName = 'Night' then
         select count(*) into cnt
         from HasDoctor 
-        where DoctorAMK = new.DoctorAMK
+        where DoctorAMKA = new.DoctorAMKA
         and ShiftTypeName = 'Night'
         and ShiftDate in (
             date_sub(new.ShiftDate, interval 1 day),
@@ -876,12 +885,12 @@ BEGIN
     end if;
 
     -- Check for a senior doctor in the shift if the doctor being updated is a Resident
-    SELECT `Rank` INTO v_DoctorRank FROM Doctor WHERE AMK = NEW.DoctorAMK;
+    SELECT `Rank` INTO v_DoctorRank FROM Doctor WHERE AMKA = NEW.DoctorAMKA;
 
     IF v_DoctorRank = 'Resident' THEN
         SELECT COUNT(*) INTO v_SeniorCount
         FROM hasDoctor hd
-        JOIN Doctor d ON hd.DoctorAMK = d.AMK
+        JOIN Doctor d ON hd.DoctorAMKA = d.AMKA
         WHERE hd.DepartmentID = NEW.DepartmentID
           AND hd.ShiftTypeName = NEW.ShiftTypeName
           AND hd.ShiftDate = NEW.ShiftDate
@@ -904,13 +913,13 @@ BEGIN
 
     -- 1. Ήταν "Senior" αυτός που πάμε να διαγράψουμε;
     SELECT IF(`Rank` IN ('Director', 'Registrar', 'Consultant'), 1, 0) INTO v_IsSenior
-    FROM Doctor WHERE AMK = OLD.DoctorAMK;
+    FROM Doctor WHERE AMKA = OLD.DoctorAMKA;
 
     IF v_IsSenior = 1 THEN
         -- 2. Υπάρχουν Ειδικευόμενοι σε αυτή τη βάρδια;
         SELECT COUNT(*) INTO v_ResidentCount
         FROM hasDoctor hd 
-        JOIN Doctor d ON hd.DoctorAMK = d.AMK
+        JOIN Doctor d ON hd.DoctorAMKA = d.AMKA
         WHERE hd.DepartmentID = OLD.DepartmentID 
           AND hd.ShiftTypeName = OLD.ShiftTypeName 
           AND hd.ShiftDate = OLD.ShiftDate 
@@ -920,12 +929,12 @@ BEGIN
             -- 3. Υπάρχει ΑΛΛΟΣ Senior να τους επιβλέπει αν φύγει αυτός;
             SELECT COUNT(*) INTO v_OtherSeniorCount
             FROM hasDoctor hd 
-            JOIN Doctor d ON hd.DoctorAMK = d.AMK
+            JOIN Doctor d ON hd.DoctorAMKA = d.AMKA
             WHERE hd.DepartmentID = OLD.DepartmentID 
               AND hd.ShiftTypeName = OLD.ShiftTypeName 
               AND hd.ShiftDate = OLD.ShiftDate 
               AND d.`Rank` IN ('Director', 'Registrar', 'Consultant') 
-              AND hd.DoctorAMK != OLD.DoctorAMK; -- Εξαιρούμε αυτόν που διαγράφεται
+              AND hd.DoctorAMKA != OLD.DoctorAMKA; -- Εξαιρούμε αυτόν που διαγράφεται
 
             IF v_OtherSeniorCount = 0 THEN
                 SIGNAL SQLSTATE '45000' 
@@ -952,7 +961,7 @@ BEGIN
     -- ==========================================
     -- RULE 0: Is the Staff Member Active?
     -- ==========================================
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.NurseAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.NurseAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -967,7 +976,7 @@ BEGIN
     -- ------------------------------------------
     SELECT COUNT(*) INTO ShiftCount
     FROM hasNurse
-    WHERE NurseAMK = NEW.NurseAMK
+    WHERE NurseAMKA = NEW.NurseAMKA
       AND MONTH(ShiftDate) = MONTH(NEW.ShiftDate)
       AND YEAR(ShiftDate) = YEAR(NEW.ShiftDate);
 
@@ -982,7 +991,7 @@ BEGIN
     SELECT COUNT(*) INTO ViolationCount
     FROM hasNurse hn
     JOIN ShiftType st ON hn.ShiftTypeName = st.`Name`
-    WHERE hn.NurseAMK = NEW.NurseAMK
+    WHERE hn.NurseAMKA = NEW.NurseAMKA
       -- Absolute difference between shift start times must be >= 16 hours (8h work + 8h rest)
       AND ABS(TIMESTAMPDIFF(HOUR, NewStartDateTime, TIMESTAMP(hn.ShiftDate, st.StartTime))) < 16;
 
@@ -997,7 +1006,7 @@ BEGIN
     IF NEW.ShiftTypeName = 'Night' THEN
         SELECT COUNT(*) INTO ConsecutiveNights
         FROM hasNurse 
-        WHERE NurseAMK = NEW.NurseAMK
+        WHERE NurseAMKA = NEW.NurseAMKA
           AND ShiftTypeName = 'Night'
           -- Check if the nurse worked nights on all 3 preceding days
           AND ShiftDate IN (
@@ -1029,7 +1038,7 @@ BEGIN
     -- ==========================================
     -- RULE 0: Is the Staff Member Active?
     -- ==========================================
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.NurseAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.NurseAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -1044,7 +1053,7 @@ BEGIN
     -- ------------------------------------------
     SELECT COUNT(*) INTO ShiftCount
     FROM hasNurse
-    WHERE NurseAMK = NEW.NurseAMK
+    WHERE NurseAMKA = NEW.NurseAMKA
       AND MONTH(ShiftDate) = MONTH(NEW.ShiftDate)
       AND YEAR(ShiftDate) = YEAR(NEW.ShiftDate)
       AND NOT (DepartmentID = OLD.DepartmentID AND ShiftTypeName = OLD.ShiftTypeName AND ShiftDate = OLD.ShiftDate);
@@ -1060,7 +1069,7 @@ BEGIN
     SELECT COUNT(*) INTO ViolationCount
     FROM hasNurse hn
     JOIN ShiftType st ON hn.ShiftTypeName = st.`Name`
-    WHERE hn.NurseAMK = NEW.NurseAMK
+    WHERE hn.NurseAMKA = NEW.NurseAMKA
       AND NOT (hn.DepartmentID = OLD.DepartmentID AND hn.ShiftTypeName = OLD.ShiftTypeName AND hn.ShiftDate = OLD.ShiftDate)
       AND ABS(TIMESTAMPDIFF(HOUR, NewStartDateTime, TIMESTAMP(hn.ShiftDate, st.StartTime))) < 16;
 
@@ -1075,7 +1084,7 @@ BEGIN
     IF NEW.ShiftTypeName = 'Night' THEN
         SELECT COUNT(*) INTO ConsecutiveNights
         FROM hasNurse
-        WHERE NurseAMK = NEW.NurseAMK
+        WHERE NurseAMKA = NEW.NurseAMKA
           AND ShiftTypeName = 'Night'
           AND NOT (DepartmentID = OLD.DepartmentID AND ShiftTypeName = OLD.ShiftTypeName AND ShiftDate = OLD.ShiftDate)
           AND ShiftDate IN (
@@ -1109,7 +1118,7 @@ BEGIN
     -- ==========================================
     -- RULE 0: Is the Staff Member Active?
     -- ==========================================
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.AdminAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.AdminAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -1124,7 +1133,7 @@ BEGIN
     -- ------------------------------------------
     SELECT COUNT(*) INTO ShiftCount
     FROM hasAdmin
-    WHERE AdminAMK = NEW.AdminAMK
+    WHERE AdminAMKA = NEW.AdminAMKA
       AND MONTH(ShiftDate) = MONTH(NEW.ShiftDate)
       AND YEAR(ShiftDate) = YEAR(NEW.ShiftDate);
 
@@ -1139,7 +1148,7 @@ BEGIN
     SELECT COUNT(*) INTO ViolationCount
     FROM hasAdmin ha
     JOIN ShiftType st ON ha.ShiftTypeName = st.`Name`
-    WHERE ha.AdminAMK = NEW.AdminAMK
+    WHERE ha.AdminAMKA = NEW.AdminAMKA
       -- Absolute difference between shift start times must be >= 16 hours (8h work + 8h rest)
       AND ABS(TIMESTAMPDIFF(HOUR, NewStartDateTime, TIMESTAMP(ha.ShiftDate, st.StartTime))) < 16;
 
@@ -1154,7 +1163,7 @@ BEGIN
     IF NEW.ShiftTypeName = 'Night' THEN
         SELECT COUNT(*) INTO ConsecutiveNights
         FROM hasAdmin 
-        WHERE AdminAMK = NEW.AdminAMK
+        WHERE AdminAMKA = NEW.AdminAMKA
           AND ShiftTypeName = 'Night'
           -- Check if the admin worked nights on all 3 preceding days
           AND ShiftDate IN (
@@ -1187,7 +1196,7 @@ BEGIN
     -- ==========================================
     -- RULE 0: Is the Staff Member Active?
     -- ==========================================
-    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMK = NEW.AdminAMK;
+    SELECT IsActive INTO v_IsActive FROM Staff WHERE AMKA = NEW.AdminAMKA;
     
     IF v_IsActive = 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -1202,7 +1211,7 @@ BEGIN
     -- ------------------------------------------
     SELECT COUNT(*) INTO ShiftCount
     FROM hasAdmin
-    WHERE AdminAMK = NEW.AdminAMK
+    WHERE AdminAMKA = NEW.AdminAMKA
       AND MONTH(ShiftDate) = MONTH(NEW.ShiftDate)
       AND YEAR(ShiftDate) = YEAR(NEW.ShiftDate)
       AND NOT (DepartmentID = OLD.DepartmentID AND ShiftTypeName = OLD.ShiftTypeName AND ShiftDate = OLD.ShiftDate);
@@ -1218,7 +1227,7 @@ BEGIN
     SELECT COUNT(*) INTO ViolationCount
     FROM hasAdmin ha
     JOIN ShiftType st ON ha.ShiftTypeName = st.`Name`
-    WHERE ha.AdminAMK = NEW.AdminAMK
+    WHERE ha.AdminAMKA = NEW.AdminAMKA
       AND NOT (ha.DepartmentID = OLD.DepartmentID AND ha.ShiftTypeName = OLD.ShiftTypeName AND ha.ShiftDate = OLD.ShiftDate)
       AND ABS(TIMESTAMPDIFF(HOUR, NewStartDateTime, TIMESTAMP(ha.ShiftDate, st.StartTime))) < 16;
 
@@ -1233,7 +1242,7 @@ BEGIN
     IF NEW.ShiftTypeName = 'Night' THEN
         SELECT COUNT(*) INTO ConsecutiveNights
         FROM hasAdmin
-        WHERE AdminAMK = NEW.AdminAMK
+        WHERE AdminAMKA = NEW.AdminAMKA
           AND ShiftTypeName = 'Night'
           AND NOT (DepartmentID = OLD.DepartmentID AND ShiftTypeName = OLD.ShiftTypeName AND ShiftDate = OLD.ShiftDate)
           AND ShiftDate IN (
@@ -1299,12 +1308,12 @@ for each row
 begin
     declare cnt int;
     set cnt = (new.ProcRoomId is not null)+
-              (new.StaffAMK is not null)+
+              (new.StaffAMKA is not null)+
               (new.DepartmentID is not null)+
               (new.RoomID is not null);
     if cnt!= 1 then
         signal sqlstate '45000'
-        set message_text = "Exactly one of ProcRoomID, StaffAMK, DepartmentID, or RoomID must be non-null for an image.";
+        set message_text = "Exactly one of ProcRoomID, StaffAMKA, DepartmentID, or RoomID must be non-null for an image.";
     end if;
 end //
 
@@ -1314,12 +1323,12 @@ for each row
 begin
     declare cnt int;
     set cnt = (new.ProcRoomId is not null)+
-              (new.StaffAMK is not null)+
+              (new.StaffAMKA is not null)+
               (new.DepartmentID is not null)+
               (new.RoomID is not null);
     if cnt!= 1 then
         signal sqlstate '45000'
-        set message_text = "Exactly one of ProcRoomID, StaffAMK, DepartmentID, or RoomID must be non-null for an image.";
+        set message_text = "Exactly one of ProcRoomID, StaffAMKA, DepartmentID, or RoomID must be non-null for an image.";
     end if;
 end //
 
@@ -1328,7 +1337,7 @@ end //
 -- =========================
 -- Insert and Update Doctor Procedures
 CREATE PROCEDURE RegisterDoctor (
-    IN p_AMK CHAR(11),
+    IN p_AMKA CHAR(11),
     IN p_FirstName VARCHAR(20),
     IN p_LastName VARCHAR(20),
     IN p_BirthDate DATE,
@@ -1337,7 +1346,7 @@ CREATE PROCEDURE RegisterDoctor (
     IN p_License VARCHAR(20),
     IN p_Specialty VARCHAR(20),
     IN p_Rank VARCHAR(20),
-    IN p_SupervisorAMK CHAR(11)
+    IN p_SupervisorAMKA CHAR(11)
 )
 BEGIN
     declare v_HireDate date;
@@ -1356,23 +1365,23 @@ BEGIN
     
     -- 1. Insert into the Superclass (Staff). 
     -- We explicitly hardcode the Type as 'Doctor' to enforce subtype disjointness.
-    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, HireDate, `Type`)
-    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Doctor');
+    INSERT INTO Staff (AMKA, FirstName, LastName, BirthDate, Email, HireDate, `Type`)
+    VALUES (p_AMKA, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Doctor');
     
-    -- 2. Insert into the Subclass (Doctor) utilizing the exact same AMK.
-    INSERT INTO Doctor (AMK, License, Specialty, `Rank`, SupervisorAMK)
-    VALUES (p_AMK, p_License, p_Specialty, p_Rank, p_SupervisorAMK);
+    -- 2. Insert into the Subclass (Doctor) utilizing the exact same AMKA.
+    INSERT INTO Doctor (AMKA, License, Specialty, `Rank`, SupervisorAMKA)
+    VALUES (p_AMKA, p_License, p_Specialty, p_Rank, p_SupervisorAMKA);
     
     COMMIT;
 END//
 
 CREATE PROCEDURE UpdateDoctorInfo (
-    IN p_OldAMK CHAR(11),
-    IN p_NewAMK CHAR(11),
+    IN p_OldAMKA CHAR(11),
+    IN p_NewAMKA CHAR(11),
     IN p_License VARCHAR(20),
     IN p_Specialty VARCHAR(20),
     IN p_Rank VARCHAR(20),
-    IN p_SupervisorAMK CHAR(11)
+    IN p_SupervisorAMKA CHAR(11)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
@@ -1380,27 +1389,27 @@ BEGIN
     
     -- 1. Update the Superclass (Staff).
     -- By appending "AND Type = 'Doctor'", we intrinsically enforce subtype disjointness.
-    -- Because of our ON UPDATE CASCADE constraint, changing the AMK here 
-    -- will automatically propagate the new AMK to the Doctor table.
+    -- Because of our ON UPDATE CASCADE constraint, changing the AMKA here 
+    -- will automatically propagate the new AMKA to the Doctor table.
     UPDATE Staff 
-    SET AMK = p_NewAMK
-    WHERE AMK = p_OldAMK AND `Type` = 'Doctor';
+    SET AMKA = p_NewAMKA
+    WHERE AMKA = p_OldAMKA AND `Type` = 'Doctor';
     
     -- 2. Update the Subclass (Doctor) specific attributes.
-    -- We use p_NewAMK here because the cascade has already updated the primary key.
+    -- We use p_NewAMKA here because the cascade has already updated the primary key.
     UPDATE Doctor 
     SET License = p_License,
         Specialty = p_Specialty,
         `Rank` = p_Rank,
-        SupervisorAMK = p_SupervisorAMK
-    WHERE AMK = p_NewAMK;
+        SupervisorAMKA = p_SupervisorAMKA
+    WHERE AMKA = p_NewAMKA;
     
     COMMIT;
 END//
 
 -- Insert and Update Nurse Procedures
 CREATE PROCEDURE RegisterNurse (
-    IN p_AMK CHAR(11),
+    IN p_AMKA CHAR(11),
     IN p_FirstName VARCHAR(20),
     IN p_LastName VARCHAR(20),
     IN p_BirthDate DATE,
@@ -1424,19 +1433,19 @@ BEGIN
     END IF;
     
     -- 1. Insert into the Superclass (Staff). 
-    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, HireDate, Type)
-    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Nurse');
+    INSERT INTO Staff (AMKA, FirstName, LastName, BirthDate, Email, HireDate, Type)
+    VALUES (p_AMKA, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'Nurse');
     
-    -- 2. Insert into the Subclass (Nurse) utilizing the exact same AMK.
-    INSERT INTO Nurse (AMK, `Rank`, DepartmentID)
-    VALUES (p_AMK, p_Rank, p_DepartmentID);
+    -- 2. Insert into the Subclass (Nurse) utilizing the exact same AMKA.
+    INSERT INTO Nurse (AMKA, `Rank`, DepartmentID)
+    VALUES (p_AMKA, p_Rank, p_DepartmentID);
     
     COMMIT;
 END//
 
 CREATE PROCEDURE UpdateNurseInfo (
-    IN p_OldAMK CHAR(11),
-    IN p_NewAMK CHAR(11),
+    IN p_OldAMKA CHAR(11),
+    IN p_NewAMKA CHAR(11),
     IN p_Rank VARCHAR(20),
     IN p_DepartmentID INT
 )
@@ -1446,21 +1455,21 @@ BEGIN
     
     -- 1. Update the Superclass (Staff).
     UPDATE Staff 
-    SET AMK = p_NewAMK
-    WHERE AMK = p_OldAMK AND Type = 'Nurse';
+    SET AMKA = p_NewAMKA
+    WHERE AMKA = p_OldAMKA AND Type = 'Nurse';
     
     -- 2. Update the Subclass (Nurse) specific attributes.
     UPDATE Nurse 
     SET `Rank` = p_Rank,
         DepartmentID = p_DepartmentID
-    WHERE AMK = p_NewAMK;
+    WHERE AMKA = p_NewAMKA;
     
     COMMIT;
 END//
 
 -- Insert and Update AdminStaff Procedures
 CREATE PROCEDURE RegisterAdminStaff (
-    IN p_AMK CHAR(11),
+    IN p_AMKA CHAR(11),
     IN p_FirstName VARCHAR(20),
     IN p_LastName VARCHAR(20),
     IN p_BirthDate DATE,
@@ -1484,19 +1493,19 @@ BEGIN
     END IF;
     
     -- 1. Insert into the Superclass (Staff). 
-    INSERT INTO Staff (AMK, FirstName, LastName, BirthDate, Email, HireDate, Type)
-    VALUES (p_AMK, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'AdminStaff');
+    INSERT INTO Staff (AMKA, FirstName, LastName, BirthDate, Email, HireDate, Type)
+    VALUES (p_AMKA, p_FirstName, p_LastName, p_BirthDate, p_Email, v_HireDate, 'AdminStaff');
     
-    -- 2. Insert into the Subclass (AdminStaff) utilizing the exact same AMK.
-    INSERT INTO AdminStaff (AMK, Role, Office, DepartmentID)
-    VALUES (p_AMK, p_Role, p_Office, p_DepartmentID);
+    -- 2. Insert into the Subclass (AdminStaff) utilizing the exact same AMKA.
+    INSERT INTO AdminStaff (AMKA, Role, Office, DepartmentID)
+    VALUES (p_AMKA, p_Role, p_Office, p_DepartmentID);
     
     COMMIT;
 END//
 
 CREATE PROCEDURE UpdateAdminStaffInfo (
-    IN p_OldAMK CHAR(11),
-    IN p_NewAMK CHAR(11),
+    IN p_OldAMKA CHAR(11),
+    IN p_NewAMKA CHAR(11),
     IN p_Role VARCHAR(20),
     IN p_Office VARCHAR(20),
     IN p_DepartmentID INT
@@ -1507,15 +1516,15 @@ BEGIN
     
     -- 1. Update the Superclass (Staff).
     UPDATE Staff 
-    SET AMK = p_NewAMK
-    WHERE AMK = p_OldAMK AND Type = 'AdminStaff';
+    SET AMKA = p_NewAMKA
+    WHERE AMKA = p_OldAMKA AND Type = 'AdminStaff';
     
     -- 2. Update the Subclass (AdminStaff) specific attributes.
     UPDATE AdminStaff 
     SET Role = p_Role,
         Office = p_Office,
         DepartmentID = p_DepartmentID
-    WHERE AMK = p_NewAMK;
+    WHERE AMKA = p_NewAMKA;
     
     COMMIT;
 END//
@@ -1526,7 +1535,7 @@ CREATE PROCEDURE CreateDepartmentWithDirector (
     IN p_Description TEXT,
     IN p_Floor TINYINT,
     IN p_Building VARCHAR(50),
-    IN p_DirectorAMK CHAR(11)
+    IN p_DirectorAMKA CHAR(11)
 )
 BEGIN
     DECLARE v_DeptID INT;
@@ -1536,22 +1545,22 @@ BEGIN
     START TRANSACTION;
     
     -- 1. Insert the department (assuming the constraint is temporarily bypassed or relaxed)
-    INSERT INTO Department (Name, Description, Floor, Building, DirectorAMK)
-    VALUES (p_Name, p_Description, p_Floor, p_Building, p_DirectorAMK);
+    INSERT INTO Department (Name, Description, Floor, Building, DirectorAMKA)
+    VALUES (p_Name, p_Description, p_Floor, p_Building, p_DirectorAMKA);
     
     -- Get the auto-generated DepartmentID of the newly inserted department
     SET v_DeptID = LAST_INSERT_ID();
     
     -- 2. Insert the relational mapping immediately after
-    INSERT INTO DoctorDepartment (DoctorAMK, DepartmentID)
-    VALUES (p_DirectorAMK, v_DeptID);
+    INSERT INTO DoctorDepartment (DoctorAMKA, DepartmentID)
+    VALUES (p_DirectorAMKA, v_DeptID);
     
     COMMIT;
 END//
 
 CREATE PROCEDURE UpdateDepartmentWithDirector (
     IN p_DeptID INT,
-    IN p_DirectorAMK CHAR(11)
+    IN p_DirectorAMKA CHAR(11)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
@@ -1559,14 +1568,14 @@ BEGIN
     START TRANSACTION;
     
     -- If the new director is not already assigned to this department, assign them now.
-    IF NOT EXISTS (SELECT 1 FROM DoctorDepartment WHERE DoctorAMK = p_DirectorAMK AND DepartmentID = p_DeptID) THEN
-        INSERT INTO DoctorDepartment (DoctorAMK, DepartmentID)
-        VALUES (p_DirectorAMK, p_DeptID);
+    IF NOT EXISTS (SELECT 1 FROM DoctorDepartment WHERE DoctorAMKA = p_DirectorAMKA AND DepartmentID = p_DeptID) THEN
+        INSERT INTO DoctorDepartment (DoctorAMKA, DepartmentID)
+        VALUES (p_DirectorAMKA, p_DeptID);
     END IF;
     
     -- 2. Update the department's director safely
     UPDATE Department
-    SET DirectorAMK = p_DirectorAMK
+    SET DirectorAMKA = p_DirectorAMKA
     WHERE DepartmentID = p_DeptID;
     
     COMMIT;
@@ -1794,12 +1803,12 @@ select
     COUNT(r.ID) AS RoomNum
 from Department d
 left join Room r ON d.DepartmentID = r.DepartmentID
-left join Staff doc ON d.DirectorAMK = doc.AMK
+left join Staff doc ON d.DirectorAMKA = doc.AMKA
 group by d.DepartmentID, d.Name, d.Floor, d.Building, doc.LastName;
 
 -- isActive Views for easier querying of only active records without having to filter every time
 create view ActiveStaff as
-select AMK, FirstName, LastName, timestampdiff(year,birthdate,curdate()) as Age, Email, HireDate, `Type`
+select AMKA, FirstName, LastName, timestampdiff(year,birthdate,curdate()) as Age, Email, HireDate, `Type`
 from Staff
 where IsActive = 1;
 
@@ -1815,9 +1824,9 @@ from LabTest
 where IsActive = 1;
 
 create view DocInfo as
-select d.amk, s.firstname, s.lastname, s.age, s.email, s.hiredate, d.license, d.specialty, d.rank, d.supervisoramk
+select d.amka, s.firstname, s.lastname, s.age, s.email, s.hiredate, d.license, d.specialty, d.rank, d.supervisoramka
 from doctor d
-join activestaff s on d.amk = s.amk;
+join activestaff s on d.amka = s.amka;
 
 CREATE VIEW ShiftsAlerts AS
 WITH ShiftStaffCounts AS (
@@ -1896,4 +1905,4 @@ create index idx_hasdoc_shiftdate   on hasDoctor(ShiftDate);
 create index idx_hasnurse_shiftdate on hasNurse(ShiftDate);
 create index idx_hasadmin_shiftdate on hasAdmin(ShiftDate);
 
-create index idx_triage_emergency on TriageEvent(EmergencyLavel);
+create index idx_triage_emergency on TriageEvent(EmergencyLevel);

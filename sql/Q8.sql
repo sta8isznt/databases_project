@@ -1,5 +1,5 @@
 with nightshifts as (
-    select hasdoctor.doctoramk as amk
+    select hasdoctor.doctoramka as amka
     from hasdoctor 
     where hasdoctor.shifttypename = 'Night'
     and hasdoctor.shiftdate = '2024-01-01' -- change this date to the desired date
@@ -11,7 +11,7 @@ with nightshifts as (
 
     union all
 
-    select hasnurse.nurseamk as amk
+    select hasnurse.nurseamka as amka
     from hasnurse
     where hasnurse.shifttypename = 'Night'
     and hasnurse.shiftdate = '2024-01-01' -- change this date to the desired date
@@ -23,7 +23,7 @@ with nightshifts as (
 
     union all
 
-    select hasadmin.adminamk as amk
+    select hasadmin.adminamka as amka
     from hasadmin
     where hasadmin.shifttypename = 'Night'
     and hasadmin.shiftdate = '2024-01-01' -- change this date to the desired date
@@ -39,5 +39,5 @@ from activestaff s
 where not exists (
     select 1
     from nightshifts ns
-    where ns.amk = s.amk
+    where ns.amka = s.amka
 );

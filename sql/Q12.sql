@@ -4,9 +4,9 @@ select
     dep.Name as `Department`,
     'Doctor' as `StaffCategory`,
     d.Specialty as `SubClass`,
-    count(hd.DoctorAMK) as `StaffCount`
+    count(hd.DoctorAMKA) as `StaffCount`
 from hasDoctor hd
-join doctor d on hd.DoctorAMK = d.AMK
+join doctor d on hd.DoctorAMKA = d.AMKA
 join department dep on hd.DepartmentID = dep.DepartmentID
 where hd.ShiftDate between '2026-03-10' and '2026-03-17'
 group by hd.ShiftDate, hd.ShiftTypeName, dep.Name, d.Specialty
@@ -19,9 +19,9 @@ select
     dep.Name,
     'Nurse',
     n.Rank,
-    count(hn.NurseAMK)
+    count(hn.NurseAMKA)
 from hasNurse hn
-join nurse n on hn.NurseAMK = n.AMK
+join nurse n on hn.NurseAMKA = n.AMKA
 join department dep on hn.DepartmentID = dep.DepartmentID
 where hn.ShiftDate between '2026-03-10' and '2026-03-17'
 group by hn.ShiftDate, hn.ShiftTypeName, dep.Name, n.Rank
@@ -34,9 +34,9 @@ select
     dep.Name,
     'Admin',
     a.Role,
-    count(ha.AdminAMK)
+    count(ha.AdminAMKA)
 from hasAdmin ha
-join AdminStaff a on ha.AdminAMK = a.AMK
+join AdminStaff a on ha.AdminAMKA = a.AMKA
 join department dep on ha.DepartmentID = dep.DepartmentID
 where ha.ShiftDate between '2026-03-10' and '2026-03-17'
 group by ha.ShiftDate, ha.ShiftTypeName, dep.Name, a.Role

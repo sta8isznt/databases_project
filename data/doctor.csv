@@ -1,4 +1,4 @@
-AMK,License,Specialty,Rank,SupervisorAMK
+AMKA,License,Specialty,Rank,SupervisorAMKA
 10000000000,LIC01000000,Cardiology,Director,
 10000000001,LIC01010001,Cardiology,Consultant,10000000000
 10000000002,LIC01020002,Cardiology,Resident,10000000003

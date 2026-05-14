@@ -1,33 +1,33 @@
 with recursive doctor_hierarchy as (
     select
         -- Store the root doctor
-        d.AMK as RootDoctorAMK,
+        d.AMKA as RootDoctorAMKA,
         concat(d.FirstName, ' ', d.LastName) as RootDoctorName,
 
-        d.AMK as CurrentDoctorAMK,
+        d.AMK as CurrentDoctorAMKA,
         concat(d.FirstName, ' ', d.LastName) as CurrentDoctorName,
         d.`Rank` as CurrentDoctorRank,
 
         0 as `Level`,
-        d.SupervisorAMK
+        d.SupervisorAMKA
     from DocInfo d
 
     union all
 
     select
-        h.RootDoctorAMK,
+        h.RootDoctorAMKA,
         h.RootDoctorName,
 
-        sup.AMK as CurrentDoctorAMK,
+        sup.AMKA as CurrentDoctorAMKA,
         concat(sup.FirstName, ' ', sup.LastName) as CurrentDoctorName,
         sup.`Rank` as CurrentDoctorRank,
 
         h.`Level` + 1 as `Level`,
-        sup.SupervisorAMK
+        sup.SupervisorAMKA
     from doctor_hierarchy h
     join DocInfo sup
-        on h.SupervisorAMK = sup.AMK
+        on h.SupervisorAMKA = sup.AMKA
 )
 select *
 from doctor_hierarchy
-order by RootDoctorAMK, `Level`;
+order by RootDoctorAMKA, `Level`;

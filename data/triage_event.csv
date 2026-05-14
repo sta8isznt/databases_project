@@ -1,4 +1,4 @@
-TriageID,Symptoms,EmergencyLevel,Outcome,TriageDateTime,HospitalizationID,PatientAMKA,AssesmentDateTime,NurseAMK
+TriageID,Symptoms,EmergencyLevel,Outcome,TriageDateTime,HospitalizationID,PatientAMKA,AssesmentDateTime,NurseAMKA
 1,Severe headache,3,Accepted,2025-01-10 02:00:00,1,30000000000,2025-01-10 02:46:00,10000000422
 2,Mild asthma,4,Accepted,2025-03-16 07:00:00,2,30000000000,2025-03-16 08:44:00,10000000422
 3,Moderate dehydration,3,Accepted,2025-05-20 07:00:00,3,30000000000,2025-05-20 08:13:00,10000000425

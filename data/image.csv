@@ -1,4 +1,4 @@
-ImageID,ImageURL,ImageDescription,ProcRoomId,StaffAMK,DepartmentID,RoomID,RoomDepartmentID
+ImageID,ImageURL,ImageDescription,ProcRoomId,StaffAMKA,DepartmentID,RoomID,RoomDepartmentID
 1,https://example.org/hospital/images/0001.jpg,Cardiology department image,,,1,,
 2,https://example.org/hospital/images/0002.jpg,Surgery department image,,,2,,
 3,https://example.org/hospital/images/0003.jpg,ICU department image,,,3,,

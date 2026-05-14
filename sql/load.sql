@@ -103,7 +103,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(AMK, FirstName, LastName, BirthDate, Email, HireDate, IsActive, `Type`);
+(AMKA, FirstName, LastName, BirthDate, Email, HireDate, IsActive, `Type`);
 
 LOAD DATA LOCAL INFILE 'data/staff_phone.csv'
 INTO TABLE StaffPhone
@@ -111,7 +111,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(StaffAMK, Phone);
+(StaffAMKA, Phone);
 
 LOAD DATA LOCAL INFILE 'data/doctor.csv'
 INTO TABLE Doctor
@@ -119,8 +119,8 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(AMK, License, Specialty, `Rank`, @SupervisorAMK)
-SET SupervisorAMK = NULLIF(@SupervisorAMK, '');
+(AMKA, License, Specialty, `Rank`, @SupervisorAMKA)
+SET SupervisorAMKA = NULLIF(@SupervisorAMKA, '');
 
 LOAD DATA LOCAL INFILE 'data/department.csv'
 INTO TABLE Department
@@ -128,7 +128,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(DepartmentID, `Name`, `Description`, Floor, Building, DirectorAMK);
+(DepartmentID, `Name`, `Description`, Floor, Building, DirectorAMKA);
 
 LOAD DATA LOCAL INFILE 'data/doctor_department.csv'
 INTO TABLE DoctorDepartment
@@ -136,7 +136,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(DoctorAMK, DepartmentID);
+(DoctorAMKA, DepartmentID);
 
 LOAD DATA LOCAL INFILE 'data/nurse.csv'
 INTO TABLE Nurse
@@ -144,7 +144,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(AMK, `Rank`, DepartmentID);
+(AMKA, `Rank`, DepartmentID);
 
 LOAD DATA LOCAL INFILE 'data/admin_staff.csv'
 INTO TABLE AdminStaff
@@ -152,7 +152,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(AMK, `Role`, Office, DepartmentID);
+(AMKA, `Role`, Office, DepartmentID);
 
 LOAD DATA LOCAL INFILE 'data/room.csv'
 INTO TABLE Room
@@ -216,7 +216,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(DepartmentID, ShiftTypeName, ShiftDate, DoctorAMK);
+(DepartmentID, ShiftTypeName, ShiftDate, DoctorAMKA);
 
 LOAD DATA LOCAL INFILE 'data/has_nurse.csv'
 INTO TABLE hasNurse
@@ -224,7 +224,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(DepartmentID, ShiftTypeName, ShiftDate, NurseAMK);
+(DepartmentID, ShiftTypeName, ShiftDate, NurseAMKA);
 
 LOAD DATA LOCAL INFILE 'data/has_admin.csv'
 INTO TABLE hasAdmin
@@ -232,7 +232,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(DepartmentID, ShiftTypeName, ShiftDate, AdminAMK);
+(DepartmentID, ShiftTypeName, ShiftDate, AdminAMKA);
 
 -- ===============================
 -- Clinical events
@@ -268,7 +268,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(TriageID, Symptoms, EmergencyLevel, Outcome, TriageDateTime, @HospitalizationID, PatientAMKA, @AssessmentDateTime, NurseAMK)
+(TriageID, Symptoms, EmergencyLevel, Outcome, TriageDateTime, @HospitalizationID, PatientAMKA, @AssessmentDateTime, NurseAMKA)
 SET HospitalizationID = NULLIF(@HospitalizationID, ''), AssessmentDateTime = NULLIF(@AssessmentDateTime, '');
 
 LOAD DATA LOCAL INFILE 'data/evaluation.csv'
@@ -285,7 +285,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(Id, HospitalizationID, LabCode, LabDateTime, LabResult, PendingResult, DoctorAMK);
+(Id, HospitalizationID, LabCode, LabDateTime, LabResult, PendingResult, DoctorAMKA);
 
 -- ===============================
 -- Procedures
@@ -305,7 +305,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(ProcEventID, ProcRoomID, `DateTime`, MainDocAMK, ProcedureCode, HospitalizationID);
+(ProcEventID, ProcRoomID, `DateTime`, MainDocAMKA, ProcedureCode, HospitalizationID);
 
 LOAD DATA LOCAL INFILE 'data/operates_in.csv'
 INTO TABLE operates_in
@@ -313,7 +313,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(DoctorAMK, ProcEventID);
+(DoctorAMKA, ProcEventID);
 
 LOAD DATA LOCAL INFILE 'data/assists_in.csv'
 INTO TABLE assists_in
@@ -321,7 +321,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(NurseAMK, ProcEventID);
+(NurseAMKA, ProcEventID);
 
 LOAD DATA LOCAL INFILE 'data/helps_in.csv'
 INTO TABLE helps_in
@@ -329,7 +329,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(AdminStaffAMK, ProcEventID);
+(AdminStaffAMKA, ProcEventID);
 
 -- ===============================
 -- Allergies and prescriptions
@@ -349,7 +349,7 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(PrescriptionID, HospitalizationID, DoctorAMK, DrugID, Dosage, frequency, PrescriptionDate, StartDate, @EndDate)
+(PrescriptionID, HospitalizationID, DoctorAMKA, DrugID, Dosage, frequency, PrescriptionDate, StartDate, @EndDate)
 SET EndDate = NULLIF(@EndDate, '');
 
 -- ===============================
@@ -362,10 +362,10 @@ CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(ImageID, ImageURL, ImageDescription, @ProcRoomId, @StaffAMK, @DepartmentID, @RoomID, @RoomDepartmentID)
+(ImageID, ImageURL, ImageDescription, @ProcRoomId, @StaffAMKA, @DepartmentID, @RoomID, @RoomDepartmentID)
 SET
     ProcRoomId = NULLIF(@ProcRoomId, ''),
-    StaffAMK = NULLIF(@StaffAMK, ''),
+    StaffAMKA = NULLIF(@StaffAMKA, ''),
     DepartmentID = NULLIF(@DepartmentID, ''),
     RoomID = NULLIF(@RoomID, ''),
     RoomDepartmentID = NULLIF(@RoomDepartmentID, '');

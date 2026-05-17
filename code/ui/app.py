@@ -31,12 +31,25 @@ from queries import (
 st.set_page_config(page_title="HospitalDB", layout="wide")
 
 
+def env_int(name: str, default: int) -> int:
+    value = os.getenv(name)
+    if not value:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
+
+
 def configured_database() -> DatabaseConfig:
     with st.sidebar:
         st.header("Database")
         host = st.text_input("Host", value=os.getenv("MYSQL_HOST", "127.0.0.1"))
         port = st.number_input(
-            "Port", min_value=1, max_value=65535, value=int(os.getenv("MYSQL_PORT", "3306"))
+            "Port",
+            min_value=1,
+            max_value=65535,
+            value=env_int("MYSQL_PORT", 3306),
         )
         database = st.text_input("Database", value=os.getenv("MYSQL_DATABASE", "HospitalDB"))
         user = st.text_input("User", value=os.getenv("MYSQL_USER", "root"))
@@ -192,7 +205,13 @@ ADD CONSTRAINT chk_triage_outcome CHECK (
             language="sql",
         )
     else:
+        lower_message = message.lower()
         st.error(message)
+        if "doctor_department" in lower_message or "hasdoctor_ibfk_3" in lower_message:
+            st.info(
+                "This doctor is not assigned to the selected department. "
+                "Choose a doctor from the same department as the shift."
+            )
 
 
 def option_value(options: list[tuple[str, Any]], label: str) -> Any | None:
@@ -1231,45 +1250,184 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
             LIMIT 500
             """,
         )
-        with st.form("assign_shift"):
-            shift_labels = [
-                f"{row.Date} - {row.Name} - {row.ShiftTypeName}"
-                for row in shift_df.itertuples()
-            ] if not shift_df.empty else []
-            shift_label = st.selectbox("Shift", shift_labels) if shift_labels else None
-            if not shift_labels:
-                st.info("No shifts are available.")
-            if shift_label and not shift_df.empty:
-                shift_index = shift_labels.index(shift_label)
-                shift_row = shift_df.iloc[shift_index]
-            else:
-                shift_row = None
+
+        shift_labels = [
+            f"{row.Date} - {row.Name} - {row.ShiftTypeName}"
+            for row in shift_df.itertuples()
+        ] if not shift_df.empty else []
+        shift_label = st.selectbox("Shift", shift_labels) if shift_labels else None
+        if not shift_labels:
+            st.info("No shifts are available.")
+        if shift_label and not shift_df.empty:
+            shift_index = shift_labels.index(shift_label)
+            shift_row = shift_df.iloc[shift_index]
+        else:
+            shift_row = None
+
+        staff_options: list[tuple[str, Any]] = []
+        if shift_row is not None:
+            department_id = int(shift_row["DepartmentID"])
+            shift_type = shift_row["ShiftTypeName"]
+            shift_date = shift_row["Date"]
 
             if staff_kind == "Doctor":
                 staff_options = rows_as_options(
                     config,
                     """
-                    SELECT d.AMKA, s.FirstName, s.LastName, d.Specialty
+                    SELECT d.AMKA, s.FirstName, s.LastName, d.Specialty, d.`Rank`
                     FROM Doctor d
                     JOIN Staff s ON d.AMKA = s.AMKA
+                    JOIN DoctorDepartment dd
+                      ON dd.DoctorAMKA = d.AMKA
+                     AND dd.DepartmentID = %s
                     WHERE s.IsActive = 1
+                      AND (
+                          SELECT COUNT(*)
+                          FROM hasDoctor hd
+                          WHERE hd.DoctorAMKA = d.AMKA
+                            AND MONTH(hd.ShiftDate) = MONTH(%s)
+                            AND YEAR(hd.ShiftDate) = YEAR(%s)
+                      ) < 15
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM hasDoctor hd
+                          JOIN ShiftType st ON hd.ShiftTypeName = st.Name
+                          JOIN ShiftType new_st ON new_st.Name = %s
+                          WHERE hd.DoctorAMKA = d.AMKA
+                            AND ABS(
+                                TIMESTAMPDIFF(
+                                    HOUR,
+                                    TIMESTAMP(%s, new_st.StartTime),
+                                    TIMESTAMP(hd.ShiftDate, st.StartTime)
+                                )
+                            ) < 16
+                      )
+                      AND (
+                          %s <> 'Night'
+                          OR (
+                              SELECT COUNT(*)
+                              FROM hasDoctor hd
+                              WHERE hd.DoctorAMKA = d.AMKA
+                                AND hd.ShiftTypeName = 'Night'
+                                AND hd.ShiftDate IN (
+                                    DATE_SUB(%s, INTERVAL 1 DAY),
+                                    DATE_SUB(%s, INTERVAL 2 DAY),
+                                    DATE_SUB(%s, INTERVAL 3 DAY)
+                                )
+                          ) < 3
+                      )
+                      AND (
+                          d.`Rank` <> 'Resident'
+                          OR EXISTS (
+                              SELECT 1
+                              FROM hasDoctor hd
+                              JOIN Doctor senior ON hd.DoctorAMKA = senior.AMKA
+                              WHERE hd.DepartmentID = %s
+                                AND hd.ShiftTypeName = %s
+                                AND hd.ShiftDate = %s
+                                AND senior.`Rank` IN ('Director', 'Registrar', 'Consultant')
+                          )
+                      )
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM hasDoctor hd
+                          WHERE hd.DepartmentID = %s
+                            AND hd.ShiftTypeName = %s
+                            AND hd.ShiftDate = %s
+                            AND hd.DoctorAMKA = d.AMKA
+                      )
                     ORDER BY s.LastName, s.FirstName
                     """,
-                    ["LastName", "FirstName", "Specialty", "AMKA"],
+                    ["LastName", "FirstName", "Specialty", "Rank", "AMKA"],
                     "AMKA",
+                    (
+                        department_id,
+                        shift_date,
+                        shift_date,
+                        shift_type,
+                        shift_date,
+                        shift_type,
+                        shift_date,
+                        shift_date,
+                        shift_date,
+                        department_id,
+                        shift_type,
+                        shift_date,
+                        department_id,
+                        shift_type,
+                        shift_date,
+                    ),
                 )
             elif staff_kind == "Nurse":
                 staff_options = rows_as_options(
                     config,
                     """
-                    SELECT n.AMKA, s.FirstName, s.LastName, n.Rank
+                    SELECT n.AMKA, s.FirstName, s.LastName, n.`Rank`
                     FROM Nurse n
                     JOIN Staff s ON n.AMKA = s.AMKA
                     WHERE s.IsActive = 1
+                      AND n.DepartmentID = %s
+                      AND (
+                          SELECT COUNT(*)
+                          FROM hasNurse hn
+                          WHERE hn.NurseAMKA = n.AMKA
+                            AND MONTH(hn.ShiftDate) = MONTH(%s)
+                            AND YEAR(hn.ShiftDate) = YEAR(%s)
+                      ) < 20
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM hasNurse hn
+                          JOIN ShiftType st ON hn.ShiftTypeName = st.Name
+                          JOIN ShiftType new_st ON new_st.Name = %s
+                          WHERE hn.NurseAMKA = n.AMKA
+                            AND ABS(
+                                TIMESTAMPDIFF(
+                                    HOUR,
+                                    TIMESTAMP(%s, new_st.StartTime),
+                                    TIMESTAMP(hn.ShiftDate, st.StartTime)
+                                )
+                            ) < 16
+                      )
+                      AND (
+                          %s <> 'Night'
+                          OR (
+                              SELECT COUNT(*)
+                              FROM hasNurse hn
+                              WHERE hn.NurseAMKA = n.AMKA
+                                AND hn.ShiftTypeName = 'Night'
+                                AND hn.ShiftDate IN (
+                                    DATE_SUB(%s, INTERVAL 1 DAY),
+                                    DATE_SUB(%s, INTERVAL 2 DAY),
+                                    DATE_SUB(%s, INTERVAL 3 DAY)
+                                )
+                          ) < 3
+                      )
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM hasNurse hn
+                          WHERE hn.DepartmentID = %s
+                            AND hn.ShiftTypeName = %s
+                            AND hn.ShiftDate = %s
+                            AND hn.NurseAMKA = n.AMKA
+                      )
                     ORDER BY s.LastName, s.FirstName
                     """,
                     ["LastName", "FirstName", "Rank", "AMKA"],
                     "AMKA",
+                    (
+                        department_id,
+                        shift_date,
+                        shift_date,
+                        shift_type,
+                        shift_date,
+                        shift_type,
+                        shift_date,
+                        shift_date,
+                        shift_date,
+                        department_id,
+                        shift_type,
+                        shift_date,
+                    ),
                 )
             else:
                 staff_options = rows_as_options(
@@ -1279,18 +1437,78 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
                     FROM AdminStaff a
                     JOIN Staff s ON a.AMKA = s.AMKA
                     WHERE s.IsActive = 1
+                      AND a.DepartmentID = %s
+                      AND (
+                          SELECT COUNT(*)
+                          FROM hasAdmin ha
+                          WHERE ha.AdminAMKA = a.AMKA
+                            AND MONTH(ha.ShiftDate) = MONTH(%s)
+                            AND YEAR(ha.ShiftDate) = YEAR(%s)
+                      ) < 25
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM hasAdmin ha
+                          JOIN ShiftType st ON ha.ShiftTypeName = st.Name
+                          JOIN ShiftType new_st ON new_st.Name = %s
+                          WHERE ha.AdminAMKA = a.AMKA
+                            AND ABS(
+                                TIMESTAMPDIFF(
+                                    HOUR,
+                                    TIMESTAMP(%s, new_st.StartTime),
+                                    TIMESTAMP(ha.ShiftDate, st.StartTime)
+                                )
+                            ) < 16
+                      )
+                      AND (
+                          %s <> 'Night'
+                          OR (
+                              SELECT COUNT(*)
+                              FROM hasAdmin ha
+                              WHERE ha.AdminAMKA = a.AMKA
+                                AND ha.ShiftTypeName = 'Night'
+                                AND ha.ShiftDate IN (
+                                    DATE_SUB(%s, INTERVAL 1 DAY),
+                                    DATE_SUB(%s, INTERVAL 2 DAY),
+                                    DATE_SUB(%s, INTERVAL 3 DAY)
+                                )
+                          ) < 3
+                      )
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM hasAdmin ha
+                          WHERE ha.DepartmentID = %s
+                            AND ha.ShiftTypeName = %s
+                            AND ha.ShiftDate = %s
+                            AND ha.AdminAMKA = a.AMKA
+                      )
                     ORDER BY s.LastName, s.FirstName
                     """,
                     ["LastName", "FirstName", "Role", "AMKA"],
                     "AMKA",
+                    (
+                        department_id,
+                        shift_date,
+                        shift_date,
+                        shift_type,
+                        shift_date,
+                        shift_type,
+                        shift_date,
+                        shift_date,
+                        shift_date,
+                        department_id,
+                        shift_type,
+                        shift_date,
+                    ),
                 )
+
+        with st.form("assign_shift"):
             staff_label = (
                 st.selectbox("Staff member", [label for label, _ in staff_options])
                 if staff_options
                 else None
             )
-            if not staff_options:
-                st.info("No active staff members are available for this category.")
+            if shift_row is not None and not staff_options:
+                st.info("No eligible unassigned staff members are available for this shift.")
             staff_amk = option_value(staff_options, staff_label)
             submitted = st.form_submit_button(
                 "Assign",
@@ -1304,7 +1522,7 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
                 sql = "INSERT INTO hasNurse (DepartmentID, ShiftTypeName, ShiftDate, NurseAMKA) VALUES (%s, %s, %s, %s)"
             else:
                 sql = "INSERT INTO hasAdmin (DepartmentID, ShiftTypeName, ShiftDate, AdminAMKA) VALUES (%s, %s, %s, %s)"
-            run_write_action(
+            if run_write_action(
                 config,
                 sql,
                 (
@@ -1313,7 +1531,9 @@ def page_staff_shifts(config: DatabaseConfig) -> None:
                     shift_row["Date"],
                     staff_amk,
                 ),
-            )
+            ):
+                st.session_state["shift_notice"] = "Shift assignment added."
+                st.rerun()
 
 
 def page_prescriptions(config: DatabaseConfig) -> None:
@@ -1351,9 +1571,28 @@ def page_prescriptions(config: DatabaseConfig) -> None:
         st.info("No active doctors are available.")
         return
 
+    hosp_label = st.selectbox("Hospitalization", [label for label, _ in hospitalizations])
+    hospitalization_id = option_value(hospitalizations, hosp_label)
+
+    allergies = safe_fetch_df(
+        config,
+        """
+        SELECT s.Name AS Allergy
+        FROM Hospitalization h
+        JOIN allergic_to a ON h.PatientAMKA = a.PatientAMKA
+        JOIN Substances s ON a.SubstanceID = s.ID
+        WHERE h.HospitalizationID = %s
+        ORDER BY s.Name
+        """,
+        (hospitalization_id,),
+    )
+    st.subheader("Recorded allergies for selected hospitalization")
+    if allergies.empty:
+        st.info("No recorded allergies for this patient.")
+    else:
+        st.dataframe(allergies, width="stretch", hide_index=True)
+
     with st.form("prescription"):
-        hosp_label = st.selectbox("Hospitalization", [label for label, _ in hospitalizations])
-        hospitalization_id = option_value(hospitalizations, hosp_label)
         doctor_label = st.selectbox("Doctor", [label for label, _ in doctors])
         doctor_amk = option_value(doctors, doctor_label)
         drug_id = st.number_input("Drug ID", min_value=1, step=1)
@@ -1363,21 +1602,6 @@ def page_prescriptions(config: DatabaseConfig) -> None:
         start_date = st.date_input("Start date", value=date.today())
         end_date = st.date_input("End date", value=date.today() + timedelta(days=7))
         submitted = st.form_submit_button("Create prescription")
-
-    if hospitalization_id:
-        run_read_query(
-            config,
-            """
-            SELECT s.Name AS Allergy
-            FROM Hospitalization h
-            JOIN allergic_to a ON h.PatientAMKA = a.PatientAMKA
-            JOIN Substances s ON a.SubstanceID = s.ID
-            WHERE h.HospitalizationID = %s
-            ORDER BY s.Name
-            """,
-            (hospitalization_id,),
-            title="Recorded allergies for selected hospitalization",
-        )
 
     if submitted:
         run_write_action(

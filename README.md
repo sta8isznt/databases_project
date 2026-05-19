@@ -253,6 +253,16 @@ make ui-run      # install requirements and run Streamlit
 make ui-clean    # remove .venv
 ```
 
+On Windows, the `Makefile` uses the Python launcher `py -3` by default. If your
+installation exposes Python as `python` instead, run:
+
+```bat
+make ui PYTHON=python
+```
+
+If `make` is not installed on Windows, use the manual Command Prompt or
+PowerShell commands below.
+
 Manual setup without `make`:
 
 On Linux/macOS:
@@ -269,20 +279,18 @@ On Windows Command Prompt:
 
 ```bat
 py -m venv .venv
-.venv\Scripts\activate
-python -m pip install --upgrade pip
-python -m pip install -r code\ui\requirements.txt
-python -m streamlit run code\ui\app.py
+.venv\Scripts\python -m pip install --upgrade pip
+.venv\Scripts\python -m pip install -r code\ui\requirements.txt
+.venv\Scripts\python -m streamlit run code\ui\app.py
 ```
 
 On Windows PowerShell:
 
 ```powershell
 py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r code\ui\requirements.txt
-python -m streamlit run code\ui\app.py
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r code\ui\requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run code\ui\app.py
 ```
 
 The sidebar reads these optional environment-variable defaults:

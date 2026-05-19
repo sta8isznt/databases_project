@@ -1,0 +1,4 @@
+Name,Name,TotalOccurances
+Paracetamol,Ibuprofen,147
+Amoxicillin,Omeprazole,121
+Atorvastatin,Metformin,114

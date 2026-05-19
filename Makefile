@@ -1,11 +1,12 @@
-PYTHON ?= python3
 VENV ?= .venv
 UI_APP := code/ui/app.py
 UI_REQUIREMENTS := code/ui/requirements.txt
 
 ifeq ($(OS),Windows_NT)
+PYTHON ?= py -3
 VENV_PYTHON := $(VENV)/Scripts/python.exe
 else
+PYTHON ?= python3
 VENV_PYTHON := $(VENV)/bin/python
 endif
 

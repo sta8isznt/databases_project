@@ -1,0 +1,1001 @@
+Name,TotalPatients,TotalDrugs
+Carrageenan,2,3
+"Erechthites Hieracifolia",2,1
+"Zedoariae Rhizoma",2,1
+"Ha And Na Surface Antigen",2,4
+"Testa Triticum Tricum",2,3
+Lebrikizumab,2,4
+"Passion Flower",1,2
+"Extract From Fresh Hawthorn Inflorescence",1,2
+Sulfathiazole,1,4
+"Bambusa D6",1,1
+"Panax Ginseng Mother Tincture D1",1,1
+"Causticum D30",1,1
+"Causticum Hahnemanni D10",1,2
+Phosphocreatine,1,6
+"Pressed Juice From Fresh Flowering Echinacea Purpurea Herb",1,1
+"Thuja Occidentale Trit. D 12",1,3
+"Kalium Carbonicum D4",1,3
+"Mucor Racemosus E Volumine Cellulae (Lyophil., Steril.) D3",1,2
+Rufloxacin,1,1
+"Measles Virus Edmonston-Enders Strain",1,8
+"Piper Methysticum E Radice Siccata",1,2
+"Iobenguane Sulfate I 131",1,1
+"Cinchona Pubescens Ø",1,2
+"Mercurius Solubilis Hahnemanni D1000",1,1
+"Peumus Boldus",1,1
+"Mercurialis Perennis Ferm 34c Ø",1,2
+"Natrium Tetrachloroauratum D8",1,5
+Mifamurtide,1,4
+"N. Meningitidis Group C Oligosaccharide Conjugated To Corynebacterium Diphtheriae Crm197",1,6
+"Guinea Pig Epithelium Extract",1,2
+"Atropinum Sulfuricum",1,4
+"Coenzyme A Trit. D10",1,1
+"Cina D 6",1,2
+"Magnesium Hydroxide Paste Concentrated",1,1
+"Extract From Wormwood",1,1
+"Pinus Sylvestris Trit. D4",1,1
+"Lycopodium Clavatum E Planta Tota Ferm 33e",1,2
+"Sulfur D200",1,3
+"Luffa Operculata D30",1,3
+"Capparis Spinosa Cortex",1,1
+Ritlecitinib,1,4
+"Passiflora Herb Fluid Extract",1,3
+Propantheline,1,3
+Alemtuzumab,1,4
+"Silibinin Dihemisuccinate Disodium",1,5
+Silibinin,1,1
+"Centella Asiatica D4",1,3
+Weißdornblüten-Pulver,1,2
+Metildigoxin,1,8
+"Ignatia Amara D3",1,1
+"Magnesium Chloratum D3",1,1
+"Veronicastrum Virginicum D6",1,2
+"Lavandulae Flore",1,2
+"Matricaria Recutita L. Flos",1,3
+"Paris Quadrifolia D2",1,1
+"Thuja Occidentalis D12",1,3
+"Liquid Extract From A Mixture Of Matricaria Capitula And Ray Florets",1,7
+"Chamomile Oil",1,6
+"Dry Extract Of Pelargonium Root",1,16
+"Ferrous Sulphate Heptahydrate",1,1
+"Thallium Sulfuricum D13",1,1
+"Extract Of St. John's Wort",1,2
+Olodaterol,1,75
+"Eucalyptus Globulus Leaf D2",1,1
+"Indapamide Hemihydrate",1,14
+"Poliovirus Type 1 (Inactivated)",1,9
+"Angelica Archangelica Extract",1,16
+"Hyaluronic Acid",1,1
+Oxomemazine,1,27
+"Conyza Canadensis",1,1
+"Adonis Vernalis D1",1,1
+"Ex Vivo Expanded Autologous Human Corneal Epithelial Cells",1,4
+"Turnera Diffusa D3",1,3
+"Histaminum D30",1,5
+"Hamamelis Virginiana E Cortice Ferm 33e",1,2
+Biclotymol,1,12
+Herring,1,1
+"Liquid Extract From Artemisia Absinthium Herb",1,1
+"Hepar Suis D200",1,1
+"Veronica Virginica",1,3
+"Aconitum Trit. D4",1,2
+"Mixture Of Allergen Extracts From Alopecurus Pratensis",1,2
+Golimumab,1,12
+"Glyceryl Monothioglycolate",1,1
+"Glandula Suprarenalis Dextra Bovis Gl",1,2
+Glycyl-L-Glutamine,1,5
+"Dry Extract From Ginkgo",1,2
+"Gingiva Suis D30",1,1
+"Liquid Extract Of Dandelion Herb With Root",1,1
+Cinolazepam,1,6
+"Ethanolamine Tenoate",1,3
+"Iris Versicolor D2",1,3
+"Bovine Bile Extract",1,2
+"Absinthium Tincture",1,2
+"Marsdenia Cundurango",1,1
+"Laurel Oil",1,1
+"Angelica Root",1,9
+"Human Papillomavirus Type 58 L1 Protein",1,4
+Furazolidone,1,3
+"Furagin Soluble",1,2
+Alchemilla,1,5
+"Foscarnet Sodium Hexahydrate",1,42
+Formaldehyde,1,3
+Fluoromethyl-(18f)-Dimethyl-2-Hydroxyethyl-Ammonium,1,6
+"Lichen Islandicus / Cladonia Rangiferina / Usnea Barbata",1,1
+"Papaver Somniferum",1,1
+"Sodium Tetradecyl",1,12
+"Ion (Fe3+)",1,2
+Penciclovir,1,31
+China,1,3
+"Almond Oil",1,4
+"Euphorbium D4",1,7
+Nilvadipine,1,1
+"Vincetoxicum Hirundinaria",1,6
+"Thyme Tincture",1,1
+"Manganese Sulphate",1,6
+"Dry Extract From Birch Leaf",1,2
+"Magnesium Acetate",1,5
+"Liquid Extract Of Fresh Echinacea Purpurea Herb",1,4
+"Coffea Arabica Trit. D6",1,1
+4-(4-Hydroxy-4-Methylpentyl)Cyclohex-3-Ene-1-Carbaldehyde,1,2
+Ozenoxacin,1,3
+"Inactivated Bordetella Pertussis Suspension",1,1
+"Psychotria Ipecacuanha C3",1,8
+"Psychotria Ipecacuanha D1",1,1
+"Lobelia Inflata D3",1,7
+"Avena Sativa D2",1,14
+Furazidine,1,19
+"Convallaria Majalis D4",1,2
+"Ammonium Carbonicum D4",1,1
+"Rhododendron Mother Tincture",1,1
+"Symphytum Officinale D12",1,2
+"Calendula Officinalis D4",1,5
+"Strontium Carbonicum D12",1,1
+"Hydrargyrum Sulfuratum Rubrum D12",1,3
+"Natrium Sulfuricum D30",1,2
+"Ferrum Iodatum D12",1,12
+"Cimicifuga Racemosa D6",1,2
+"Centaurii Herba",1,10
+"Fluid Extract From Whitethorn Fruit",1,5
+"Dry Extract From Rubus Idaeus",1,3
+"Rhubarb Root",1,3
+"Citrullus Colocynthis D6",1,14
+"Podophyllum Peltatum C9",1,1
+"Rose Fruit",1,4
+"Festuca Elatior Pollen",1,3
+Darunavir,1,109
+"Iron(Iii)-Hydroxide Dextran Complex",1,14
+"Hepar Suis D8",1,6
+Lincomycin,1,15
+"Dried Aluminium Hydroxide",1,1
+"Bryonia Cretica D4",1,3
+"Magnesium Oroticum Dihydricum D6",1,5
+"Citrullus Colocynthis C9",1,3
+Chlorzoxazone,1,9
+"Kalium Bichromicum Trit. D3",1,3
+"Cichorium Intybus Var. Sativum Stanno Cultum",1,1
+"Retina Et Chorioidea Bovis",1,3
+"Human Chorionic Gonadotropin",1,20
+"Curcuma Zanthorrhiza Rhizoma D1",1,1
+"Cholesterolum D4",1,2
+"Solidago Virgaurea Urtinktur",1,6
+Propanol,1,23
+"Ornithine Oxoglutarate",1,1
+"Cerebrum Suis D30",1,2
+"Aesculus Hippocastanum D4",1,6
+Suxamethonium,1,59
+"Viscum Album Trit. D4",1,1
+"Hydrargyrum Sulfuratum Rubrum D4",1,2
+Cefradine,1,8
+"Aesculus Hippocastanum Bark",1,1
+"Articulatio Interphalangea Bovis Gl",1,2
+"Nutmeg Oil",1,9
+Stannous,1,10
+"Cola Extract",1,1
+"Isosorbide Dinitrate",1,63
+"Pneumococcal Polysaccharide Serotype 24f Conjugated To Crm197",1,4
+"Valeriana Officinalis D2",1,4
+"Cocculus D4",1,1
+"Lilium Tigrinum Trit. D6",1,3
+"Melissa Leaf Dry Extract",1,13
+"Passion Flower Dry Extract",1,5
+"Valerian Dry Hydroalcoholic Extract",1,1
+"Calcium Levofolinate",1,11
+"Rubi Fruticosi Folium",1,9
+"Cinis E Fructibus Avenae Sativae Cum Magnesio Phosphorico Trit. D2",1,1
+Bumetanide,1,29
+"Lamium Album",1,2
+"Capsicum Tincture",1,5
+"Piroxicam Betadex",1,21
+"Ratanhia Ø",1,1
+"Artemisia Abrotanum Ex Herba Ferm 33c Ø",1,1
+Tibolone,1,70
+"Sennae Folii Extractum Siccum Normatum",1,3
+"Clostridium Botulinum Neurotoxin Type A (150kd)",1,63
+"Aromatic Ammonia Solution",1,1
+"Dry Extract Of Marshmallow Root",1,44
+Thrombin,1,1
+Cethexonium,1,4
+"Kalium Arsenicosum D12",1,2
+"Natrium Tetrachloroauratum D12",1,2
+"Tincture From Melissa Herb",1,1
+Tasonermin,1,4
+"Kalium Carbonicum D2",1,1
+"Oxalic Acid D8",1,1
+"Pulsatilla D4",1,4
+Metoprolol,1,314
+"Nux Vomica Trit. D5",1,1
+"Rosae Aetheroleum )",1,10
+"Bcg (Bacillus Calmette-Guérin)",1,27
+"Arctostaphylos Uva-Ursi",1,3
+Clozapine,1,132
+"Fluciclovine (18f)",1,4
+"Senna Pods",1,23
+"Aurum Metallicum Trit. D30",1,1
+"Atorvastatin Calcium Trihydrate",1,100
+Horse,1,15
+"2,4 Dichlorobenzyl Alcohol, Anhydrous Lidocaine",1,3
+"Magnesium Aspartate",1,41
+"Arum Triphyllum Dil D2",1,1
+"Arisaema Triphyllum",1,3
+"Rhus Toxicodendron D2",1,20
+"Nadidum D8",1,13
+"Acidum Thiocticum D8",1,19
+"Embryo Totalis Suis D6",1,7
+Ceylon,1,2
+"Liquid Extract From Fresh Arnica Flower",1,3
+"Hypophysis Bovis Gl",1,16
+"Medulla Oblongata Suis Gl",1,2
+"Cor Bovis",1,3
+"Mercurius Bijodatus",1,3
+Mandragora,1,6
+"Apis Mellifica 42b",1,1
+"Milk Thistle Dry Extract 162.5 - 250 Mg",1,2
+"Dry Bearberry Leaf Extract",1,10
+Archangelica,1,2
+Bimatoprost,1,329
+"Azelaic Acid",1,49
+"Toxicodendron Quercifolium",1,6
+"Dryopteris Filix-Mas E Radice Ferm 33c",1,5
+"Ononis Spinosa Dry Extract",1,5
+"Allium Cepa D6",1,8
+"Aconitum Napellus D18",1,1
+"Arnica Tincture",1,6
+"Leontopodium Alpinum",1,1
+Motherwort,1,7
+"Lavandulae Flos",1,17
+"Antimonit Trit. D4",1,4
+"Tannic Acid",1,4
+"Dry Extract From Ginger Rhizome",1,1
+"Physostigmine Salicylate",1,2
+"Baptisia D3",1,1
+"Hydrargyrum Bichloratum D8",1,15
+"Pulsatilla Vulgaris",1,2
+"Ginkgo Biloba Extract",1,4
+"Adonis Vernalis Mother Tincture",1,1
+"Calcium Arsenicosum",1,1
+Terbinafine,1,343
+Phenylalanine,1,1226
+Pork,1,9
+Egg,1,10
+"Wasp Venom (Vespula Spp)",1,4
+"Tyrophagus Putrescentiae",1,27
+"Horse Epithelia",1,26
+"Helminthosporium Halodes",1,26
+"Amarantus Retroflexus L",1,23
+"Artemisia Vulgaris L",1,41
+"Sodium Hyaluronate",1,43
+Inactivated,1,246
+"Human Coagulation Factor Viii",1,179
+"Zincum Valerianicum D12",1,6
+Prochlorperazine,1,30
+Betula,1,64
+"Aralia Racemosa D3",1,2
+"Plantago Lanceolata",1,38
+"Cladosporium Herbarum",1,7
+Guaiacol,1,4
+"Trometamol Citrate, Anhydrous Disodium",1,1
+"Isopropyl Alcohol",1,166
+"Clopidogrel Hydrogen",1,33
+"Dry Extract From Chaste Tree Fruits",1,24
+Thymol,1,33
+"Nicotiana Tabacum Dil D6",1,6
+"Aesculus Seed Dry Extract",1,1
+Oxazepam,1,51
+Donepezil,1,333
+"Arctium D8",1,1
+"Sodium Valproate",1,257
+"Histaminum Dihydrochloricum D22",1,1
+Anagrelide,1,120
+Crataegus,1,34
+"Lobaria Pulmonaria D4",1,9
+"Podophyllum Peltatum D6",1,7
+Delapril,1,9
+"Poliovirus (Inactivated) Type 3",1,160
+"Nitrous Oxide",1,238
+"Magnesium Carbonate",1,22
+"P-Aminobenzoic Acid",1,4
+Zinc,1,34
+Cyanocobalamin,1,400
+Biotin,1,148
+"Nitroglycerinum C4",1,3
+"Toxicodendron Quercifolium E Foliis Ferm 33d",1,7
+"Quarz Oleos",1,2
+Naphazoline,1,74
+Tazobactam,1,281
+"Acidum Malicum D200",1,2
+"Trichloroacetic Acid",1,1
+"Gadoteric Acid",1,122
+"Pantoprazole Sodium Sesquihydrate",1,158
+"Alendronic Acid",1,172
+Allopurinol,1,204
+"4,4-Methylenedianiline",1,1
+3-Aminophenol,1,1
+"Ribonucleic Acid K10",1,1
+Interleukin-5,1,5
+131i-Meta-Iodobenzyl-Guanidine,1,2
+"1,4-Bis(2,3-Epoxypropoxy)Butane",1,1
+"Granulocyte Colony-Stimulating Factor C30",1,1
+"Tuberculin Purified Protein Derivative For Human Use",1,1
+"Solanum Dulcamara D10",1,1
+"Primulae Extractum Fluidum",1,1
+Elbasvir,1,4
+"Paris Quadrifolia D4",1,2
+"Lactobacillus Delbrueckii Subsp. Bulgaricus",1,1
+"Atractylodes Lancea Rhizome",1,1
+Eravacycline,1,4
+"Triticum Aestivum Pollen",1,1
+"White Cabbage",1,1
+"Cyproheptadine Pyridoxalphosphate",1,1
+"Viscum Album (Populi) E Planta Tota Ferm 33f",1,2
+"Viscum Album Pini Ex Herba Recente Col. D20",1,1
+"Viscum Album Crataegi Ex Herba Recente Col. D10",1,1
+"Chikungunya Virus, Strain Senegal 37997",1,4
+"Petroleum Rectificatum Trit. D8",1,3
+"Conium Maculatum Trit. D3",1,3
+"Thuja Occidentalis C9",1,1
+"Bordetella Pertussis Filamentous Haemagglutinin",1,12
+"Valeriana Officinalis Root",1,1
+"Valerian Dry Root Extract - Valerianae Radix",1,2
+"Dry Extract From Urticae Folium",1,1
+"Scilla D4 Trit",1,1
+"Vitis Idaeae Folium",1,1
+"Technetium (99mtc)",1,22
+"Carbo Animalis D8",1,1
+"Chelidonium Majus L. Herba",1,1
+"Sacituzumab Govitecan",1,4
+"Symphytum X Uplandicum Fresh Herb Preparation",1,5
+"Cephaelis Ipecacuanha D4 Vinos",1,1
+"Aconitum Napellus D4 Vinos",1,2
+"Atropinum Sulfuricum Trit. D5",1,6
+"Mercurius Cyanatus Trit. D8",1,1
+"Kalium Stibyltartaricum D6",1,1
+"Embryo Totalis Suis D13",1,2
+Dexfosfoserine,1,1
+"Turnera Diffusa D8",1,1
+"Kalium Picrinicum D6",1,1
+"Conium Maculatum D28",1,1
+"Pneumococcal Polysaccharide Serotype 18c Conjugated To Tetanus Toxoid Carrier Protein",1,4
+Beractant,1,1
+"Equine Collagen",1,1
+"Saw Palmetto Soft Extract",1,2
+"Zincum Oxydatum C3",1,3
+"Melilotus Officinalis Trit D3",1,1
+"Melilotus Officinalis D3",1,1
+"Cuprum Sulfuricum D4",1,1
+"Fumaria Officinalis Hydroalcoholic Extract",1,2
+"Helleborus Niger D1",1,1
+"Primula Flower With Calyx",1,48
+"Calcium Fluoratum D4",1,1
+"Senna Alexandrina Fruit Dry Extraxt",1,1
+"Coffea Arabica D6",1,1
+"Plumbum Mellitum Trit. D12",1,2
+"Magnesium Phosphoricum Trit. D4",1,1
+"Pulsatilla Pratensis D15",1,1
+"Extractum Siccum",1,3
+Entrectinib,1,4
+"Leonurus Cardiaca D4",1,1
+"Alsine Media Mother Tincture",1,1
+"Echinaceae Purpureae Herba",1,1
+"Epoetin Zeta",1,8
+"Formica Rufa D6",1,2
+Aescin,1,1
+"Berberis Vulgaris Spag. Peka",1,1
+"Dry Hydroalcoholic Extract Of Valerian (Valeriana Officinalis L. Radix)",1,4
+"Aurum Iodatum",1,1
+"Rat Hair",1,1
+Aliskiren,1,4
+"Sambuci Fructu",1,1
+"Soft Extract Of Artichoke Herb",1,2
+"Acidum Arsenicosum Dil D11",1,1
+"Calcium Phosphoricum Trit. D 1",1,1
+"Quinidine Gluconate",1,1
+Ripretinib,1,4
+"Digitalis Purpurea D12",1,1
+"Euphrasia D5",1,4
+"Corallium Rubrum",1,2
+"Serenoa Repens Fruits Hydroalcoholic Extract",1,2
+"Oculus Totalis Suis D200",1,2
+"Triamcinolone Diacetate",1,1
+Mequitazine,1,1
+"Pneumococcal Polysaccharide Serotype 23f Conjugated To Crm197",1,12
+"Pneumococcal Polysaccharide Serotype 14 Conjugated To Crm197",1,12
+Sonidegib,1,3
+"Manganum Sulfuricum D10",1,1
+Mogamulizumab,1,4
+"Cipaglucosidase Alfa",1,4
+Azoximer,1,1
+"Sodium Diethylenetriaminepentaacetate",1,2
+"Grass Pollen Thick Extract (Rye : Timothy Grass : Maize, 30:1.5:1)",1,1
+"Rye Grass Pollen",1,2
+"Pneumococcal Polysaccharide Serotype 22f",1,28
+"Plane Pollen",1,5
+Picotamide,1,1
+Alpelisib,1,4
+Jodum,1,1
+"Dactylopius Coccus Trit. D 2",1,1
+"Lemna Minor Trit. D 2",1,1
+"Anisum Stellatum Trit. D 2",1,1
+"Apisinum Trit. D 10",1,2
+"Anamirta Cocculus Dil D 15",1,1
+"Pemetrexed Disodium Hemipentahydrate",1,16
+"Candida Parapsilosis E Volumine Cellulae (Lyophil., Steril.) D6",1,1
+Ambra,1,2
+"Dry Extract Of The Passionflower Herb",1,1
+"Polygonum Aviculare L. Herba",1,3
+"Aquilegia Vulgaris D4",1,2
+"Ferrum Phosphoricum Dil. C8",1,1
+Precipitated,1,3
+"Acorus Calamus Rhizome",1,2
+"Phenoxymethylpenicillin Benzathine Lecithinated",1,1
+Baricitinib,1,4
+Olmesartan,1,9
+"Potassium Gluconate",0,7
+"Sodium Phosphate Dodecahydrate",0,1
+"Cobalt Gluconate 2h2o",0,3
+"Silver Colloidal",0,1
+"Gold Powder",0,1
+Aganirsen,0,1
+"Olea Europaea Pollen Extract",0,2
+"Silver Gluconate",0,2
+"Nickel Gluconate",0,3
+"Iron Protein Acetyl Aspartate",0,2
+"Omega-3 Fatty Acids",0,2
+"Highly Refined Fish Oil",0,18
+"Purified Egg Phosphatide",0,5
+"Pelargonium Roots Tincture",0,14
+Ketorolac,0,2
+Momelotinib,0,4
+Omalizumab,0,8
+"Testosterone Decanoate",0,15
+"Testosterone Isocaproate",0,15
+"Testosterone Phenylpropionate",0,15
+"Testosterone Propionate",0,17
+Gadodiamide,0,26
+Mirikizumab,0,8
+"Schoenocaulon Officinale D1",0,1
+"Bryonia D1",0,1
+"Aconitum Napellus D1",0,13
+Pegaspargase,0,4
+"Disodium Folinate",0,4
+"Bacillus Calmette-Guérin (Bcg)",0,14
+Tice,0,14
+"Mefenidramium Metilsulfate",0,2
+"Andexanet Alfa",0,4
+Opicapone,0,4
+Patisiran,0,4
+Procaterol,0,2
+Cenobamate,0,4
+Nivolumab,0,12
+Relatlimab,0,4
+Benzododecinium,0,4
+"Esculin Sesquihydrate",0,4
+"Squill Liquid Extract",0,1
+"Bellis Perennis Spag. Peka D1",0,1
+"Glechoma Hederacea Spag. Peka Ø",0,2
+"Gratiola Officinalis",0,2
+Butalbital,0,2
+Epinastine,0,14
+"Ornithine L-Form Aspartate",0,2
+Ioversol,0,29
+"Bismuth Gluconate",0,1
+"Glucose Monohydrate, Disodium Hydrogen",0,1
+"Glucose Monohydrate, Disodium Citrate Sesquihydrate",0,1
+"Glucose Monohydrate , Disodium Hydrogen Citrate 1.5 H2o",0,1
+"Ambrosia Artemisiifolia Pollen Extract",0,2
+"Artemisia Vulgaris Pollen Extract",0,4
+"Betula Pendula Pollen Extract",0,8
+"Alnus Glutinosa Pollen Extract",0,12
+"Corylus Avellana Pollen Extract",0,11
+"Dermatophagoides Farinae Extract",0,4
+"Dermatophagoides Pteronyssinus Extract",0,6
+"Mixture Of Allergen Extacts From Holcus Lanatus",0,1
+"Poa Pratensis And Festuca Pratensis",0,1
+"Mixture Of Allergen Extracts From Ambrosia Artemisiifolia And Artemisia Vulgaris",0,1
+"Mixture Of Allergen Extracts From Betula Pendula",0,1
+"Alnus Glutinosa And Corylus Avellana",0,1
+"Mixture Of Allergen Extracts From Dermatophagoides Pteronyssinus And Dermatophagoides Farinae",0,1
+"Phleum Pratense Pollen Extract",0,13
+"Festuca Pratensis Pollen Extract",0,2
+"Lolium Perenne Pollen Extract",0,16
+"Poa Pratensis Pollen Extract",0,16
+"Dactylis Glomerata Pollen Extract",0,16
+"Secale Cereale Pollen Extract",0,15
+Pimozide,0,17
+Odronextamab,0,4
+Abatacept,0,8
+Taka-Diastase,0,1
+"Crocus Sativus D3",0,1
+Relugolix,0,8
+"Chrome Chloryde Hexahydrate",0,1
+"Artemisia Absinthium L. Herba",0,2
+"Curcuma Zedoaria",0,2
+"Commiphora Myrrha",0,2
+"Cinnamomum Verum",0,3
+"Potentilla Erecta Ø",0,3
+"Zinc Gluconate Trihydrate",0,2
+"Soft Extract Of Thyme",0,1
+Lumacaftor,0,4
+Berotralstat,0,4
+Eflornithine,0,5
+"Cholic Acid",0,5
+Elacestrant,0,4
+Safinamide,0,29
+"Putamen Ovi",0,1
+"Os Suis D10",0,2
+"Os Suis D200",0,2
+"Os Suis D30",0,2
+"Calcium Carbonicum Hahnemanni C8",0,3
+"Magnesium Phosphoricum C6",0,3
+"Ferrum Phosphoricum C8",0,3
+"Magnesium Phosphoricum Dil. C6",0,1
+"Calcium Carbonicum Hahnemanni Dil. C8",0,1
+"Colloidal Gold",0,3
+"Anas Barbariae Hepatis Et Cordis Extractum K200",0,17
+Sultiame,0,23
+"Ossein Hydroxyapatite Compound",0,4
+"Galipea Officinalis Spag. Peka D4",0,1
+"Equisetum Arvense Ø",0,1
+"Bellis Perennis Spag.Peka",0,1
+"Ruta Graveolens Spag.Peka",0,1
+"Asa Foetida Trit. D 4",0,3
+"Stillingia Sylvatica Trit. D4",0,2
+"Hekla Lava E Lava Trit. D6",0,1
+"Hydrargyrum Oxydatum Rubrum D9",0,1
+"Calcarea Carbonica Ostrearum",0,1
+"Calcarea Fluorica",0,1
+"Calcarea Phosphorica",0,1
+"Calcarea Phosphorica D3",0,4
+"Sulfur Iodatum C4",0,4
+"Calcium Carbonicum Hahnemanni D3",0,2
+"Etidronate Disodium Tetrahydrate",0,1
+"Calcium Pidolate",0,1
+"Chamomilla D3",0,6
+"Butylene Glycol",0,2
+Paradichlorobenzene,0,1
+"Turpentine Flavour",0,4
+"Capsicum Annuum",0,10
+"Acidum Boricum",0,2
+"Aurum Metallicum Trit. D 4",0,1
+"Graphites Trit. D 4",0,1
+"Phytolacca Americana Trit D 3",0,2
+"Thuja Occidentale Trit. D 3",0,4
+"Viola Odorata Trit. D 3",0,1
+"Hepar Sulfuris Trit. D3",0,7
+Iodum,0,4
+"Sanguinaria Canadensis Ø",0,3
+Polymyxin,0,1
+"Follitropin Alfa (Genetical Recombination)",0,4
+"Calvatia Gigantea D6",0,2
+"Cypripedium Parviflorum Var. Pubescens D6",0,2
+"Dry Extract Of Olive Leaf",0,1
+"Hypophysis Suis D13",0,2
+"Kreosotum D8",0,2
+"Lilium Lancifolium D4",0,1
+"Pulsatilla Pratensis D18",0,2
+"Tuba Uterina Suis D10",0,2
+"Ovarium Suis D8",0,1
+"Uterus Suis D10",0,2
+"Ovarium Suis D10",0,1
+"Ovarium Suis D200",0,1
+"Ovarium Suis D30",0,1
+Treosulfan,0,22
+"Choriogonadotropin Alfa",0,4
+"Liquid Extract From Hawthorn Leaf And Flower",0,1
+"Leonurus Cardiaca Extract",0,2
+"Dry Extract Of Motherwort Herb",0,1
+"Dry Extract Of Mixture Of Hawthorn Leaf With Flower And Hawthorn Berries",0,1
+"Oxalis Acetosella E Planta Tota La 20%",0,1
+Oxalis,0,4
+"Oxalis Acetosella E Planta Tota W 10%",0,1
+"Oxycodone Hydrochloride Trihydrate",0,1
+Etofylline,0,4
+Voxelotor,0,4
+Cenegermin,0,4
+Lumasiran,0,4
+"Chlorite Ion",0,1
+"Chlorate Ion",0,1
+Tetrachlorodecaoxide,0,1
+Oxolamine,0,2
+"Potassium Chlorate",0,1
+"Sodium Percarbonate",0,1
+"Sodium Peroxide",0,1
+"Sulfuric Acid",0,1
+Pitolisant,0,8
+"Enfortumab Vedotin",0,4
+"Plantago Lanceolata L",0,6
+"Dry Extract Of Mistletoe",0,1
+"Terminalia Chebula Fruit",0,3
+"Cardamom Fruit",0,1
+"Azadirachta Indica Fruit",0,2
+"Valeriana Officinalis Radix",0,2
+"Syzygium Aromaticum",0,3
+"Hamamelis Virginiana Trit. D 3",0,3
+Bisbutylcarboethylene,0,1
+"Defatted Powder Of Arachis Hypogaea L",0,4
+Pegvaliase,0,4
+Pamidronate,0,1
+"Pamidronic Acid",0,1
+"Acidum Sulfuricum D8",0,1
+"Viscum Album D8",0,1
+"Potassium Aspartate",0,9
+"Pancreas Suis D30",0,3
+"A / Vietnam / 1203 / 2004 (H5n1) Strain (A / Vietnam / 1203 / 2004, Medi 0141000136)",0,4
+"A / California / 7 / 2009 (H1n1) V Reass. X - 179 A",0,1
+"A / California / 7 / 2009(H1n1)-Like Strain (Nymc X-179a)",0,2
+"Pancreas Suis D200",0,2
+"Pancreas Suis D8",0,1
+Pantethine,0,1
+Keratin,0,5
+"4-Aminobenzencarboxi Acid",0,1
+"Calcium D-Pantothenate",0,1
+Panthenol,0,1
+Hemicellulase,0,1
+"P-Benzochinonum D12",0,1
+"P-Benzochinonum D200",0,1
+"P-Benzochinonum D30",0,1
+"P-Benzochinonum D8",0,1
+"Eupatorium Perfoliatum C4",0,5
+"Gelsemium Sempervirens C4",0,5
+"Sulfur C5",0,4
+"Tuba Uterina Bovis Gl",0,1
+"Parametrium Bovis Gl",0,1
+"Psyllium Husk",0,1
+"Glandulae Parathyreoideae Bovis Gl",0,2
+"Phenyl Salicylate",0,4
+"Mentha Canadensis Oil",0,1
+Oxerutins,0,2
+Etelcalcetide,0,3
+"Acidum Formicicum D2",0,1
+"Alumen Chromicum D1",0,1
+"Gelsemium Sempervirens D2",0,2
+"Alumen Chromicum Trit. D1",0,1
+"Acidum Formicicum Trit. D2",0,1
+"Gelsemium Trit. D2",0,1
+"Ononis Spinosa Mother Tincture",0,2
+"Aletris Farinosa D3",0,1
+"Vitex Agnus-Castus D2",0,2
+"Caulophyllum Thalictroides D2",0,1
+"Packera Aurea D5",0,1
+"Fraxinus Americana D3",0,1
+"Lilium Lancifolium D3",0,1
+"Viburnum Prunifolium",0,1
+"Packera Aurea Trit. D5",0,1
+"Cimicifuga Trit. D6",0,1
+"Vitex Agnus-Castus Trit. D2",0,1
+"Aletris Farinosa Trit. D3",0,1
+"Pulsatilla Trit. D4",0,1
+"Chamaelirium Luteum Trit. D3",0,1
+"Lilium Lancifolium Trit. D3",0,1
+"Caulophyllum Thalictroides Trit. D2",0,1
+"Packera Aurea",0,2
+"Dry Extract Of Hawthorn Berries",0,1
+"Baptisia Trit. D4",0,2
+"Bryonia Trit. D1",0,1
+"Thuja Trit. D4",0,1
+"Baptisia Tinctoria Mother Tincture",0,3
+Myrrha,0,1
+"Lycosa D5",0,1
+Tarantula,0,2
+"Equisetum Hiemale Mother Tincture",0,1
+Helleborus,0,1
+"Sarsaparilla Mother Tincture",0,1
+"Balsamum Copaivae",0,2
+"Hydrangea Arborescens",0,1
+"Achillea Millefolium Dil D 2",0,3
+"Passiflora Incarnata Flowering Top",0,1
+Aminosalicylate,0,1
+"Avena Sativa Ferm 33c Ø",0,1
+"Humulus Lupulus Ex Herba Et Fructibus Ferm 34d Ø",0,1
+"Valeriana Officinalis E Radice Ferm 33c Ø",0,1
+"Passiflora Caerulea Ex Herba Ferm 33c Ø",0,1
+"Salix Alba Ssp. Vitellina E Cortice Et Foliis Ferm 33d",0,3
+"Passiflora Caerulea Ex Herba Ferm 33c",0,2
+Lupulus,0,2
+"Atropa Bella-Donna D5",0,3
+"Eschscholtzia Californica Ex Herba Flor. Rec. Ø",0,1
+"Dry Extract From Passionflower Herb (Equivalent To 2125-2975 Mg Of Passion Flower)",0,1
+"Liquid Extract From Passiflora Incarnata Herb",0,1
+"Peloid Mass",0,1
+"Potato Starch",0,5
+"Aconitum Napellus C5",0,3
+"Atropa Bella-Donna C5",0,2
+"Drosera C5",0,2
+"Psychotria Ipecacuanha C5",0,2
+"Extract Of Fresh Opium Poppy",0,1
+Oxeladin,0,5
+Nirmatrelvir,0,4
+"Eicosapentanoic Acid / Docosahexaenoic Acid",0,1
+Pazopanib,0,170
+"Macrogol Glycerol Hydroxystearate",0,1
+"Crataegus Trit. D3",0,1
+"Cactus Trit. D7",0,1
+"Spigelia Trit. D5",0,1
+"Magnesium Phosphoricum Trit. D7",0,1
+"Lichene Islandico",0,1
+"Hyssopi Herba",0,1
+"Saponariae Radice",0,1
+"Pinus Sylvestris Ø",0,1
+"Acetyl Sulfafurazole",0,1
+"Permethrin Bpc Cis:Trans / 25:75",0,7
+"Oleum Strophanthi Kombe",0,1
+"Candida Parapsilosis E Volumine Cellulae (Lyophil., Steril.) D4",0,1
+"Peginterferon Alfa-2a",0,4
+"Plantago Major Spag. Peka",0,3
+"Pulsatilla Pratensis Spag. Peka",0,1
+"Delphinium Staphisagria Spag. Peka",0,3
+"Pelargonium Root Liquid Extract",0,1
+"Pelargonium Sidoides",0,2
+Pemigatinib,0,4
+"Pemetrexed Disodium",0,10
+"Rosmarini Aetheroleum",0,1
+"Pemetrexed Disodium Heptahydrate",0,6
+Pivmecillinam,0,28
+Sulfamethylthiazole,0,1
+"Pentamidine Isetionate",0,18
+"Immunoglobulin A",0,6
+"Immunoglobulin G",0,6
+"Immunoglobulin M",0,6
+Pentazocine,0,3
+Thiopental,0,24
+"Melphalan Flufenamide",0,4
+Guaiazulene,0,2
+Pepsin,0,1
+"Perphenazine Decanoate",0,6
+"Perazine Dimaleate",0,2
+"Perazine Dimalonate",0,1
+"Crataegi Folium Cum Flore Extractum Siccum",0,2
+Enoximone,0,5
+Perindopril,0,29
+"Melissa Cupro Culta D3",0,1
+"Viburnum Opulus D6",0,1
+"Mandibula Feti Bovis Gl",0,2
+"Maxilla Feti Bovis Gl",0,2
+"Periodontium Bovis Gl",0,2
+"Lysine Amidotrizoate",0,5
+Pertuzumab,0,8
+"Serenoa Repens (Bartram) Small",0,4
+"Agrostis Alba",0,1
+"Apera Spica Venti",0,1
+"Drosera D1",0,1
+"Dactylopius Coccus D8",0,1
+"Mephitis Putorius D8",0,1
+"Coccus Cacti",0,1
+"Mephitis Putorius",0,1
+"Sodium (Lactate)",0,1
+"Petasites Hybridus",0,1
+"Petasites Hybridus E Radice Ferm 33c",0,4
+"Abies Alba E Summitatibus Ferm 33d",0,2
+Protionamide,0,3
+Mesuximide,0,1
+"Horse Epithelium Extract",0,2
+"Horse Hair",0,1
+"Dactylopius Coccus Urt",0,1
+"Kalium Stibyltartaricum Dil D 12",0,1
+"Adonis Vernalis Trit D 3",0,1
+"Apocynum Cannabium Trit D 3",0,2
+"Convallaria Majalis Trit. D 3",0,1
+"Digitalis Purpurea Trit. D 4",0,1
+"Kalmia Latifolia Trit. D 3",0,1
+"Naja Naja Trit. D 10",0,1
+"Urginea Maritima Trit D 3",0,1
+"Acidum Hydrochloricum",0,1
+"Carbo Animalis",0,1
+"Aluminium Oxydatum Trit. D 3",0,1
+"Collinsonia Canadensis Trit. D 2",0,2
+"Citronellae Aetheroleum",0,1
+"Colecalciferol Concentrate (Sds)",0,2
+"Apocynum Cannabium Trit D 2",0,1
+"Crataegus Trit. D 2",0,1
+"Liatris Spicata Trit. D 2",0,1
+"Prunus Spinosa Trit. D 2",0,1
+"Strophantus Gratus Trit. D 4",0,1
+"Bellis Perennis Trit: D 2",0,3
+"Calcium Sulfuricum Trit. D 3",0,1
+"Hepar Sulfuris Trit. D 3",0,3
+"Myristica Sebifera D3",0,2
+"Bismutum Subnitricum Dil. 10",0,1
+"Bryonia Trit. D 5",0,1
+"Chamomilla Recutita Trit. D 3",0,2
+"Euphrasia Trit. D 3",0,1
+"Ferrum Phosphoricum Trit. D 4",0,3
+"Hydrargyrum Bichloratum Trit. D8",0,2
+"Lytta Vesicatoria Trit. D 4",0,3
+"Ptelea Trifoliata Trit. D 3",0,1
+"Silybum Marianum Trit. D 3",0,1
+"Yucca Filamentosa Trit. D3",0,1
+"Natrium Tetrachloroauratum",0,1
+"Actaea Spicata Trit. D 3",0,1
+"Alsine Media Trit. D 3",0,1
+"Ammonium Benzoicum Trit. D 3",0,1
+"Bellis Perennis Trit. D 3",0,1
+"Guajacum Trit. D 3",0,1
+"Manganum Aceticum Trit. D 4",0,1
+"Aesculus Hippocastanum Trit. D 2",0,1
+"Paeonia Officinalis Trit. D 2",0,1
+"Balsamum Peruvianum",0,1
+"Rauwolfia Serpentina Trit. D 4",0,1
+"Zincum Metallicum Trit. D 4",0,1
+"Stillingia Sylvatica",0,1
+"Raphanus Sativus Var. Niger",0,1
+"Anisum Stellatum",0,1
+"Ammonium Jodatum Trit D 4",0,1
+"Drosera Trit. D 3",0,3
+"Eucalyptus Globulus Trit. D 3",0,1
+"Euspongia Officinalis Trit. D 4",0,1
+"Rumex Crispus Trit. D 3",0,1
+"Stibium Sulfuratum Aurantiacum Trit. D3",0,1
+"Fraxinus Americana Trit D 2",0,1
+"Calcium Fluoratum Trit. D 3",0,1
+"Euspongia Officinalis Trit. D 3",0,2
+"Lapis Albus Trit. D 4",0,1
+"Spongilla Lacustris Trit. D 3",0,2
+"Fucus Vesiculosus D3",0,2
+"Mahonia Aquifolium Trit. D 6",0,2
+"Cuprum Aceticum Trit D 3",0,2
+"Datura Stramonium Trit. D 6",0,1
+"Gratiola Officinalis Trit. D 3",0,1
+"Magnesium Chloratum Trit. D 3",0,2
+"Populus Balsamifera",0,1
+"Calcium Fluoratum Trit. D 4",0,3
+"Hekla Lava E Lava Trit. D4",0,1
+"Tilia Europaea",0,1
+"Carbo Vegetabilis Trit. D 4",0,2
+"Kalium Sulfuricum Trit. D 3",0,1
+"Quebracho Trit. D 3",0,1
+"Zingiber Officinalis Trit. D 3",0,1
+"Cinnamomum Camphora Bark Oil",0,3
+"Acidum Nitricum Trit. D 6",0,1
+"Aluminium Oxydatum Trit. D 8",0,1
+"Graphites Trit. D 5",0,1
+"Kalium Bichromicum Trit. D 4",0,1
+"Pulsatilla Pratensis Trit. D 4",0,3
+"Gelsemium Sempervirens Trit D 6",0,1
+"Lathyrus Sativus Trit. D 3",0,1
+"Toxicodendron Quercifolium Trit. D 4",0,1
+"Calcium Carbonicum Hahnemanni Trit. D 4",0,2
+"Kalium Nitricum Trit. D 4",0,1
+Acipimox,0,4
+"Teucrium Marum Trit. D5",0,1
+Dementholised,0,1
+"Solidago Virgaurea Trit. D 2",0,2
+"Olanzapine Micronized",0,12
+"Resina Piceae",0,1
+"Robinia Pseudoacacia",0,1
+"Petroleum Rectifictum Dil D 12",0,1
+"Serenoa Repens Trit. D 2",0,3
+"Chondrodendron Trit. D3",0,2
+"Cuprum Metallicum Trit. D 4",0,1
+"Dactylopius Coccus Trit. D 1",0,1
+"Narcissus Pseudonarcissus Trit. D 3",0,1
+"Filipendula Ulmaria Trit. D 2",0,1
+"Guajacum Trit. D 2",0,1
+"Rhododendron Trit. D 3",0,1
+"Acidum Salicylicum Trit. D 4",0,1
+"Gaultheria Procumbens Trit D 4",0,1
+"Iris Vesicolor Trit D 3",0,1
+"Toxicodendron Quercifolium Trit. D 8",0,1
+"Verbascum Densiflorum Trit. D 3",0,1
+"Zincum Picrinicum",0,1
+"Senecio Bicolor",0,1
+"Vipera Berus D10",0,2
+"Linum Usitatissimum Dil D 2",0,1
+"Sinapis Nigra",0,1
+Solanumlycopersicum,0,1
+"Sulfur Jodatum Trit. D 6",0,1
+"Toxicodendron Quercifolium Trit. D 6",0,1
+"Chionanthus Virginicus D4",0,1
+"Syzygium Cumini D2",0,1
+"Arctostaphylos Uva-Ursi Trit. D 2",0,1
+"Solanum Dulcamara Trit. D 3",0,1
+"Melilotus Officinalis D2",0,1
+"Cyclamen Purpurascens D6",0,1
+Myristalkonium,0,5
+Chloride,0,5
+Methylphenobarbital,0,2
+"Sodium Sulfosalicylate Samarate",0,3
+Trimethylphloroglucinol,0,6
+"Bismuth Sub-Succinate",0,1
+"Arnica Montana E Floribus Sicc. Glückselig",0,11
+"Bolus Alba Spag. Glückselig Ø",0,11
+"Digitalis Purpurea Glückselig",0,7
+"Dryopteris Filix-Mas Ex Herba Rec. Glückselig",0,5
+"Euspongia Officinalis Glückselig Ø",0,2
+"Filipendula Ulmaria Ex Herba Rec. Glückselig Ø",0,6
+"Hydrargyrum Bichloratum Spag. Glückselig",0,10
+"Hypericum Perforatum Ex Herba Glückselig Ø",0,2
+"Juniperus Communis E Fructibus Sicc. Glückselig Ø",0,6
+"Kalium Nitricum",0,5
+"Orthosiphon Stamineus E Foliis Sicc. Glückselig Ø",0,4
+"Solidago Virgaurea Ex Herba Rec. Glückselig Ø",0,6
+"Tartarus Depuratus Spag. Glückselig Ø",0,5
+"Urtica Urens Ex Herba Rec. Glückselig",0,4
+"Cuprum Sulfuricum Et Sulfur Et Tartarus Depuratus Spag. Glückselig Ø",0,1
+"Chelidonium Majus Ex Herba Rec. Spag. Glückselig",0,4
+"Valeriana Officinalis Glückselig Ø",0,2
+"Ferrum Chloratum Solutum",0,1
+"Rosmarinus Officinalis Glückselig Ø",0,1
+"Echinacea Angustifolia E Planta Tota Rec. Spag. Glückselig",0,2
+"Aurum Metallicum D30",0,1
+"Verbena Officinalis Ex Herba Sicc. Glückselig Ø",0,2
+"Asparagus Officinalis",0,2
+"Aesculus Hippocastanum E Semine Sicc. Glückselig Ø",0,2
+"Atropa Bella-Donna E Foliis Rec. Glückselig",0,2
+"Crataegus E Foliis Cum Flores Rec. Glückselig Ø",0,2
+"Paeonia Officinalis E Floribus Sicc. Glückselig Ø",0,2
+"Phosphoric Acid",0,1
+"Calcium Bis(Dihydrogenphosphate)",0,1
+"Aluminium Chlorhydroxide-Complex",0,1
+"Argentum Nitricum D200",0,2
+"Phosphorus D200",0,2
+"Paris Quadrifolia D10",0,3
+"Paris Quadrifolia D200",0,4
+"Paris Quadrifolia D30",0,4
+"Paris Quadrifolia D6",0,4
+Porfimer,0,3
+Metacycline,0,1
+"Primulae Radix",0,2
+"Extract From Goldenrod",0,5
+"Potentilla Anserina Herb And Equisetum Stem",0,5
+"Fraxini Cortex",0,2
+"Populi Cortex Et Folium",0,2
+"European Goldenrod Extract",0,2
+"Tolu Balm",0,1
+"Tincture From Ipecacuanha Root",0,1
+"Hedera Helix D1",0,1
+"Hyoscyamus Niger D3",0,1
+"Fenpipramide Bromomethylate",0,1
+"Avocado Oil Unsaponifiables",0,7
+"Soybean Oil Unsaponifiables",0,7
+"Avocado Oil",0,1
+Crovalimab,0,4
+"Poliovirus Type 1",0,10
+"Inactivated, Strain Brunhilde",0,10
+"Pygeum Africanum Bark",0,1
+"Thymus Extract",0,1
+Mushroom,0,1
+Natamycin,0,11
+Pindolol,0,7
+"Pipemidic Acid Trihydrate",0,1
+Pipotiazine,0,1
+"Pipotiazine Palmitate",0,1
+"Olibanum D12",0,1
+Pyrazinamide,0,37
+"Pizotifen Malate",0,8
+"Solanum Nigrum",0,1
+"Barium Carbonicum Trit. D13",0,1
+"Embryo Totalis Suis D8",0,3
+"Plumbum Jodatum D18",0,2
+"Vena Suis D8",0,2
+"Sarcolacticum Acidum D4",0,5
+"Barium Carbonicum D13",0,1
+"Cuprum Sulfuricum D6",0,11
+"Solanum Nigrum D6",0,1
+"Melilotus Officinalis D6",0,1
+"Placenta Totalis Suis D200",0,2
+"Placenta Totalis Suis D12",0,1
+"Placenta Totalis Suis D8",0,1
+Polydeoxyribonucleotide,0,3
+"Lorazepam Pivalate",0,1
+"Myrrha D6",0,1
+Teicoplanin,0,136
+"Drosera E Planta Tota Ferm 33c",0,1
+"Liquid Extract With Sugar From 0,3 G Picea Abies Herb",0,1
+"Liquid Extract With Sugar From 0,7 G Ribwort Plantain",0,1
+"Plantaginis Extractum Fluidum",0,6
+Melilot,0,4
+Succinated,0,1
+"Okoubaka Aubrevillei Trit. D2",0,1
+"Platanus Spp. Pollen Extract",0,1
+"Platinum Chloratum",0,2
+"Peginterferon Beta-1a",0,8
+"Calcium Amidotrizoate",0,1
+"Aconite Tincture",0,2
+"Sweet Orange Tincture",0,2
+Saponin,0,3
+"Dry Extract Of Horse Chestnut Seeds",0,1
+"Plumbum Aceticum Spag. Glückselig",0,1
+"Plumbum Metallicum Praeparatum Trit. D6",0,1
+"Lutetium (177lu) Vipivotide Tetraxetan",0,4

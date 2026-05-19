@@ -21,5 +21,5 @@ select d.amka, d.firstname, d.lastname,
     from docinfo d
     left join shiftcnt shc on d.amka = shc.doctoramka
     left join surgcnt sc on d.amka = sc.maindocamka
-    where d.specialty = 'Cardiology'; -- Example specialty, change as needed
-
+    where d.specialty = 'Cardiology' -- Example specialty, change as needed
+    order by totalprocedures desc, d.lastname, d.firstname;

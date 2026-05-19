@@ -21,13 +21,32 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (ICDCode, `Description`);
 
+-- Stage costs because the source file contains a few repeated KEN codes.
+DROP TEMPORARY TABLE IF EXISTS CostLoad;
+CREATE TEMPORARY TABLE CostLoad (
+    LoadID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    KENCode VARCHAR(5) NOT NULL,
+    `Description` TEXT NOT NULL,
+    BaseCost MEDIUMINT NOT NULL,
+    PredictedAvgTime INT NOT NULL
+);
+
 LOAD DATA LOCAL INFILE 'data/cost.csv'
-INTO TABLE Cost
+INTO TABLE CostLoad
 CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (KENCode, `Description`, BaseCost, PredictedAvgTime);
+
+INSERT INTO Cost (KENCode, `Description`, BaseCost, PredictedAvgTime)
+SELECT cl.KENCode, cl.`Description`, cl.BaseCost, cl.PredictedAvgTime
+FROM CostLoad cl
+JOIN (
+    SELECT KENCode, MIN(LoadID) AS LoadID
+    FROM CostLoad
+    GROUP BY KENCode
+) first_cost ON first_cost.LoadID = cl.LoadID;
 
 LOAD DATA LOCAL INFILE 'data/procedure_type.csv'
 INTO TABLE ProcedureType
@@ -113,14 +132,44 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (StaffAMKA, Phone);
 
+-- Stage doctors because Doctor.SupervisorAMKA is a self-referencing foreign key.
+DROP TEMPORARY TABLE IF EXISTS DoctorLoad;
+CREATE TEMPORARY TABLE DoctorLoad (
+    AMKA CHAR(11) NOT NULL,
+    License VARCHAR(20) NOT NULL,
+    Specialty VARCHAR(20) NOT NULL,
+    `Rank` VARCHAR(20) NOT NULL,
+    SupervisorAMKA CHAR(11)
+);
+
 LOAD DATA LOCAL INFILE 'data/doctor.csv'
-INTO TABLE Doctor
+INTO TABLE DoctorLoad
 CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (AMKA, License, Specialty, `Rank`, @SupervisorAMKA)
 SET SupervisorAMKA = NULLIF(@SupervisorAMKA, '');
+
+INSERT INTO Doctor (AMKA, License, Specialty, `Rank`, SupervisorAMKA)
+SELECT AMKA, License, Specialty, `Rank`, SupervisorAMKA
+FROM DoctorLoad
+WHERE `Rank` = 'Director';
+
+INSERT INTO Doctor (AMKA, License, Specialty, `Rank`, SupervisorAMKA)
+SELECT AMKA, License, Specialty, `Rank`, SupervisorAMKA
+FROM DoctorLoad
+WHERE `Rank` = 'Registrar';
+
+INSERT INTO Doctor (AMKA, License, Specialty, `Rank`, SupervisorAMKA)
+SELECT AMKA, License, Specialty, `Rank`, SupervisorAMKA
+FROM DoctorLoad
+WHERE `Rank` = 'Consultant';
+
+INSERT INTO Doctor (AMKA, License, Specialty, `Rank`, SupervisorAMKA)
+SELECT AMKA, License, Specialty, `Rank`, SupervisorAMKA
+FROM DoctorLoad
+WHERE `Rank` = 'Resident';
 
 LOAD DATA LOCAL INFILE 'data/department.csv'
 INTO TABLE Department
@@ -210,13 +259,36 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (DepartmentID, ShiftTypeName, `Date`);
 
+-- Stage doctor shifts so senior doctors are assigned before residents.
+DROP TEMPORARY TABLE IF EXISTS HasDoctorLoad;
+CREATE TEMPORARY TABLE HasDoctorLoad (
+    DepartmentID INT NOT NULL,
+    ShiftTypeName VARCHAR(20) NOT NULL,
+    ShiftDate DATE NOT NULL,
+    DoctorAMKA CHAR(11) NOT NULL
+);
+
 LOAD DATA LOCAL INFILE 'data/has_doctor.csv'
-INTO TABLE hasDoctor
+INTO TABLE HasDoctorLoad
 CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (DepartmentID, ShiftTypeName, ShiftDate, DoctorAMKA);
+
+INSERT INTO hasDoctor (DepartmentID, ShiftTypeName, ShiftDate, DoctorAMKA)
+SELECT hdl.DepartmentID, hdl.ShiftTypeName, hdl.ShiftDate, hdl.DoctorAMKA
+FROM HasDoctorLoad hdl
+JOIN Doctor d ON hdl.DoctorAMKA = d.AMKA
+WHERE d.`Rank` <> 'Resident'
+ORDER BY hdl.ShiftDate, FIELD(hdl.ShiftTypeName, 'Morning', 'Afternoon', 'Night'), hdl.DepartmentID, hdl.DoctorAMKA;
+
+INSERT INTO hasDoctor (DepartmentID, ShiftTypeName, ShiftDate, DoctorAMKA)
+SELECT hdl.DepartmentID, hdl.ShiftTypeName, hdl.ShiftDate, hdl.DoctorAMKA
+FROM HasDoctorLoad hdl
+JOIN Doctor d ON hdl.DoctorAMKA = d.AMKA
+WHERE d.`Rank` = 'Resident'
+ORDER BY hdl.ShiftDate, FIELD(hdl.ShiftTypeName, 'Morning', 'Afternoon', 'Night'), hdl.DepartmentID, hdl.DoctorAMKA;
 
 LOAD DATA LOCAL INFILE 'data/has_nurse.csv'
 INTO TABLE hasNurse

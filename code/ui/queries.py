@@ -68,11 +68,11 @@ ORDER BY TotalProcedures DESC, d.LastName, d.FirstName
 """,
     "Q4.sql": """
 SELECT
-    de.DoctorAMKA AS AMKA,
+    de.DoctorAMKA,
     s.FirstName,
     s.LastName,
-    AVG(de.QoDoctorS) AS AverageDoctorService,
-    AVG(he.GeneralExperience) AS AverageGeneralExperience
+    ROUND(AVG(de.QoDoctorS), 2) AS AvgDoctorQuality,
+    ROUND(AVG(he.GeneralExperience), 2) AS AvgHospitalExperience
 FROM DoctorEvaluation de
 JOIN HospEvaluation he ON de.HospitalizationID = he.HospitalizationID
 JOIN ActiveStaff s ON de.DoctorAMKA = s.AMKA
@@ -111,17 +111,17 @@ WHERE h.PatientAMKA = %s
 ORDER BY h.AdmissionDateTime
 """,
     "Q8.sql": """
-WITH scheduled AS (
+WITH scheduled_staff AS (
     SELECT DoctorAMKA AS AMKA
     FROM hasDoctor
     WHERE ShiftDate = %s
       AND DepartmentID = (SELECT DepartmentID FROM Department WHERE Name = %s)
-    UNION
+    UNION ALL
     SELECT NurseAMKA AS AMKA
     FROM hasNurse
     WHERE ShiftDate = %s
       AND DepartmentID = (SELECT DepartmentID FROM Department WHERE Name = %s)
-    UNION
+    UNION ALL
     SELECT AdminAMKA AS AMKA
     FROM hasAdmin
     WHERE ShiftDate = %s
@@ -131,7 +131,7 @@ SELECT s.AMKA, s.FirstName, s.LastName, s.Age, s.Type
 FROM ActiveStaff s
 WHERE NOT EXISTS (
     SELECT 1
-    FROM scheduled sch
+    FROM scheduled_staff sch
     WHERE sch.AMKA = s.AMKA
 )
 ORDER BY s.Type, s.LastName, s.FirstName

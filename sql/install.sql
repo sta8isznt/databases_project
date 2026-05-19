@@ -4,7 +4,7 @@
 -- TABLES
 -- =========================
 
--- drop database HospitalDB;
+drop database if exists HospitalDB;
 
 create database HospitalDB;
 
@@ -438,7 +438,7 @@ create table PrescriptionEvent (
     StartDate date not null,
     EndDate date,
 
-    unique(DoctorAMKA, HospitalizationID, DrugID, PrescriptionDate), -- A doctor cannot prescribe the same drug to the same patient on the same day
+    unique(DoctorAMKA, HospitalizationID, DrugID, StartDate), -- A doctor cannot prescribe the same drug to the same patient on the same day
     foreign key (HospitalizationID) references Hospitalization(HospitalizationID) on delete restrict,
     foreign key (DoctorAMKA) references Doctor(AMKA) on delete restrict on update cascade,
     foreign key (DrugID) references DrugType(DrugID) on delete restrict,

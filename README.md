@@ -157,20 +157,11 @@ commands. Common MAMP results are:
 
 ## Database Setup
 
-`sql/install.sql` creates a database named `HospitalDB` and then switches to it.
-Run it from the project root, using the correct MySQL client command for your
-environment:
+`sql/install.sql` drops any existing `HospitalDB` database, creates a fresh one,
+and then switches to it. Run it from the project root, using the correct MySQL
+client command for your environment:
 
 ```bash
-mysql -u root -p < sql/install.sql
-```
-
-If the database already exists, the script will fail at `CREATE DATABASE
-HospitalDB`. For a clean rebuild, drop the existing database first only if you
-are sure you no longer need its contents:
-
-```bash
-mysql -u root -p -e "DROP DATABASE IF EXISTS HospitalDB;"
 mysql -u root -p < sql/install.sql
 ```
 
@@ -178,7 +169,6 @@ For MAMP/XAMPP/WAMP, apply the same idea with the full client path and the right
 port. Example for MAMP with MySQL 8.0:
 
 ```bash
-/Applications/MAMP/Library/bin/mysql80/bin/mysql -h 127.0.0.1 -P 8889 -u root -p -e "DROP DATABASE IF EXISTS HospitalDB;"
 /Applications/MAMP/Library/bin/mysql80/bin/mysql -h 127.0.0.1 -P 8889 -u root -p < sql/install.sql
 ```
 
@@ -484,13 +474,13 @@ and `sql/load.sql`.
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `CREATE DATABASE HospitalDB` fails | The database already exists. | Drop or rename the old database before rerunning `sql/install.sql`. |
+| `CREATE DATABASE HospitalDB` fails | The connected user does not have permission to create/drop databases, or you are connected to the wrong server. | Use a privileged user and verify the host/port/socket before rerunning `sql/install.sql`. |
 | `LOAD DATA LOCAL INFILE` is disabled | Client or server local-infile setting is off. | Run the client with `--local-infile=1` and enable `local_infile` on the server if needed. |
 | CSV file not found during load | `sql/load.sql` was run from the wrong directory. | Run `mysql --local-infile=1 -u root -p < sql/load.sql` from the project root. |
 | PowerShell reports that `<` is reserved | PowerShell input redirection differs from Bash/CMD. | Use Command Prompt, Git Bash, WSL, or the `cmd /c` examples above. |
 | Connection refused or wrong server | MySQL is running on a different port, common with MAMP/XAMPP. | Use the correct `-P` port and `-h 127.0.0.1`, then match the same settings in Streamlit. |
 | Streamlit cannot connect | Wrong host, port, user, password, or unloaded database. | Check the sidebar connection settings and make sure `HospitalDB` has been created and loaded. |
-| Query returns no rows | Dataset was not loaded, or the query depends on a specific populated case. | Re-run `sql/load.sql` and verify row counts in `data/dataset_summary.json`. |
+| Query returns no rows | Dataset was not loaded, or the query depends on a specific populated case. | Re-run `sql/load.sql` and verify row counts in `data/dataset_summary.json`; `Cost` loads 694 unique KEN codes from 701 source rows because duplicate KEN codes are deduplicated during load. |
 
 ## Submission Checklist
 

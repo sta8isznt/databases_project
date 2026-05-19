@@ -1,5 +1,4 @@
 -- Active: 1778170419470@@localhost@3306@HospitalDB
-explain analyze
 with departmentcnt as (
     select t.EmergencyLevel, d.`Name` as DepartmentName, count(t.TriageID) AS CasesPerDept
     from TriageEvent t

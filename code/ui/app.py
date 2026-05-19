@@ -218,6 +218,10 @@ def option_value(options: list[tuple[str, Any]], label: str) -> Any | None:
     return next((value for item_label, value in options if item_label == label), None)
 
 
+def index_of_value(values: Sequence[Any], target: Any) -> int:
+    return next((index for index, value in enumerate(values) if str(value) == str(target)), 0)
+
+
 def no_options(message: str) -> bool:
     st.info(message)
     return True
@@ -347,7 +351,12 @@ def query_parameter_inputs(
         specialties = fetch_scalar_options(
             config, "SELECT DISTINCT Specialty FROM Doctor ORDER BY Specialty"
         )
-        specialty = st.selectbox("Specialty", specialties or ["Cardiology"])
+        specialty_options = specialties or ["Cardiology"]
+        specialty = st.selectbox(
+            "Specialty",
+            specialty_options,
+            index=index_of_value(specialty_options, "Cardiology"),
+        )
         return PARAMETERIZED_SQL[filename], (specialty,)
 
     if filename == "Q4.sql":
@@ -357,12 +366,19 @@ def query_parameter_inputs(
             SELECT d.AMKA, s.FirstName, s.LastName, d.Specialty
             FROM Doctor d
             JOIN Staff s ON d.AMKA = s.AMKA
-            ORDER BY s.LastName, s.FirstName
+            ORDER BY d.AMKA = '10000000000' DESC, s.LastName, s.FirstName
             """,
             ["LastName", "FirstName", "Specialty", "AMKA"],
             "AMKA",
         )
-        selected = st.selectbox("Doctor", [label for label, _ in doctors] or ["10000000000"])
+        doctor_labels = [label for label, _ in doctors] or ["10000000000"]
+        selected = st.selectbox(
+            "Doctor",
+            doctor_labels,
+            index=index_of_value([value for _, value in doctors], "10000000000")
+            if doctors
+            else 0,
+        )
         amk = option_value(doctors, selected) or selected
         return PARAMETERIZED_SQL[filename], (amk,)
 
@@ -372,20 +388,32 @@ def query_parameter_inputs(
             """
             SELECT AMKA, FirstName, LastName
             FROM Patient
-            ORDER BY LastName, FirstName
+            ORDER BY AMKA = '30000000000' DESC, LastName, FirstName
             LIMIT 500
             """,
             ["LastName", "FirstName", "AMKA"],
             "AMKA",
         )
-        selected = st.selectbox("Patient", [label for label, _ in patients] or ["30000000000"])
+        patient_labels = [label for label, _ in patients] or ["30000000000"]
+        selected = st.selectbox(
+            "Patient",
+            patient_labels,
+            index=index_of_value([value for _, value in patients], "30000000000")
+            if patients
+            else 0,
+        )
         amka = option_value(patients, selected) or selected
         return PARAMETERIZED_SQL[filename], (amka,)
 
     if filename == "Q8.sql":
         departments = fetch_scalar_options(config, "SELECT Name FROM Department ORDER BY Name")
-        shift_date = st.date_input("Date", value=date.today())
-        department = st.selectbox("Department", departments or ["Cardiology"])
+        shift_date = st.date_input("Date", value=date(2026, 3, 10))
+        department_options = departments or ["Cardiology"]
+        department = st.selectbox(
+            "Department",
+            department_options,
+            index=index_of_value(department_options, "Cardiology"),
+        )
         return PARAMETERIZED_SQL[filename], (
             shift_date,
             department,
@@ -396,8 +424,8 @@ def query_parameter_inputs(
         )
 
     if filename == "Q12.sql":
-        week_start = st.date_input("Week start", value=date.today())
-        week_end = st.date_input("Week end", value=week_start + timedelta(days=6))
+        week_start = st.date_input("Week start", value=date(2026, 3, 9))
+        week_end = st.date_input("Week end", value=date(2026, 3, 15))
         return PARAMETERIZED_SQL[filename], (
             week_start,
             week_end,

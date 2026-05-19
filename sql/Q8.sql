@@ -1,8 +1,7 @@
-with nightshifts as (
+with scheduled_staff as (
     select hasdoctor.doctoramka as amka
     from hasdoctor 
-    where hasdoctor.shifttypename = 'Night'
-    and hasdoctor.shiftdate = '2024-01-01' -- change this date to the desired date
+    where hasdoctor.shiftdate = '2026-03-10' -- change this date to the desired date
     and hasdoctor.departmentid = (
         select departmentid
         from department
@@ -13,8 +12,7 @@ with nightshifts as (
 
     select hasnurse.nurseamka as amka
     from hasnurse
-    where hasnurse.shifttypename = 'Night'
-    and hasnurse.shiftdate = '2024-01-01' -- change this date to the desired date
+    where hasnurse.shiftdate = '2026-03-10' -- change this date to the desired date
     and hasnurse.departmentid = (
         select departmentid
         from department
@@ -25,8 +23,7 @@ with nightshifts as (
 
     select hasadmin.adminamka as amka
     from hasadmin
-    where hasadmin.shifttypename = 'Night'
-    and hasadmin.shiftdate = '2024-01-01' -- change this date to the desired date
+    where hasadmin.shiftdate = '2026-03-10' -- change this date to the desired date
     and hasadmin.departmentid = (
         select departmentid
         from department
@@ -34,10 +31,11 @@ with nightshifts as (
     ) 
 )
 
-select s.firstname,s.lastname,s.age,s.`type`
+select s.amka, s.firstname, s.lastname, s.age, s.`type`
 from activestaff s
 where not exists (
     select 1
-    from nightshifts ns
+    from scheduled_staff ns
     where ns.amka = s.amka
-);
+)
+order by s.`type`, s.lastname, s.firstname;

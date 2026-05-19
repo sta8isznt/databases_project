@@ -381,6 +381,7 @@ and `sql/load.sql`.
 | 20 | Staff specialization is treated as disjoint: each staff member belongs to exactly one of `Doctor`, `Nurse`, or `AdminStaff`. | The committed dataset and registration procedures maintain this convention by creating one matching subtype row per staff member; the schema uses foreign keys from subtype tables to `Staff`, but it does not define separate subtype triggers. |
 | 21 | The main doctor of a `ProcedureEvent` cannot be the main doctor of another overlapping procedure. Other participating staff may assist in overlapping events. | This enforces primary-doctor responsibility while allowing flexible assistant participation. |
 | 22 | Emergency arrivals create a `TriageEvent` and enter the priority FIFO `PatientQueue`; scheduled/direct admissions may create a `Hospitalization` without triage. | This preserves the emergency workflow while supporting planned admissions. |
+| 23 | Hospitalization billing uses the KEN base cost plus extra-day charges only. Lab-test and procedure event costs are treated as included in the KEN hospitalization package. | This keeps `CalculateHospitalizationBill`, Q3, and Q6 consistent and avoids double-counting synthetic lab/procedure reference costs. |
 
 ## Business Rules
 
@@ -465,7 +466,7 @@ and `sql/load.sql`.
 | `UpdateDepartmentWithDirector` | Update department details and director safely. |
 | `AdmitPatient` | Create a hospitalization and update room state transactionally. |
 | `DischargePatient` | Discharge a patient and free the room transactionally. |
-| `CalculateHospitalizationBill` | Calculate hospitalization bill from base cost, extra days, lab tests, and procedures. |
+| `CalculateHospitalizationBill` | Calculate hospitalization bill from KEN base cost and extra-day charges. |
 | `FetchNext` | Fetch the next pending triage patient from the priority FIFO queue. |
 | `ProcessTriageAdmission` | Admit a patient from triage and update triage outcome. |
 | `DiscardTriagePatient` | Mark a pending triage patient as not admitted. |
@@ -481,21 +482,6 @@ and `sql/load.sql`.
 | Connection refused or wrong server | MySQL is running on a different port, common with MAMP/XAMPP. | Use the correct `-P` port and `-h 127.0.0.1`, then match the same settings in Streamlit. |
 | Streamlit cannot connect | Wrong host, port, user, password, or unloaded database. | Check the sidebar connection settings and make sure `HospitalDB` has been created and loaded. |
 | Query returns no rows | Dataset was not loaded, or the query depends on a specific populated case. | Re-run `sql/load.sql` and verify row counts in `data/dataset_summary.json`; `Cost` loads 694 unique KEN codes from 701 source rows because duplicate KEN codes are deduplicated during load. |
-
-## Submission Checklist
-
-Before final submission, verify that the deliverable contains the files required
-by the assignment:
-
-- `README.md`
-- `diagrams/er.pdf`
-- `diagrams/relational.pdf`
-- `sql/install.sql`
-- `sql/load.sql`
-- `sql/Q1.sql` through `sql/Q15.sql`
-- `sql/Q1_out.txt` through `sql/Q15_out.txt`, if requested
-- `docs/report.pdf`
-- `code/`, if submitting the Streamlit UI and data-generation scripts
 
 ## AI/LLM Usage
 

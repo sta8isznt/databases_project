@@ -1749,9 +1749,6 @@ BEGIN
     DECLARE v_ChargePerDay DECIMAL(10,2) DEFAULT 0;
     DECLARE v_ActualDays INT DEFAULT 0;
 
-    DECLARE v_LabFees DECIMAL(10,2) DEFAULT 0;
-    DECLARE v_ProcedureFees DECIMAL(10,2) DEFAULT 0;
-
     -- Retrieve the KEN Base Cost, Predicted Average Time, and Actual Days 
     SELECT c.BaseCost, c.PredictedAvgTime, c.ChargePerDay, h.ActualDays
     INTO v_BaseCost, v_PredictedDays, v_ChargePerDay, v_ActualDays
@@ -1766,22 +1763,8 @@ BEGIN
         SET p_AdditionalFees = 0;
     END IF;
 
-    -- If the patient had no lab tests -> 0
-    SELECT IFNULL(sum(lt.LabCost), 0) 
-    INTO v_LabFees
-    FROM HospLabTest hlt
-    JOIN LabTest lt ON hlt.LabCode = lt.LabCode
-    WHERE hlt.HospitalizationID = p_HospitalizationID;
-
-    --  Aggregate Procedure 
-    SELECT IFNULL(sum(pt.ProcCost), 0) 
-    INTO v_ProcedureFees
-    FROM ProcedureEvent pe
-    JOIN ProcedureType pt ON pe.ProcedureCode = pt.ProcCode
-    WHERE pe.HospitalizationID = p_HospitalizationID;
-
-    -- Calculate Final Total Fees
-    SET p_TotalFees = v_BaseCost + p_AdditionalFees + v_LabFees + v_ProcedureFees;
+    -- KEN billing is treated as inclusive of hospitalization lab/procedure costs.
+    SET p_TotalFees = v_BaseCost + p_AdditionalFees;
 END//
 
 -- Peek the next patient in the triage queue

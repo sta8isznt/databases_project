@@ -1,49 +1,92 @@
-amka,firstname,lastname,age,totalsurgicalproc
-10000000031,Michalis,Konstantinou,31,7
-10000000299,Michalis,Theodorou,30,6
-10000000179,Petros,Sotiriou,34,6
-10000000059,Katerina,Petrou,27,6
-10000000291,Christos,Alexiou,33,6
-10000000268,Giorgos,Dimitriou,31,6
-10000000239,Kostas,Vasiliou,33,6
-10000000191,Dimitra,Nikolaou,30,6
-10000000215,Anna,Theodorou,31,6
-10000000008,Panagiota,Georgiou,32,5
-10000000035,Vasilis,Vasiliou,32,5
-10000000057,Chrysa,Lazarou,33,5
-10000000065,Anna,Athanasiou,33,5
-10000000075,Andreas,Vasiliou,31,5
-10000000077,Stavros,Dimitriou,34,5
-10000000271,Nikos,Konstantinou,28,5
-10000000235,Michalis,Alexiou,33,5
-10000000228,Kostas,Vasiliou,31,5
-10000000171,Natalia,Ioannou,32,5
-10000000015,Vasiliki,Athanasiou,31,5
-10000000219,Sofia,Lazarou,28,5
-10000000039,Anna,Kostopoulos,28,4
-10000000288,Dimitris,Nikolaou,31,4
-10000000071,Dimitra,Nikolaou,28,4
-10000000279,Michalis,Lazarou,31,4
-10000000135,Giannis,Papadopoulos,28,4
-10000000151,Spyros,Kostopoulos,34,4
-10000000155,Anastasia,Sotiriou,34,4
-10000000199,Natalia,Petrou,28,4
-10000000197,Anastasia,Lazarou,34,3
-10000000195,Dimitris,Kostopoulos,33,3
-10000000019,Michalis,Nikolaou,30,3
-10000000145,Spyros,Vasiliou,34,3
-10000000139,Katerina,Lazarou,30,3
-10000000119,Stavros,Ioannou,27,3
-10000000259,Sofia,Papadopoulos,33,3
-10000000068,Christos,Georgiou,27,3
-10000000295,Christos,Dimitriou,28,3
-10000000231,Georgia,Vasiliou,31,2
-10000000251,Christos,Lazarou,29,2
-10000000255,Stavros,Nikolaou,32,2
-10000000111,Nikos,Nikolaou,30,2
-10000000099,Marios,Ioannou,27,2
-10000000275,Vasilis,Nikolaou,30,2
-10000000079,Giorgos,Pavlidis,27,2
-10000000062,Giorgos,Nikolaou,31,2
-10000000202,Petros,Konstantinou,32,1
-10000000188,Vasilis,Dimitriou,28,1
+amka	firstname	lastname	age	totalsurgicalproc
+10000000285	Evangelia	Alexiou	30	7
+10000000248	Kostas	Theodorou	30	7
+10000000031	Michalis	Konstantinou	31	7
+10000000088	Michalis	Ioannou	32	7
+10000000299	Michalis	Theodorou	30	6
+10000000291	Christos	Alexiou	33	6
+10000000268	Giorgos	Dimitriou	31	6
+10000000262	Anastasia	Papadopoulos	33	6
+10000000239	Kostas	Vasiliou	33	6
+10000000215	Anna	Theodorou	31	6
+10000000191	Dimitra	Nikolaou	30	6
+10000000179	Petros	Sotiriou	34	6
+10000000168	Andreas	Theodorou	34	6
+10000000165	Georgia	Papadopoulos	32	6
+10000000125	Nikos	Sotiriou	28	6
+10000000082	Christos	Vasiliou	33	6
+10000000059	Katerina	Petrou	27	6
+10000000057	Chrysa	Lazarou	33	5
+10000000035	Vasilis	Vasiliou	32	5
+10000000008	Panagiota	Georgiou	32	5
+10000000065	Anna	Athanasiou	33	5
+10000000271	Nikos	Konstantinou	28	5
+10000000011	Georgia	Sotiriou	28	5
+10000000075	Andreas	Vasiliou	31	5
+10000000077	Stavros	Dimitriou	34	5
+10000000015	Vasiliki	Athanasiou	31	5
+10000000235	Michalis	Alexiou	33	5
+10000000228	Kostas	Vasiliou	31	5
+10000000222	Kostas	Sotiriou	32	5
+10000000219	Sofia	Lazarou	28	5
+10000000185	Eleni	Lazarou	28	5
+10000000171	Natalia	Ioannou	32	5
+10000000002	Eleni	Theodorou	27	5
+10000000115	Ioanna	Vasiliou	29	5
+10000000108	Eleni	Kostopoulos	29	5
+10000000055	Chrysa	Papadopoulos	34	4
+10000000105	Anastasia	Lazarou	34	4
+10000000288	Dimitris	Nikolaou	31	4
+10000000282	Christos	Athanasiou	30	4
+10000000279	Michalis	Lazarou	31	4
+10000000071	Dimitra	Nikolaou	28	4
+10000000131	Anna	Alexiou	29	4
+10000000135	Giannis	Papadopoulos	28	4
+10000000022	Giorgos	Nikolaou	29	4
+10000000142	Petros	Nikolaou	29	4
+10000000225	Petros	Lazarou	28	4
+10000000048	Andreas	Vasiliou	32	4
+10000000151	Spyros	Kostopoulos	34	4
+10000000155	Anastasia	Sotiriou	34	4
+10000000091	Anastasia	Vasiliou	29	4
+10000000205	Panagiotis	Kostopoulos	31	4
+10000000039	Anna	Kostopoulos	28	4
+10000000199	Natalia	Petrou	28	4
+10000000175	Vasilis	Pavlidis	32	4
+10000000139	Katerina	Lazarou	30	3
+10000000295	Christos	Dimitriou	28	3
+10000000005	Petros	Alexiou	31	3
+10000000119	Stavros	Ioannou	27	3
+10000000028	Marios	Alexiou	30	3
+10000000195	Dimitris	Kostopoulos	33	3
+10000000197	Anastasia	Lazarou	34	3
+10000000068	Christos	Georgiou	27	3
+10000000259	Sofia	Papadopoulos	33	3
+10000000042	Kostas	Dimitriou	30	3
+10000000019	Michalis	Nikolaou	30	3
+10000000242	Maria	Nikolaou	33	3
+10000000162	Andreas	Nikolaou	27	3
+10000000148	Spyros	Petrou	29	3
+10000000145	Spyros	Vasiliou	34	3
+10000000051	Vasilis	Petrou	33	3
+10000000231	Georgia	Vasiliou	31	2
+10000000102	Christos	Petrou	31	2
+10000000025	Vasilis	Ioannou	30	2
+10000000251	Christos	Lazarou	29	2
+10000000255	Stavros	Nikolaou	32	2
+10000000079	Giorgos	Pavlidis	27	2
+10000000265	Evangelia	Georgiou	29	2
+10000000099	Marios	Ioannou	27	2
+10000000275	Vasilis	Nikolaou	30	2
+10000000045	Dimitris	Petrou	28	2
+10000000122	Marios	Athanasiou	27	2
+10000000062	Giorgos	Nikolaou	31	2
+10000000182	Michalis	Alexiou	29	2
+10000000111	Nikos	Nikolaou	30	2
+10000000085	Stavros	Dimitriou	29	1
+10000000245	Sofia	Dimitriou	30	1
+10000000208	Michalis	Georgiou	33	1
+10000000202	Petros	Konstantinou	32	1
+10000000128	Natalia	Sotiriou	28	1
+10000000188	Vasilis	Dimitriou	28	1
+10000000095	Petros	Dimitriou	28	1

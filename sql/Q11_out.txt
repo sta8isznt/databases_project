@@ -1,237 +1,270 @@
-amka,firstname,lastname,totalproc
-10000000000,Marios,Pavlidis,5
-10000000001,Panagiota,Petrou,1
-10000000003,Nikos,Konstantinou,3
-10000000004,Marios,Theodorou,5
-10000000007,Sofia,Athanasiou,3
-10000000009,Dimitris,Athanasiou,1
-10000000010,Michalis,Kostopoulos,3
-10000000012,Eleni,Kostopoulos,3
-10000000013,Dimitra,Lazarou,3
-10000000014,Vasilis,Athanasiou,0
-10000000015,Vasiliki,Athanasiou,5
-10000000016,Dimitris,Kostopoulos,2
-10000000017,Stavros,Alexiou,0
-10000000018,Spyros,Lazarou,2
-10000000020,Georgia,Sotiriou,6
-10000000021,Ioanna,Lazarou,1
-10000000023,Panagiotis,Ioannou,5
-10000000026,Sofia,Lazarou,5
-10000000027,Petros,Theodorou,5
-10000000029,Michalis,Lazarou,3
-10000000030,Spyros,Nikolaou,2
-10000000032,Christos,Pavlidis,1
-10000000033,Giannis,Athanasiou,4
-10000000034,Sofia,Ioannou,5
-10000000035,Vasilis,Vasiliou,6
-10000000036,Vasiliki,Petrou,2
-10000000037,Ioanna,Pavlidis,3
-10000000038,Natalia,Sotiriou,3
-10000000039,Anna,Kostopoulos,6
-10000000040,Andreas,Athanasiou,2
-10000000041,Marios,Vasiliou,3
-10000000043,Sofia,Nikolaou,2
-10000000044,Marios,Ioannou,4
-10000000046,Andreas,Nikolaou,6
-10000000047,Giannis,Kostopoulos,0
-10000000050,Katerina,Nikolaou,4
-10000000052,Michalis,Petrou,2
-10000000053,Sofia,Kostopoulos,0
-10000000054,Vasiliki,Petrou,4
-10000000056,Natalia,Konstantinou,2
-10000000057,Chrysa,Lazarou,5
-10000000058,Dimitra,Dimitriou,2
-10000000060,Sofia,Alexiou,2
-10000000061,Maria,Pavlidis,2
-10000000062,Giorgos,Nikolaou,4
-10000000063,Evangelia,Athanasiou,2
-10000000064,Georgia,Kostopoulos,2
-10000000065,Anna,Athanasiou,5
-10000000066,Dimitra,Alexiou,2
-10000000067,Stavros,Dimitriou,3
-10000000068,Christos,Georgiou,5
-10000000069,Eleni,Dimitriou,2
-10000000071,Dimitra,Nikolaou,5
-10000000073,Marios,Papadopoulos,1
-10000000074,Michalis,Vasiliou,4
-10000000075,Andreas,Vasiliou,5
-10000000076,Sofia,Lazarou,2
-10000000077,Stavros,Dimitriou,5
-10000000078,Michalis,Lazarou,2
-10000000079,Giorgos,Pavlidis,4
-10000000080,Petros,Georgiou,3
-10000000081,Andreas,Papadopoulos,4
-10000000083,Ioanna,Dimitriou,2
-10000000084,Evangelia,Vasiliou,4
-10000000086,Maria,Lazarou,4
-10000000087,Nikos,Ioannou,1
-10000000089,Chrysa,Ioannou,4
-10000000090,Georgia,Petrou,0
-10000000092,Vasilis,Theodorou,3
-10000000093,Giannis,Sotiriou,1
-10000000094,Sofia,Ioannou,2
-10000000096,Anna,Konstantinou,6
-10000000097,Georgia,Nikolaou,5
-10000000098,Marios,Kostopoulos,6
-10000000099,Marios,Ioannou,4
-10000000100,Kostas,Alexiou,4
-10000000101,Anastasia,Vasiliou,4
-10000000103,Natalia,Nikolaou,4
-10000000104,Panagiotis,Petrou,4
-10000000106,Marios,Konstantinou,5
-10000000107,Dimitra,Lazarou,4
-10000000109,Marios,Pavlidis,5
-10000000110,Christos,Dimitriou,5
-10000000111,Nikos,Nikolaou,4
-10000000112,Vasiliki,Pavlidis,5
-10000000113,Nikos,Ioannou,3
-10000000114,Panagiota,Vasiliou,2
-10000000116,Dimitris,Ioannou,1
-10000000117,Katerina,Ioannou,1
-10000000118,Dimitra,Pavlidis,2
-10000000119,Stavros,Ioannou,4
-10000000120,Georgia,Papadopoulos,1
-10000000121,Vasiliki,Nikolaou,5
-10000000123,Georgia,Georgiou,3
-10000000124,Marios,Sotiriou,2
-10000000127,Nikos,Alexiou,2
-10000000129,Stavros,Kostopoulos,5
-10000000130,Ioanna,Konstantinou,6
-10000000132,Dimitra,Konstantinou,1
-10000000133,Anastasia,Petrou,2
-10000000134,Giannis,Papadopoulos,3
-10000000135,Giannis,Papadopoulos,5
-10000000136,Nikos,Konstantinou,2
-10000000137,Anna,Athanasiou,4
-10000000139,Katerina,Lazarou,4
-10000000140,Sofia,Petrou,3
-10000000141,Panagiota,Petrou,1
-10000000143,Giorgos,Georgiou,1
-10000000144,Nikos,Lazarou,2
-10000000145,Spyros,Vasiliou,6
-10000000146,Maria,Ioannou,1
-10000000147,Michalis,Dimitriou,3
-10000000149,Anna,Kostopoulos,6
-10000000151,Spyros,Kostopoulos,6
-10000000152,Eleni,Dimitriou,2
-10000000153,Natalia,Georgiou,4
-10000000154,Stavros,Ioannou,6
-10000000155,Anastasia,Sotiriou,5
-10000000156,Andreas,Alexiou,2
-10000000157,Michalis,Konstantinou,2
-10000000158,Evangelia,Kostopoulos,3
-10000000159,Anna,Pavlidis,1
-10000000161,Giorgos,Theodorou,5
-10000000163,Sofia,Pavlidis,2
-10000000164,Stavros,Sotiriou,6
-10000000166,Andreas,Georgiou,1
-10000000167,Spyros,Konstantinou,6
-10000000169,Andreas,Konstantinou,4
-10000000170,Stavros,Dimitriou,4
-10000000171,Natalia,Ioannou,5
-10000000172,Maria,Ioannou,4
-10000000173,Chrysa,Papadopoulos,3
-10000000174,Petros,Athanasiou,4
-10000000176,Dimitra,Georgiou,4
-10000000177,Giannis,Papadopoulos,4
-10000000178,Christos,Petrou,4
-10000000179,Petros,Sotiriou,6
-10000000180,Andreas,Papadopoulos,4
-10000000181,Spyros,Georgiou,4
-10000000183,Katerina,Pavlidis,2
-10000000184,Stavros,Papadopoulos,3
-10000000186,Vasiliki,Ioannou,3
-10000000187,Petros,Lazarou,1
-10000000188,Vasilis,Dimitriou,3
-10000000189,Anna,Lazarou,3
-10000000190,Petros,Petrou,5
-10000000192,Panagiota,Papadopoulos,3
-10000000193,Anastasia,Lazarou,5
-10000000194,Anna,Athanasiou,6
-10000000195,Dimitris,Kostopoulos,4
-10000000196,Kostas,Pavlidis,2
-10000000197,Anastasia,Lazarou,5
-10000000198,Giorgos,Konstantinou,6
-10000000200,Dimitra,Dimitriou,2
-10000000201,Sofia,Kostopoulos,5
-10000000202,Petros,Konstantinou,1
-10000000203,Marios,Nikolaou,3
-10000000204,Natalia,Ioannou,5
-10000000206,Chrysa,Georgiou,2
-10000000207,Ioanna,Nikolaou,3
-10000000209,Andreas,Georgiou,3
-10000000210,Petros,Konstantinou,4
-10000000211,Ioanna,Kostopoulos,0
-10000000212,Sofia,Vasiliou,3
-10000000214,Anna,Petrou,4
-10000000215,Anna,Theodorou,6
-10000000216,Eleni,Kostopoulos,3
-10000000217,Vasiliki,Dimitriou,3
-10000000218,Panagiota,Ioannou,1
-10000000219,Sofia,Lazarou,5
-10000000220,Vasiliki,Athanasiou,4
-10000000221,Sofia,Nikolaou,4
-10000000223,Georgia,Ioannou,4
-10000000224,Katerina,Ioannou,6
-10000000227,Panagiota,Ioannou,3
-10000000228,Kostas,Vasiliou,6
-10000000229,Giorgos,Ioannou,1
-10000000230,Anna,Georgiou,1
-10000000231,Georgia,Vasiliou,3
-10000000232,Georgia,Theodorou,3
-10000000233,Evangelia,Konstantinou,2
-10000000234,Vasilis,Athanasiou,5
-10000000235,Michalis,Alexiou,6
-10000000236,Christos,Athanasiou,3
-10000000237,Katerina,Georgiou,5
-10000000238,Evangelia,Nikolaou,3
-10000000239,Kostas,Vasiliou,6
-10000000240,Evangelia,Athanasiou,3
-10000000241,Eleni,Nikolaou,2
-10000000243,Sofia,Vasiliou,4
-10000000244,Dimitra,Petrou,3
-10000000246,Sofia,Papadopoulos,2
-10000000247,Spyros,Athanasiou,3
-10000000249,Giannis,Petrou,3
-10000000250,Stavros,Papadopoulos,4
-10000000251,Christos,Lazarou,2
-10000000252,Petros,Alexiou,6
-10000000253,Panagiota,Sotiriou,3
-10000000254,Evangelia,Kostopoulos,1
-10000000255,Stavros,Nikolaou,2
-10000000256,Maria,Dimitriou,2
-10000000257,Ioanna,Nikolaou,4
-10000000258,Panagiota,Vasiliou,3
-10000000259,Sofia,Papadopoulos,6
-10000000260,Dimitra,Theodorou,5
-10000000261,Anna,Kostopoulos,6
-10000000263,Eleni,Kostopoulos,4
-10000000266,Chrysa,Dimitriou,3
-10000000267,Nikos,Nikolaou,4
-10000000268,Giorgos,Dimitriou,6
-10000000269,Panagiota,Georgiou,3
-10000000270,Marios,Theodorou,3
-10000000271,Nikos,Konstantinou,6
-10000000272,Chrysa,Theodorou,1
-10000000274,Vasilis,Georgiou,0
-10000000275,Vasilis,Nikolaou,3
-10000000276,Andreas,Lazarou,2
-10000000277,Georgia,Pavlidis,5
-10000000278,Sofia,Theodorou,6
-10000000279,Michalis,Lazarou,5
-10000000280,Petros,Nikolaou,3
-10000000281,Evangelia,Petrou,2
-10000000283,Spyros,Vasiliou,5
-10000000284,Panagiotis,Kostopoulos,4
-10000000286,Petros,Konstantinou,2
-10000000287,Nikos,Lazarou,4
-10000000288,Dimitris,Nikolaou,4
-10000000289,Stavros,Vasiliou,3
-10000000290,Giannis,Vasiliou,3
-10000000292,Kostas,Alexiou,4
-10000000293,Giannis,Papadopoulos,4
-10000000294,Anastasia,Kostopoulos,3
-10000000295,Christos,Dimitriou,4
-10000000296,Nikos,Nikolaou,3
-10000000297,Kostas,Georgiou,6
-10000000298,Giannis,Papadopoulos,4
+amka	firstname	lastname	totalproc
+10000000000	Marios	Pavlidis	5
+10000000001	Panagiota	Petrou	1
+10000000002	Eleni	Theodorou	5
+10000000003	Nikos	Konstantinou	3
+10000000004	Marios	Theodorou	5
+10000000005	Petros	Alexiou	4
+10000000007	Sofia	Athanasiou	3
+10000000009	Dimitris	Athanasiou	1
+10000000010	Michalis	Kostopoulos	3
+10000000012	Eleni	Kostopoulos	3
+10000000013	Dimitra	Lazarou	3
+10000000014	Vasilis	Athanasiou	0
+10000000015	Vasiliki	Athanasiou	5
+10000000016	Dimitris	Kostopoulos	2
+10000000017	Stavros	Alexiou	0
+10000000018	Spyros	Lazarou	2
+10000000020	Georgia	Sotiriou	6
+10000000021	Ioanna	Lazarou	1
+10000000022	Giorgos	Nikolaou	4
+10000000023	Panagiotis	Ioannou	5
+10000000025	Vasilis	Ioannou	3
+10000000026	Sofia	Lazarou	5
+10000000027	Petros	Theodorou	5
+10000000028	Marios	Alexiou	5
+10000000029	Michalis	Lazarou	3
+10000000030	Spyros	Nikolaou	2
+10000000032	Christos	Pavlidis	1
+10000000033	Giannis	Athanasiou	4
+10000000034	Sofia	Ioannou	5
+10000000035	Vasilis	Vasiliou	6
+10000000036	Vasiliki	Petrou	2
+10000000037	Ioanna	Pavlidis	3
+10000000038	Natalia	Sotiriou	3
+10000000039	Anna	Kostopoulos	6
+10000000040	Andreas	Athanasiou	2
+10000000041	Marios	Vasiliou	3
+10000000042	Kostas	Dimitriou	3
+10000000043	Sofia	Nikolaou	2
+10000000044	Marios	Ioannou	4
+10000000045	Dimitris	Petrou	2
+10000000046	Andreas	Nikolaou	6
+10000000047	Giannis	Kostopoulos	0
+10000000048	Andreas	Vasiliou	4
+10000000050	Katerina	Nikolaou	4
+10000000051	Vasilis	Petrou	4
+10000000052	Michalis	Petrou	2
+10000000053	Sofia	Kostopoulos	0
+10000000054	Vasiliki	Petrou	4
+10000000055	Chrysa	Papadopoulos	4
+10000000056	Natalia	Konstantinou	2
+10000000057	Chrysa	Lazarou	5
+10000000058	Dimitra	Dimitriou	2
+10000000060	Sofia	Alexiou	2
+10000000061	Maria	Pavlidis	2
+10000000062	Giorgos	Nikolaou	4
+10000000063	Evangelia	Athanasiou	2
+10000000064	Georgia	Kostopoulos	2
+10000000065	Anna	Athanasiou	5
+10000000066	Dimitra	Alexiou	2
+10000000067	Stavros	Dimitriou	3
+10000000068	Christos	Georgiou	5
+10000000069	Eleni	Dimitriou	2
+10000000071	Dimitra	Nikolaou	5
+10000000073	Marios	Papadopoulos	1
+10000000074	Michalis	Vasiliou	4
+10000000075	Andreas	Vasiliou	5
+10000000076	Sofia	Lazarou	2
+10000000077	Stavros	Dimitriou	5
+10000000078	Michalis	Lazarou	2
+10000000079	Giorgos	Pavlidis	4
+10000000080	Petros	Georgiou	3
+10000000081	Andreas	Papadopoulos	4
+10000000083	Ioanna	Dimitriou	2
+10000000084	Evangelia	Vasiliou	4
+10000000085	Stavros	Dimitriou	2
+10000000086	Maria	Lazarou	4
+10000000087	Nikos	Ioannou	1
+10000000089	Chrysa	Ioannou	4
+10000000090	Georgia	Petrou	0
+10000000091	Anastasia	Vasiliou	6
+10000000092	Vasilis	Theodorou	3
+10000000093	Giannis	Sotiriou	1
+10000000094	Sofia	Ioannou	2
+10000000095	Petros	Dimitriou	5
+10000000096	Anna	Konstantinou	6
+10000000097	Georgia	Nikolaou	5
+10000000098	Marios	Kostopoulos	6
+10000000099	Marios	Ioannou	4
+10000000100	Kostas	Alexiou	4
+10000000101	Anastasia	Vasiliou	4
+10000000102	Christos	Petrou	4
+10000000103	Natalia	Nikolaou	4
+10000000104	Panagiotis	Petrou	4
+10000000106	Marios	Konstantinou	5
+10000000107	Dimitra	Lazarou	4
+10000000109	Marios	Pavlidis	5
+10000000110	Christos	Dimitriou	5
+10000000111	Nikos	Nikolaou	4
+10000000112	Vasiliki	Pavlidis	5
+10000000113	Nikos	Ioannou	3
+10000000114	Panagiota	Vasiliou	2
+10000000115	Ioanna	Vasiliou	5
+10000000116	Dimitris	Ioannou	1
+10000000117	Katerina	Ioannou	1
+10000000118	Dimitra	Pavlidis	2
+10000000119	Stavros	Ioannou	4
+10000000120	Georgia	Papadopoulos	1
+10000000121	Vasiliki	Nikolaou	5
+10000000122	Marios	Athanasiou	3
+10000000123	Georgia	Georgiou	3
+10000000124	Marios	Sotiriou	2
+10000000127	Nikos	Alexiou	2
+10000000128	Natalia	Sotiriou	2
+10000000129	Stavros	Kostopoulos	5
+10000000130	Ioanna	Konstantinou	6
+10000000132	Dimitra	Konstantinou	1
+10000000133	Anastasia	Petrou	2
+10000000134	Giannis	Papadopoulos	3
+10000000135	Giannis	Papadopoulos	5
+10000000136	Nikos	Konstantinou	2
+10000000137	Anna	Athanasiou	4
+10000000139	Katerina	Lazarou	4
+10000000140	Sofia	Petrou	3
+10000000141	Panagiota	Petrou	1
+10000000143	Giorgos	Georgiou	1
+10000000144	Nikos	Lazarou	2
+10000000145	Spyros	Vasiliou	6
+10000000146	Maria	Ioannou	1
+10000000147	Michalis	Dimitriou	3
+10000000148	Spyros	Petrou	5
+10000000149	Anna	Kostopoulos	6
+10000000151	Spyros	Kostopoulos	6
+10000000152	Eleni	Dimitriou	2
+10000000153	Natalia	Georgiou	4
+10000000154	Stavros	Ioannou	6
+10000000155	Anastasia	Sotiriou	5
+10000000156	Andreas	Alexiou	2
+10000000157	Michalis	Konstantinou	2
+10000000158	Evangelia	Kostopoulos	3
+10000000159	Anna	Pavlidis	1
+10000000161	Giorgos	Theodorou	5
+10000000162	Andreas	Nikolaou	3
+10000000163	Sofia	Pavlidis	2
+10000000164	Stavros	Sotiriou	6
+10000000166	Andreas	Georgiou	1
+10000000167	Spyros	Konstantinou	6
+10000000168	Andreas	Theodorou	6
+10000000169	Andreas	Konstantinou	4
+10000000170	Stavros	Dimitriou	4
+10000000171	Natalia	Ioannou	5
+10000000172	Maria	Ioannou	4
+10000000173	Chrysa	Papadopoulos	3
+10000000174	Petros	Athanasiou	4
+10000000175	Vasilis	Pavlidis	4
+10000000176	Dimitra	Georgiou	4
+10000000177	Giannis	Papadopoulos	4
+10000000178	Christos	Petrou	4
+10000000179	Petros	Sotiriou	6
+10000000180	Andreas	Papadopoulos	4
+10000000181	Spyros	Georgiou	4
+10000000182	Michalis	Alexiou	3
+10000000183	Katerina	Pavlidis	2
+10000000184	Stavros	Papadopoulos	3
+10000000185	Eleni	Lazarou	6
+10000000186	Vasiliki	Ioannou	3
+10000000187	Petros	Lazarou	1
+10000000188	Vasilis	Dimitriou	3
+10000000189	Anna	Lazarou	3
+10000000190	Petros	Petrou	5
+10000000192	Panagiota	Papadopoulos	3
+10000000193	Anastasia	Lazarou	5
+10000000194	Anna	Athanasiou	6
+10000000195	Dimitris	Kostopoulos	4
+10000000196	Kostas	Pavlidis	2
+10000000197	Anastasia	Lazarou	5
+10000000198	Giorgos	Konstantinou	6
+10000000200	Dimitra	Dimitriou	2
+10000000201	Sofia	Kostopoulos	5
+10000000202	Petros	Konstantinou	1
+10000000203	Marios	Nikolaou	3
+10000000204	Natalia	Ioannou	5
+10000000205	Panagiotis	Kostopoulos	4
+10000000206	Chrysa	Georgiou	2
+10000000207	Ioanna	Nikolaou	3
+10000000208	Michalis	Georgiou	4
+10000000209	Andreas	Georgiou	3
+10000000210	Petros	Konstantinou	4
+10000000211	Ioanna	Kostopoulos	0
+10000000212	Sofia	Vasiliou	3
+10000000214	Anna	Petrou	4
+10000000215	Anna	Theodorou	6
+10000000216	Eleni	Kostopoulos	3
+10000000217	Vasiliki	Dimitriou	3
+10000000218	Panagiota	Ioannou	1
+10000000219	Sofia	Lazarou	5
+10000000220	Vasiliki	Athanasiou	4
+10000000221	Sofia	Nikolaou	4
+10000000222	Kostas	Sotiriou	5
+10000000223	Georgia	Ioannou	4
+10000000224	Katerina	Ioannou	6
+10000000225	Petros	Lazarou	4
+10000000227	Panagiota	Ioannou	3
+10000000228	Kostas	Vasiliou	6
+10000000229	Giorgos	Ioannou	1
+10000000230	Anna	Georgiou	1
+10000000231	Georgia	Vasiliou	3
+10000000232	Georgia	Theodorou	3
+10000000233	Evangelia	Konstantinou	2
+10000000234	Vasilis	Athanasiou	5
+10000000235	Michalis	Alexiou	6
+10000000236	Christos	Athanasiou	3
+10000000237	Katerina	Georgiou	5
+10000000238	Evangelia	Nikolaou	3
+10000000239	Kostas	Vasiliou	6
+10000000240	Evangelia	Athanasiou	3
+10000000241	Eleni	Nikolaou	2
+10000000242	Maria	Nikolaou	4
+10000000243	Sofia	Vasiliou	4
+10000000244	Dimitra	Petrou	3
+10000000245	Sofia	Dimitriou	1
+10000000246	Sofia	Papadopoulos	2
+10000000247	Spyros	Athanasiou	3
+10000000249	Giannis	Petrou	3
+10000000250	Stavros	Papadopoulos	4
+10000000251	Christos	Lazarou	2
+10000000252	Petros	Alexiou	6
+10000000253	Panagiota	Sotiriou	3
+10000000254	Evangelia	Kostopoulos	1
+10000000255	Stavros	Nikolaou	2
+10000000256	Maria	Dimitriou	2
+10000000257	Ioanna	Nikolaou	4
+10000000258	Panagiota	Vasiliou	3
+10000000259	Sofia	Papadopoulos	6
+10000000260	Dimitra	Theodorou	5
+10000000261	Anna	Kostopoulos	6
+10000000262	Anastasia	Papadopoulos	6
+10000000263	Eleni	Kostopoulos	4
+10000000265	Evangelia	Georgiou	4
+10000000266	Chrysa	Dimitriou	3
+10000000267	Nikos	Nikolaou	4
+10000000268	Giorgos	Dimitriou	6
+10000000269	Panagiota	Georgiou	3
+10000000270	Marios	Theodorou	3
+10000000271	Nikos	Konstantinou	6
+10000000272	Chrysa	Theodorou	1
+10000000274	Vasilis	Georgiou	0
+10000000275	Vasilis	Nikolaou	3
+10000000276	Andreas	Lazarou	2
+10000000277	Georgia	Pavlidis	5
+10000000278	Sofia	Theodorou	6
+10000000279	Michalis	Lazarou	5
+10000000280	Petros	Nikolaou	3
+10000000281	Evangelia	Petrou	2
+10000000282	Christos	Athanasiou	4
+10000000283	Spyros	Vasiliou	5
+10000000284	Panagiotis	Kostopoulos	4
+10000000285	Evangelia	Alexiou	6
+10000000286	Petros	Konstantinou	2
+10000000287	Nikos	Lazarou	4
+10000000288	Dimitris	Nikolaou	4
+10000000289	Stavros	Vasiliou	3
+10000000290	Giannis	Vasiliou	3
+10000000292	Kostas	Alexiou	4
+10000000293	Giannis	Papadopoulos	4
+10000000294	Anastasia	Kostopoulos	3
+10000000295	Christos	Dimitriou	4
+10000000296	Nikos	Nikolaou	3
+10000000297	Kostas	Georgiou	6
+10000000298	Giannis	Papadopoulos	4

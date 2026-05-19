@@ -807,7 +807,13 @@ BEGIN
     from hasDoctor
     where DoctorAMKA = new.DoctorAMKA
     and month(ShiftDate) = month(new.ShiftDate)
-    and year(ShiftDate) = year(new.ShiftDate);
+    and year(ShiftDate) = year(new.ShiftDate)
+    and not (
+        DepartmentID = old.DepartmentID
+        and ShiftTypeName = old.ShiftTypeName
+        and ShiftDate = old.ShiftDate
+        and DoctorAMKA = old.DoctorAMKA
+    );
 
     if ShiftCount >= 15 then
         signal sqlstate '45000'
@@ -824,6 +830,13 @@ BEGIN
     from hasDoctor hd
     join ShiftType st on hd.ShiftTypeName = st.`Name`
     where hd.DoctorAMKA = new.DoctorAMKA
+    -- When checking for conflicts ignore the exact row that is currently being updated
+    and not (
+        hd.DepartmentID = old.DepartmentID
+        and hd.ShiftTypeName = old.ShiftTypeName
+        and hd.ShiftDate = old.ShiftDate
+        and hd.DoctorAMKA = old.DoctorAMKA
+    )
     and abs(timestampdiff(hour, NewStartDateTime, timestamp(hd.ShiftDate, st.StartTime))) < 16;
     if overlapcnt > 0 then
         signal sqlstate '45000'
@@ -836,6 +849,12 @@ BEGIN
         from HasDoctor 
         where DoctorAMKA = new.DoctorAMKA
         and ShiftTypeName = 'Night'
+        and not (
+            DepartmentID = old.DepartmentID
+            and ShiftTypeName = old.ShiftTypeName
+            and ShiftDate = old.ShiftDate
+            and DoctorAMKA = old.DoctorAMKA
+        )
         and ShiftDate in (
             date_sub(new.ShiftDate, interval 1 day),
             date_sub(new.ShiftDate, interval 2 day),
@@ -857,6 +876,12 @@ BEGIN
         WHERE hd.DepartmentID = NEW.DepartmentID
           AND hd.ShiftTypeName = NEW.ShiftTypeName
           AND hd.ShiftDate = NEW.ShiftDate
+          AND NOT (
+              hd.DepartmentID = OLD.DepartmentID
+              AND hd.ShiftTypeName = OLD.ShiftTypeName
+              AND hd.ShiftDate = OLD.ShiftDate
+              AND hd.DoctorAMKA = OLD.DoctorAMKA
+          )
           AND d.`Rank` IN ('Director', 'Registrar', 'Consultant');
 
         IF v_SeniorCount = 0 THEN

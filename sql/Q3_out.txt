@@ -1,21 +1,21 @@
-FirstName,LastName,Name,num_of_visits,total_cost
-Petros,Georgiou,Orthopedics,4,27593.00
-Panagiotis,Nikolaou,Pediatrics,4,9369.00
-Ioanna,Vasiliou,ICU,4,8898.50
-Marios,Kostopoulos,Oncology,5,13729.50
-Katerina,Nikolaou,Pediatrics,4,7431.00
-Eleni,Papadopoulos,ICU,5,6670.00
-Natalia,Sotiriou,Surgery,4,9212.00
-Katerina,Athanasiou,Ophthalmology,4,5158.00
-Dimitra,Dimitriou,Gastroenterology,5,16480.00
-Panagiotis,Pavlidis,Psychiatry,4,15177.00
-Kostas,Theodorou,"Internal Medicine",5,12194.00
-Vasilis,Papadopoulos,"Internal Medicine",4,11145.00
-Christos,Pavlidis,Emergency,5,195166.91
-Chrysa,Petrou,Ophthalmology,4,7935.20
-Vasiliki,Kostopoulos,Oncology,4,22640.06
-Natalia,Alexiou,Cardiology,5,22857.89
-Nikos,Ioannou,ENT,4,6280.77
-Sofia,Vasiliou,Pediatrics,4,20808.67
-Michalis,Petrou,ICU,4,6335.18
-Nikos,Theodorou,Psychiatry,4,15804.65
+FirstName	LastName	Name	num_of_visits	total_cost
+Petros	Georgiou	Orthopedics	4	27593.00
+Panagiotis	Nikolaou	Pediatrics	4	9369.00
+Ioanna	Vasiliou	ICU	4	8898.50
+Marios	Kostopoulos	Oncology	5	13729.50
+Katerina	Nikolaou	Pediatrics	4	7431.00
+Eleni	Papadopoulos	ICU	5	6670.00
+Natalia	Sotiriou	Surgery	4	9212.00
+Katerina	Athanasiou	Ophthalmology	4	5158.00
+Dimitra	Dimitriou	Gastroenterology	5	16480.00
+Panagiotis	Pavlidis	Psychiatry	4	15177.00
+Kostas	Theodorou	Internal Medicine	5	12194.00
+Vasilis	Papadopoulos	Internal Medicine	4	11145.00
+Christos	Pavlidis	Emergency	5	195166.91
+Chrysa	Petrou	Ophthalmology	4	7935.20
+Vasiliki	Kostopoulos	Oncology	4	22640.06
+Natalia	Alexiou	Cardiology	5	22857.89
+Nikos	Ioannou	ENT	4	6280.77
+Sofia	Vasiliou	Pediatrics	4	20808.67
+Michalis	Petrou	ICU	4	6335.18
+Nikos	Theodorou	Psychiatry	4	15804.65

@@ -1,115 +1,115 @@
-Year,"Total Hospitalization Days","Number of Patients",Patients
-2026,97,2,"Dimitra Sotiriou | Panagiota Petrou"
-2026,96,2,"Kostas Papadopoulos | Stavros Athanasiou"
-2026,91,2,"Michalis Petrou | Chrysa Sotiriou"
-2026,89,2,"Giannis Ioannou | Anastasia Alexiou"
-2026,86,2,"Panagiota Georgiou | Ioanna Athanasiou"
-2026,82,3,"Evangelia Papadopoulos | Christos Ioannou | Ioanna Konstantinou"
-2026,80,2,"Ioanna Athanasiou | Ioanna Theodorou"
-2026,72,3,"Natalia Georgiou | Chrysa Dimitriou | Giorgos Papadopoulos"
-2026,71,2,"Marios Lazarou | Marios Ioannou"
-2026,70,4,"Natalia Pavlidis | Evangelia Lazarou | Spyros Lazarou | Sofia Georgiou"
-2026,67,3,"Maria Sotiriou | Ioanna Nikolaou | Nikos Papadopoulos"
-2026,66,3,"Anna Ioannou | Dimitra Theodorou | Michalis Lazarou"
-2026,63,2,"Dimitris Athanasiou | Eleni Theodorou"
-2026,61,3,"Vasiliki Lazarou | Dimitris Athanasiou | Kostas Konstantinou"
-2026,60,3,"Natalia Sotiriou | Vasilis Nikolaou | Sofia Pavlidis"
-2026,59,4,"Giannis Theodorou | Marios Ioannou | Anna Pavlidis | Andreas Athanasiou"
-2026,58,5,"Petros Papadopoulos | Eleni Petrou | Nikos Pavlidis | Christos Sotiriou | Stavros Athanasiou"
-2026,56,3,"Michalis Dimitriou | Andreas Dimitriou | Sofia Alexiou"
-2026,55,4,"Natalia Nikolaou | Michalis Nikolaou | Dimitra Alexiou | Panagiota Sotiriou"
-2026,54,4,"Eleni Sotiriou | Nikos Ioannou | Panagiotis Vasiliou | Maria Ioannou"
-2026,53,2,"Nikos Alexiou | Andreas Athanasiou"
-2026,52,7,"Eleni Ioannou | Ioanna Pavlidis | Marios Theodorou | Marios Ioannou | Dimitris Sotiriou | Giannis Alexiou | Georgia Ioannou"
-2026,51,4,"Michalis Petrou | Kostas Konstantinou | Vasiliki Kostopoulos | Petros Pavlidis"
-2026,49,3,"Petros Sotiriou | Sofia Vasiliou | Andreas Alexiou"
-2026,48,11,"Dimitris Lazarou | Andreas Pavlidis | Nikos Ioannou | Eleni Dimitriou | Michalis Konstantinou | Kostas Sotiriou | Eleni Alexiou | Chrysa Lazarou | Natalia Alexiou | Panagiota Dimitriou | Dimitris Sotiriou"
-2026,47,6,"Petros Nikolaou | Panagiota Vasiliou | Spyros Theodorou | Panagiota Papadopoulos | Kostas Theodorou | Christos Ioannou"
-2026,46,3,"Panagiota Vasiliou | Anastasia Ioannou | Giannis Nikolaou"
-2026,44,9,"Marios Papadopoulos | Marios Athanasiou | Andreas Lazarou | Christos Nikolaou | Giorgos Georgiou | Panagiotis Lazarou | Vasiliki Lazarou | Petros Lazarou | Vasilis Pavlidis"
-2026,43,7,"Giannis Dimitriou | Anastasia Vasiliou | Chrysa Athanasiou | Evangelia Kostopoulos | Natalia Pavlidis | Georgia Alexiou | Natalia Alexiou"
-2026,42,6,"Katerina Vasiliou | Ioanna Vasiliou | Nikos Lazarou | Georgia Petrou | Anna Sotiriou | Panagiota Nikolaou"
-2026,41,3,"Eleni Dimitriou | Dimitris Alexiou | Natalia Papadopoulos"
-2026,40,3,"Chrysa Nikolaou | Anna Theodorou | Ioanna Konstantinou"
-2026,39,5,"Nikos Georgiou | Spyros Ioannou | Maria Nikolaou | Dimitra Georgiou | Ioanna Vasiliou"
-2026,38,6,"Maria Dimitriou | Giorgos Sotiriou | Sofia Sotiriou | Anna Kostopoulos | Giorgos Athanasiou | Georgia Petrou"
-2026,37,3,"Giorgos Petrou | Panagiota Nikolaou | Dimitra Sotiriou"
-2026,36,10,"Spyros Nikolaou | Giorgos Vasiliou | Petros Ioannou | Marios Theodorou | Kostas Lazarou | Andreas Kostopoulos | Spyros Petrou | Katerina Vasiliou | Spyros Sotiriou | Marios Theodorou"
-2026,35,7,"Michalis Ioannou | Sofia Petrou | Spyros Athanasiou | Panagiota Nikolaou | Panagiota Sotiriou | Ioanna Dimitriou | Dimitra Vasiliou"
-2026,34,13,"Giannis Theodorou | Georgia Vasiliou | Ioanna Konstantinou | Anastasia Konstantinou | Georgia Sotiriou | Maria Georgiou | Michalis Pavlidis | Christos Pavlidis | Chrysa Theodorou | Panagiota Athanasiou | Vasilis Athanasiou | Christos Vasiliou | Panagiotis Alexiou"
-2026,33,11,"Eleni Papadopoulos | Natalia Vasiliou | Stavros Konstantinou | Evangelia Dimitriou | Stavros Alexiou | Nikos Dimitriou | Katerina Nikolaou | Kostas Kostopoulos | Stavros Dimitriou | Andreas Alexiou | Spyros Pavlidis"
-2026,32,5,"Vasilis Vasiliou | Michalis Vasiliou | Evangelia Vasiliou | Katerina Sotiriou | Georgia Georgiou"
-2026,31,9,"Petros Pavlidis | Ioanna Alexiou | Maria Papadopoulos | Evangelia Kostopoulos | Dimitris Petrou | Kostas Papadopoulos | Katerina Lazarou | Maria Konstantinou | Dimitris Vasiliou"
-2026,30,11,"Stavros Papadopoulos | Giannis Nikolaou | Stavros Papadopoulos | Vasilis Nikolaou | Giannis Theodorou | Dimitra Georgiou | Dimitra Lazarou | Petros Ioannou | Georgia Kostopoulos | Vasiliki Sotiriou | Spyros Papadopoulos"
-2026,29,10,"Panagiota Vasiliou | Andreas Konstantinou | Maria Alexiou | Vasilis Pavlidis | Evangelia Sotiriou | Vasiliki Kostopoulos | Nikos Athanasiou | Maria Sotiriou | Vasilis Theodorou | Christos Vasiliou"
-2026,28,9,"Michalis Pavlidis | Chrysa Alexiou | Maria Alexiou | Natalia Dimitriou | Maria Theodorou | Petros Pavlidis | Evangelia Lazarou | Stavros Sotiriou | Petros Alexiou"
-2026,27,5,"Marios Lazarou | Nikos Ioannou | Christos Dimitriou | Dimitris Konstantinou | Panagiota Athanasiou"
-2026,26,6,"Anastasia Pavlidis | Georgia Vasiliou | Vasilis Lazarou | Evangelia Ioannou | Spyros Dimitriou | Dimitris Vasiliou"
-2026,25,10,"Chrysa Kostopoulos | Maria Nikolaou | Natalia Lazarou | Evangelia Georgiou | Stavros Theodorou | Michalis Petrou | Christos Dimitriou | Evangelia Pavlidis | Anastasia Kostopoulos | Andreas Lazarou"
-2026,24,9,"Nikos Lazarou | Panagiotis Vasiliou | Eleni Pavlidis | Christos Dimitriou | Evangelia Pavlidis | Marios Nikolaou | Katerina Nikolaou | Giannis Pavlidis | Ioanna Papadopoulos"
-2026,23,13,"Giannis Pavlidis | Anastasia Vasiliou | Eleni Ioannou | Anna Vasiliou | Andreas Athanasiou | Andreas Dimitriou | Marios Ioannou | Anastasia Georgiou | Panagiota Athanasiou | Eleni Georgiou | Andreas Ioannou | Natalia Lazarou | Panagiotis Kostopoulos"
-2026,22,12,"Andreas Lazarou | Sofia Kostopoulos | Georgia Lazarou | Marios Athanasiou | Spyros Georgiou | Kostas Sotiriou | Natalia Dimitriou | Eleni Theodorou | Dimitris Petrou | Marios Kostopoulos | Vasilis Vasiliou | Vasilis Pavlidis"
-2026,21,11,"Petros Alexiou | Kostas Theodorou | Evangelia Konstantinou | Panagiota Vasiliou | Anna Ioannou | Dimitris Theodorou | Chrysa Papadopoulos | Panagiota Lazarou | Kostas Dimitriou | Sofia Vasiliou | Eleni Papadopoulos"
-2026,20,13,"Spyros Alexiou | Andreas Ioannou | Chrysa Sotiriou | Dimitra Theodorou | Katerina Theodorou | Christos Papadopoulos | Andreas Petrou | Kostas Konstantinou | Eleni Lazarou | Dimitris Dimitriou | Eleni Ioannou | Evangelia Kostopoulos | Dimitra Georgiou"
-2026,19,15,"Natalia Athanasiou | Kostas Konstantinou | Georgia Ioannou | Katerina Sotiriou | Anna Ioannou | Anastasia Pavlidis | Anna Alexiou | Michalis Nikolaou | Petros Petrou | Maria Kostopoulos | Evangelia Papadopoulos | Nikos Georgiou | Stavros Nikolaou | Dimitra Vasiliou | Petros Sotiriou"
-2026,18,15,"Nikos Sotiriou | Katerina Georgiou | Kostas Theodorou | Giannis Ioannou | Sofia Nikolaou | Evangelia Alexiou | Georgia Konstantinou | Spyros Theodorou | Vasilis Papadopoulos | Giannis Alexiou | Maria Lazarou | Vasiliki Konstantinou | Evangelia Ioannou | Christos Lazarou | Chrysa Alexiou"
-2026,17,15,"Vasilis Theodorou | Natalia Kostopoulos | Stavros Petrou | Natalia Ioannou | Natalia Alexiou | Panagiotis Pavlidis | Panagiota Alexiou | Giannis Theodorou | Katerina Alexiou | Nikos Pavlidis | Anna Dimitriou | Panagiotis Vasiliou | Panagiotis Ioannou | Vasilis Lazarou | Georgia Georgiou"
-2026,16,16,"Sofia Nikolaou | Stavros Lazarou | Sofia Nikolaou | Katerina Nikolaou | Vasiliki Petrou | Petros Konstantinou | Georgia Papadopoulos | Katerina Theodorou | Dimitris Georgiou | Nikos Athanasiou | Spyros Ioannou | Natalia Petrou | Eleni Theodorou | Stavros Georgiou | Maria Sotiriou | Chrysa Ioannou"
-2025,136,2,"Chrysa Sotiriou | Vasiliki Vasiliou"
-2025,110,2,"Nikos Petrou | Andreas Pavlidis"
-2025,90,2,"Michalis Petrou | Anna Theodorou"
-2025,88,2,"Natalia Petrou | Dimitris Konstantinou"
-2025,81,3,"Giorgos Sotiriou | Andreas Vasiliou | Panagiota Athanasiou"
-2025,79,2,"Vasiliki Sotiriou | Dimitris Athanasiou"
-2025,78,2,"Anna Athanasiou | Giorgos Papadopoulos"
-2025,76,4,"Natalia Lazarou | Dimitris Athanasiou | Ioanna Nikolaou | Nikos Alexiou"
-2025,71,3,"Katerina Nikolaou | Andreas Athanasiou | Christos Lazarou"
-2025,69,2,"Katerina Nikolaou | Giannis Ioannou"
-2025,68,6,"Natalia Nikolaou | Vasilis Vasiliou | Maria Georgiou | Eleni Ioannou | Evangelia Papadopoulos | Panagiota Konstantinou"
-2025,67,2,"Ioanna Konstantinou | Kostas Sotiriou"
-2025,65,2,"Christos Nikolaou | Vasiliki Lazarou"
-2025,64,3,"Dimitra Sotiriou | Evangelia Vasiliou | Nikos Nikolaou"
-2025,63,2,"Marios Ioannou | Evangelia Alexiou"
-2025,62,3,"Natalia Alexiou | Dimitra Georgiou | Eleni Georgiou"
-2025,61,2,"Chrysa Ioannou | Vasilis Theodorou"
-2025,60,4,"Sofia Nikolaou | Giorgos Ioannou | Ioanna Alexiou | Spyros Theodorou"
-2025,59,4,"Dimitris Vasiliou | Marios Kostopoulos | Sofia Vasiliou | Chrysa Kostopoulos"
-2025,57,3,"Panagiotis Pavlidis | Natalia Theodorou | Panagiotis Alexiou"
-2025,56,5,"Ioanna Dimitriou | Vasilis Petrou | Evangelia Athanasiou | Maria Konstantinou | Evangelia Lazarou"
-2025,55,2,"Spyros Lazarou | Dimitra Athanasiou"
-2025,54,4,"Nikos Papadopoulos | Dimitra Georgiou | Marios Lazarou | Stavros Ioannou"
-2025,53,2,"Petros Ioannou | Maria Alexiou"
-2025,51,3,"Eleni Papadopoulos | Andreas Lazarou | Georgia Vasiliou"
-2025,49,3,"Christos Ioannou | Anna Dimitriou | Kostas Konstantinou"
-2025,48,3,"Dimitris Konstantinou | Ioanna Nikolaou | Natalia Dimitriou"
-2025,46,4,"Maria Pavlidis | Giannis Alexiou | Petros Pavlidis | Kostas Ioannou"
-2025,45,7,"Marios Kostopoulos | Dimitris Petrou | Dimitra Theodorou | Panagiota Athanasiou | Georgia Kostopoulos | Panagiota Vasiliou | Andreas Alexiou"
-2025,44,3,"Panagiota Athanasiou | Andreas Kostopoulos | Katerina Papadopoulos"
-2025,43,5,"Vasilis Papadopoulos | Vasilis Lazarou | Stavros Alexiou | Marios Theodorou | Georgia Petrou"
-2025,42,5,"Spyros Nikolaou | Giannis Ioannou | Chrysa Theodorou | Stavros Petrou | Panagiota Alexiou"
-2025,41,3,"Stavros Nikolaou | Ioanna Pavlidis | Panagiotis Lazarou"
-2025,40,9,"Kostas Nikolaou | Christos Vasiliou | Dimitra Sotiriou | Anastasia Konstantinou | Natalia Papadopoulos | Maria Sotiriou | Ioanna Pavlidis | Vasilis Nikolaou | Ioanna Konstantinou"
-2025,39,6,"Chrysa Georgiou | Eleni Petrou | Kostas Papadopoulos | Evangelia Lazarou | Panagiota Papadopoulos | Natalia Sotiriou"
-2025,38,5,"Katerina Athanasiou | Marios Petrou | Ioanna Nikolaou | Vasiliki Athanasiou | Natalia Alexiou"
-2025,37,13,"Petros Nikolaou | Anna Lazarou | Vasiliki Lazarou | Natalia Sotiriou | Michalis Nikolaou | Panagiota Vasiliou | Michalis Sotiriou | Evangelia Lazarou | Anna Pavlidis | Giorgos Ioannou | Marios Nikolaou | Christos Ioannou | Panagiotis Georgiou"
-2025,36,6,"Vasilis Theodorou | Panagiota Theodorou | Vasiliki Kostopoulos | Nikos Theodorou | Dimitra Alexiou | Petros Alexiou"
-2025,35,7,"Dimitra Georgiou | Christos Kostopoulos | Vasilis Vasiliou | Spyros Petrou | Michalis Theodorou | Vasilis Vasiliou | Panagiota Theodorou"
-2025,34,7,"Anastasia Kostopoulos | Ioanna Athanasiou | Petros Nikolaou | Spyros Lazarou | Dimitris Athanasiou | Giannis Theodorou | Georgia Sotiriou"
-2025,33,12,"Michalis Lazarou | Stavros Georgiou | Anastasia Ioannou | Petros Sotiriou | Anastasia Alexiou | Katerina Lazarou | Kostas Athanasiou | Petros Georgiou | Vasiliki Alexiou | Anna Lazarou | Katerina Konstantinou | Nikos Lazarou"
-2025,32,12,"Katerina Theodorou | Marios Sotiriou | Stavros Nikolaou | Chrysa Lazarou | Georgia Alexiou | Marios Lazarou | Sofia Kostopoulos | Natalia Dimitriou | Ioanna Papadopoulos | Dimitris Dimitriou | Vasilis Alexiou | Eleni Vasiliou"
-2025,31,11,"Georgia Pavlidis | Vasilis Vasiliou | Ioanna Vasiliou | Anna Vasiliou | Chrysa Petrou | Vasilis Ioannou | Nikos Pavlidis | Michalis Nikolaou | Panagiota Pavlidis | Vasiliki Alexiou | Panagiota Sotiriou"
-2025,30,6,"Maria Nikolaou | Dimitris Dimitriou | Panagiota Petrou | Natalia Georgiou | Dimitra Papadopoulos | Kostas Sotiriou"
-2025,29,7,"Natalia Athanasiou | Nikos Alexiou | Vasilis Athanasiou | Natalia Papadopoulos | Evangelia Kostopoulos | Spyros Sotiriou | Anna Nikolaou"
-2025,28,13,"Petros Georgiou | Katerina Nikolaou | Nikos Athanasiou | Andreas Athanasiou | Katerina Pavlidis | Giannis Nikolaou | Marios Sotiriou | Maria Konstantinou | Giannis Ioannou | Panagiota Nikolaou | Spyros Ioannou | Evangelia Vasiliou | Michalis Athanasiou"
-2025,27,11,"Christos Georgiou | Kostas Konstantinou | Evangelia Kostopoulos | Andreas Ioannou | Andreas Lazarou | Christos Pavlidis | Stavros Konstantinou | Anastasia Pavlidis | Spyros Theodorou | Andreas Athanasiou | Nikos Pavlidis"
-2025,26,10,"Andreas Alexiou | Anna Alexiou | Eleni Georgiou | Sofia Kostopoulos | Anna Petrou | Ioanna Alexiou | Vasilis Georgiou | Georgia Vasiliou | Vasiliki Lazarou | Maria Sotiriou"
-2025,25,13,"Christos Petrou | Nikos Sotiriou | Panagiotis Vasiliou | Sofia Nikolaou | Maria Sotiriou | Sofia Pavlidis | Eleni Dimitriou | Evangelia Vasiliou | Katerina Sotiriou | Dimitra Vasiliou | Marios Papadopoulos | Ioanna Athanasiou | Anastasia Theodorou"
-2025,24,22,"Dimitra Theodorou | Christos Konstantinou | Dimitris Sotiriou | Ioanna Vasiliou | Vasiliki Lazarou | Kostas Dimitriou | Maria Lazarou | Evangelia Konstantinou | Anna Georgiou | Vasilis Pavlidis | Spyros Athanasiou | Andreas Petrou | Petros Ioannou | Natalia Konstantinou | Georgia Petrou | Nikos Kostopoulos | Petros Pavlidis | Petros Nikolaou | Vasiliki Kostopoulos | Vasilis Athanasiou | Anna Ioannou | Georgia Theodorou"
-2025,23,12,"Chrysa Nikolaou | Ioanna Petrou | Panagiotis Ioannou | Giorgos Kostopoulos | Christos Dimitriou | Panagiota Dimitriou | Anna Dimitriou | Vasilis Nikolaou | Katerina Konstantinou | Anastasia Vasiliou | Spyros Athanasiou | Eleni Petrou"
-2025,22,18,"Ioanna Vasiliou | Giannis Dimitriou | Anna Vasiliou | Ioanna Pavlidis | Georgia Kostopoulos | Anastasia Athanasiou | Maria Ioannou | Petros Lazarou | Vasilis Papadopoulos | Natalia Dimitriou | Dimitra Lazarou | Petros Alexiou | Stavros Sotiriou | Vasilis Nikolaou | Evangelia Lazarou | Marios Athanasiou | Christos Petrou | Eleni Alexiou"
-2025,21,14,"Giannis Konstantinou | Ioanna Theodorou | Stavros Nikolaou | Katerina Vasiliou | Maria Ioannou | Evangelia Nikolaou | Marios Ioannou | Evangelia Ioannou | Sofia Vasiliou | Eleni Lazarou | Dimitris Vasiliou | Panagiotis Dimitriou | Katerina Vasiliou | Eleni Georgiou"
-2025,20,17,"Kostas Theodorou | Sofia Nikolaou | Dimitris Petrou | Georgia Petrou | Ioanna Pavlidis | Petros Alexiou | Giorgos Petrou | Nikos Alexiou | Stavros Athanasiou | Panagiota Vasiliou | Spyros Theodorou | Kostas Lazarou | Kostas Kostopoulos | Stavros Sotiriou | Sofia Theodorou | Petros Pavlidis | Stavros Theodorou"
-2025,19,16,"Maria Nikolaou | Eleni Dimitriou | Giannis Theodorou | Panagiota Georgiou | Petros Sotiriou | Nikos Papadopoulos | Maria Theodorou | Dimitris Vasiliou | Georgia Kostopoulos | Michalis Pavlidis | Eleni Pavlidis | Andreas Dimitriou | Stavros Lazarou | Anastasia Ioannou | Vasilis Petrou | Evangelia Georgiou"
-2025,18,18,"Giannis Alexiou | Giannis Nikolaou | Giannis Sotiriou | Marios Pavlidis | Anastasia Georgiou | Michalis Dimitriou | Georgia Lazarou | Giannis Kostopoulos | Katerina Georgiou | Dimitris Lazarou | Maria Athanasiou | Spyros Vasiliou | Evangelia Ioannou | Michalis Nikolaou | Christos Ioannou | Sofia Kostopoulos | Christos Dimitriou | Panagiota Lazarou"
-2025,17,11,"Petros Alexiou | Vasilis Lazarou | Chrysa Nikolaou | Georgia Papadopoulos | Michalis Petrou | Dimitra Vasiliou | Marios Sotiriou | Vasiliki Petrou | Katerina Theodorou | Evangelia Kostopoulos | Dimitra Vasiliou"
-2025,16,10,"Sofia Pavlidis | Anastasia Ioannou | Chrysa Konstantinou | Chrysa Dimitriou | Spyros Nikolaou | Michalis Alexiou | Spyros Papadopoulos | Georgia Dimitriou | Spyros Pavlidis | Stavros Georgiou"
+Year	Total Hospitalization Days	Number of Patients	Patients
+2026	97	2	Dimitra Sotiriou | Panagiota Petrou
+2026	96	2	Kostas Papadopoulos | Stavros Athanasiou
+2026	91	2	Michalis Petrou | Chrysa Sotiriou
+2026	89	2	Giannis Ioannou | Anastasia Alexiou
+2026	86	2	Panagiota Georgiou | Ioanna Athanasiou
+2026	82	3	Evangelia Papadopoulos | Christos Ioannou | Ioanna Konstantinou
+2026	80	2	Ioanna Athanasiou | Ioanna Theodorou
+2026	72	3	Natalia Georgiou | Chrysa Dimitriou | Giorgos Papadopoulos
+2026	71	2	Marios Lazarou | Marios Ioannou
+2026	70	4	Natalia Pavlidis | Evangelia Lazarou | Spyros Lazarou | Sofia Georgiou
+2026	67	3	Maria Sotiriou | Ioanna Nikolaou | Nikos Papadopoulos
+2026	66	3	Anna Ioannou | Dimitra Theodorou | Michalis Lazarou
+2026	63	2	Dimitris Athanasiou | Eleni Theodorou
+2026	61	3	Vasiliki Lazarou | Dimitris Athanasiou | Kostas Konstantinou
+2026	60	3	Natalia Sotiriou | Vasilis Nikolaou | Sofia Pavlidis
+2026	59	4	Giannis Theodorou | Marios Ioannou | Anna Pavlidis | Andreas Athanasiou
+2026	58	5	Petros Papadopoulos | Eleni Petrou | Nikos Pavlidis | Christos Sotiriou | Stavros Athanasiou
+2026	56	3	Michalis Dimitriou | Andreas Dimitriou | Sofia Alexiou
+2026	55	4	Natalia Nikolaou | Michalis Nikolaou | Dimitra Alexiou | Panagiota Sotiriou
+2026	54	4	Eleni Sotiriou | Nikos Ioannou | Panagiotis Vasiliou | Maria Ioannou
+2026	53	2	Nikos Alexiou | Andreas Athanasiou
+2026	52	7	Eleni Ioannou | Ioanna Pavlidis | Marios Theodorou | Marios Ioannou | Dimitris Sotiriou | Giannis Alexiou | Georgia Ioannou
+2026	51	4	Michalis Petrou | Kostas Konstantinou | Vasiliki Kostopoulos | Petros Pavlidis
+2026	49	3	Petros Sotiriou | Sofia Vasiliou | Andreas Alexiou
+2026	48	11	Dimitris Lazarou | Andreas Pavlidis | Nikos Ioannou | Eleni Dimitriou | Michalis Konstantinou | Kostas Sotiriou | Eleni Alexiou | Chrysa Lazarou | Natalia Alexiou | Panagiota Dimitriou | Dimitris Sotiriou
+2026	47	6	Petros Nikolaou | Panagiota Vasiliou | Spyros Theodorou | Panagiota Papadopoulos | Kostas Theodorou | Christos Ioannou
+2026	46	3	Panagiota Vasiliou | Anastasia Ioannou | Giannis Nikolaou
+2026	44	9	Marios Papadopoulos | Marios Athanasiou | Andreas Lazarou | Christos Nikolaou | Giorgos Georgiou | Panagiotis Lazarou | Vasiliki Lazarou | Petros Lazarou | Vasilis Pavlidis
+2026	43	7	Giannis Dimitriou | Anastasia Vasiliou | Chrysa Athanasiou | Evangelia Kostopoulos | Natalia Pavlidis | Georgia Alexiou | Natalia Alexiou
+2026	42	6	Katerina Vasiliou | Ioanna Vasiliou | Nikos Lazarou | Georgia Petrou | Anna Sotiriou | Panagiota Nikolaou
+2026	41	3	Eleni Dimitriou | Dimitris Alexiou | Natalia Papadopoulos
+2026	40	3	Chrysa Nikolaou | Anna Theodorou | Ioanna Konstantinou
+2026	39	5	Nikos Georgiou | Spyros Ioannou | Maria Nikolaou | Dimitra Georgiou | Ioanna Vasiliou
+2026	38	6	Maria Dimitriou | Giorgos Sotiriou | Sofia Sotiriou | Anna Kostopoulos | Giorgos Athanasiou | Georgia Petrou
+2026	37	3	Giorgos Petrou | Panagiota Nikolaou | Dimitra Sotiriou
+2026	36	10	Spyros Nikolaou | Giorgos Vasiliou | Petros Ioannou | Marios Theodorou | Kostas Lazarou | Andreas Kostopoulos | Spyros Petrou | Katerina Vasiliou | Spyros Sotiriou | Marios Theodorou
+2026	35	7	Michalis Ioannou | Sofia Petrou | Spyros Athanasiou | Panagiota Nikolaou | Panagiota Sotiriou | Ioanna Dimitriou | Dimitra Vasiliou
+2026	34	13	Giannis Theodorou | Georgia Vasiliou | Ioanna Konstantinou | Anastasia Konstantinou | Georgia Sotiriou | Maria Georgiou | Michalis Pavlidis | Christos Pavlidis | Chrysa Theodorou | Panagiota Athanasiou | Vasilis Athanasiou | Christos Vasiliou | Panagiotis Alexiou
+2026	33	11	Eleni Papadopoulos | Natalia Vasiliou | Stavros Konstantinou | Evangelia Dimitriou | Stavros Alexiou | Nikos Dimitriou | Katerina Nikolaou | Kostas Kostopoulos | Stavros Dimitriou | Andreas Alexiou | Spyros Pavlidis
+2026	32	5	Vasilis Vasiliou | Michalis Vasiliou | Evangelia Vasiliou | Katerina Sotiriou | Georgia Georgiou
+2026	31	9	Petros Pavlidis | Ioanna Alexiou | Maria Papadopoulos | Evangelia Kostopoulos | Dimitris Petrou | Kostas Papadopoulos | Katerina Lazarou | Maria Konstantinou | Dimitris Vasiliou
+2026	30	11	Stavros Papadopoulos | Giannis Nikolaou | Stavros Papadopoulos | Vasilis Nikolaou | Giannis Theodorou | Dimitra Georgiou | Dimitra Lazarou | Petros Ioannou | Georgia Kostopoulos | Vasiliki Sotiriou | Spyros Papadopoulos
+2026	29	10	Panagiota Vasiliou | Andreas Konstantinou | Maria Alexiou | Vasilis Pavlidis | Evangelia Sotiriou | Vasiliki Kostopoulos | Nikos Athanasiou | Maria Sotiriou | Vasilis Theodorou | Christos Vasiliou
+2026	28	9	Michalis Pavlidis | Chrysa Alexiou | Maria Alexiou | Natalia Dimitriou | Maria Theodorou | Petros Pavlidis | Evangelia Lazarou | Stavros Sotiriou | Petros Alexiou
+2026	27	5	Marios Lazarou | Nikos Ioannou | Christos Dimitriou | Dimitris Konstantinou | Panagiota Athanasiou
+2026	26	6	Anastasia Pavlidis | Georgia Vasiliou | Vasilis Lazarou | Evangelia Ioannou | Spyros Dimitriou | Dimitris Vasiliou
+2026	25	10	Chrysa Kostopoulos | Maria Nikolaou | Natalia Lazarou | Evangelia Georgiou | Stavros Theodorou | Michalis Petrou | Christos Dimitriou | Evangelia Pavlidis | Anastasia Kostopoulos | Andreas Lazarou
+2026	24	9	Nikos Lazarou | Panagiotis Vasiliou | Eleni Pavlidis | Christos Dimitriou | Evangelia Pavlidis | Marios Nikolaou | Katerina Nikolaou | Giannis Pavlidis | Ioanna Papadopoulos
+2026	23	13	Giannis Pavlidis | Anastasia Vasiliou | Eleni Ioannou | Anna Vasiliou | Andreas Athanasiou | Andreas Dimitriou | Marios Ioannou | Anastasia Georgiou | Panagiota Athanasiou | Eleni Georgiou | Andreas Ioannou | Natalia Lazarou | Panagiotis Kostopoulos
+2026	22	12	Andreas Lazarou | Sofia Kostopoulos | Georgia Lazarou | Marios Athanasiou | Spyros Georgiou | Kostas Sotiriou | Natalia Dimitriou | Eleni Theodorou | Dimitris Petrou | Marios Kostopoulos | Vasilis Vasiliou | Vasilis Pavlidis
+2026	21	11	Petros Alexiou | Kostas Theodorou | Evangelia Konstantinou | Panagiota Vasiliou | Anna Ioannou | Dimitris Theodorou | Chrysa Papadopoulos | Panagiota Lazarou | Kostas Dimitriou | Sofia Vasiliou | Eleni Papadopoulos
+2026	20	13	Spyros Alexiou | Andreas Ioannou | Chrysa Sotiriou | Dimitra Theodorou | Katerina Theodorou | Christos Papadopoulos | Andreas Petrou | Kostas Konstantinou | Eleni Lazarou | Dimitris Dimitriou | Eleni Ioannou | Evangelia Kostopoulos | Dimitra Georgiou
+2026	19	15	Natalia Athanasiou | Kostas Konstantinou | Georgia Ioannou | Katerina Sotiriou | Anna Ioannou | Anastasia Pavlidis | Anna Alexiou | Michalis Nikolaou | Petros Petrou | Maria Kostopoulos | Evangelia Papadopoulos | Nikos Georgiou | Stavros Nikolaou | Dimitra Vasiliou | Petros Sotiriou
+2026	18	15	Nikos Sotiriou | Katerina Georgiou | Kostas Theodorou | Giannis Ioannou | Sofia Nikolaou | Evangelia Alexiou | Georgia Konstantinou | Spyros Theodorou | Vasilis Papadopoulos | Giannis Alexiou | Maria Lazarou | Vasiliki Konstantinou | Evangelia Ioannou | Christos Lazarou | Chrysa Alexiou
+2026	17	15	Vasilis Theodorou | Natalia Kostopoulos | Stavros Petrou | Natalia Ioannou | Natalia Alexiou | Panagiotis Pavlidis | Panagiota Alexiou | Giannis Theodorou | Katerina Alexiou | Nikos Pavlidis | Anna Dimitriou | Panagiotis Vasiliou | Panagiotis Ioannou | Vasilis Lazarou | Georgia Georgiou
+2026	16	16	Sofia Nikolaou | Stavros Lazarou | Sofia Nikolaou | Katerina Nikolaou | Vasiliki Petrou | Petros Konstantinou | Georgia Papadopoulos | Katerina Theodorou | Dimitris Georgiou | Nikos Athanasiou | Spyros Ioannou | Natalia Petrou | Eleni Theodorou | Stavros Georgiou | Maria Sotiriou | Chrysa Ioannou
+2025	136	2	Chrysa Sotiriou | Vasiliki Vasiliou
+2025	110	2	Nikos Petrou | Andreas Pavlidis
+2025	90	2	Michalis Petrou | Anna Theodorou
+2025	88	2	Natalia Petrou | Dimitris Konstantinou
+2025	81	3	Giorgos Sotiriou | Andreas Vasiliou | Panagiota Athanasiou
+2025	79	2	Vasiliki Sotiriou | Dimitris Athanasiou
+2025	78	2	Anna Athanasiou | Giorgos Papadopoulos
+2025	76	4	Natalia Lazarou | Dimitris Athanasiou | Ioanna Nikolaou | Nikos Alexiou
+2025	71	3	Katerina Nikolaou | Andreas Athanasiou | Christos Lazarou
+2025	69	2	Katerina Nikolaou | Giannis Ioannou
+2025	68	6	Natalia Nikolaou | Vasilis Vasiliou | Maria Georgiou | Eleni Ioannou | Evangelia Papadopoulos | Panagiota Konstantinou
+2025	67	2	Ioanna Konstantinou | Kostas Sotiriou
+2025	65	2	Christos Nikolaou | Vasiliki Lazarou
+2025	64	3	Dimitra Sotiriou | Evangelia Vasiliou | Nikos Nikolaou
+2025	63	2	Marios Ioannou | Evangelia Alexiou
+2025	62	3	Natalia Alexiou | Dimitra Georgiou | Eleni Georgiou
+2025	61	2	Chrysa Ioannou | Vasilis Theodorou
+2025	60	4	Sofia Nikolaou | Giorgos Ioannou | Ioanna Alexiou | Spyros Theodorou
+2025	59	4	Dimitris Vasiliou | Marios Kostopoulos | Sofia Vasiliou | Chrysa Kostopoulos
+2025	57	3	Panagiotis Pavlidis | Natalia Theodorou | Panagiotis Alexiou
+2025	56	5	Ioanna Dimitriou | Vasilis Petrou | Evangelia Athanasiou | Maria Konstantinou | Evangelia Lazarou
+2025	55	2	Spyros Lazarou | Dimitra Athanasiou
+2025	54	4	Nikos Papadopoulos | Dimitra Georgiou | Marios Lazarou | Stavros Ioannou
+2025	53	2	Petros Ioannou | Maria Alexiou
+2025	51	3	Eleni Papadopoulos | Andreas Lazarou | Georgia Vasiliou
+2025	49	3	Christos Ioannou | Anna Dimitriou | Kostas Konstantinou
+2025	48	3	Dimitris Konstantinou | Ioanna Nikolaou | Natalia Dimitriou
+2025	46	4	Maria Pavlidis | Giannis Alexiou | Petros Pavlidis | Kostas Ioannou
+2025	45	7	Marios Kostopoulos | Dimitris Petrou | Dimitra Theodorou | Panagiota Athanasiou | Georgia Kostopoulos | Panagiota Vasiliou | Andreas Alexiou
+2025	44	3	Panagiota Athanasiou | Andreas Kostopoulos | Katerina Papadopoulos
+2025	43	5	Vasilis Papadopoulos | Vasilis Lazarou | Stavros Alexiou | Marios Theodorou | Georgia Petrou
+2025	42	5	Spyros Nikolaou | Giannis Ioannou | Chrysa Theodorou | Stavros Petrou | Panagiota Alexiou
+2025	41	3	Stavros Nikolaou | Ioanna Pavlidis | Panagiotis Lazarou
+2025	40	9	Kostas Nikolaou | Christos Vasiliou | Dimitra Sotiriou | Anastasia Konstantinou | Natalia Papadopoulos | Maria Sotiriou | Ioanna Pavlidis | Vasilis Nikolaou | Ioanna Konstantinou
+2025	39	6	Chrysa Georgiou | Eleni Petrou | Kostas Papadopoulos | Evangelia Lazarou | Panagiota Papadopoulos | Natalia Sotiriou
+2025	38	5	Katerina Athanasiou | Marios Petrou | Ioanna Nikolaou | Vasiliki Athanasiou | Natalia Alexiou
+2025	37	13	Petros Nikolaou | Anna Lazarou | Vasiliki Lazarou | Natalia Sotiriou | Michalis Nikolaou | Panagiota Vasiliou | Michalis Sotiriou | Evangelia Lazarou | Anna Pavlidis | Giorgos Ioannou | Marios Nikolaou | Christos Ioannou | Panagiotis Georgiou
+2025	36	6	Vasilis Theodorou | Panagiota Theodorou | Vasiliki Kostopoulos | Nikos Theodorou | Dimitra Alexiou | Petros Alexiou
+2025	35	7	Dimitra Georgiou | Christos Kostopoulos | Vasilis Vasiliou | Spyros Petrou | Michalis Theodorou | Vasilis Vasiliou | Panagiota Theodorou
+2025	34	7	Anastasia Kostopoulos | Ioanna Athanasiou | Petros Nikolaou | Spyros Lazarou | Dimitris Athanasiou | Giannis Theodorou | Georgia Sotiriou
+2025	33	12	Michalis Lazarou | Stavros Georgiou | Anastasia Ioannou | Petros Sotiriou | Anastasia Alexiou | Katerina Lazarou | Kostas Athanasiou | Petros Georgiou | Vasiliki Alexiou | Anna Lazarou | Katerina Konstantinou | Nikos Lazarou
+2025	32	12	Katerina Theodorou | Marios Sotiriou | Stavros Nikolaou | Chrysa Lazarou | Georgia Alexiou | Marios Lazarou | Sofia Kostopoulos | Natalia Dimitriou | Ioanna Papadopoulos | Dimitris Dimitriou | Vasilis Alexiou | Eleni Vasiliou
+2025	31	11	Georgia Pavlidis | Vasilis Vasiliou | Ioanna Vasiliou | Anna Vasiliou | Chrysa Petrou | Vasilis Ioannou | Nikos Pavlidis | Michalis Nikolaou | Panagiota Pavlidis | Vasiliki Alexiou | Panagiota Sotiriou
+2025	30	6	Maria Nikolaou | Dimitris Dimitriou | Panagiota Petrou | Natalia Georgiou | Dimitra Papadopoulos | Kostas Sotiriou
+2025	29	7	Natalia Athanasiou | Nikos Alexiou | Vasilis Athanasiou | Natalia Papadopoulos | Evangelia Kostopoulos | Spyros Sotiriou | Anna Nikolaou
+2025	28	13	Petros Georgiou | Katerina Nikolaou | Nikos Athanasiou | Andreas Athanasiou | Katerina Pavlidis | Giannis Nikolaou | Marios Sotiriou | Maria Konstantinou | Giannis Ioannou | Panagiota Nikolaou | Spyros Ioannou | Evangelia Vasiliou | Michalis Athanasiou
+2025	27	11	Christos Georgiou | Kostas Konstantinou | Evangelia Kostopoulos | Andreas Ioannou | Andreas Lazarou | Christos Pavlidis | Stavros Konstantinou | Anastasia Pavlidis | Spyros Theodorou | Andreas Athanasiou | Nikos Pavlidis
+2025	26	10	Andreas Alexiou | Anna Alexiou | Eleni Georgiou | Sofia Kostopoulos | Anna Petrou | Ioanna Alexiou | Vasilis Georgiou | Georgia Vasiliou | Vasiliki Lazarou | Maria Sotiriou
+2025	25	13	Christos Petrou | Nikos Sotiriou | Panagiotis Vasiliou | Sofia Nikolaou | Maria Sotiriou | Sofia Pavlidis | Eleni Dimitriou | Evangelia Vasiliou | Katerina Sotiriou | Dimitra Vasiliou | Marios Papadopoulos | Ioanna Athanasiou | Anastasia Theodorou
+2025	24	22	Dimitra Theodorou | Christos Konstantinou | Dimitris Sotiriou | Ioanna Vasiliou | Vasiliki Lazarou | Kostas Dimitriou | Maria Lazarou | Evangelia Konstantinou | Anna Georgiou | Vasilis Pavlidis | Spyros Athanasiou | Andreas Petrou | Petros Ioannou | Natalia Konstantinou | Georgia Petrou | Nikos Kostopoulos | Petros Pavlidis | Petros Nikolaou | Vasiliki Kostopoulos | Vasilis Athanasiou | Anna Ioannou | Georgia Theodorou
+2025	23	12	Chrysa Nikolaou | Ioanna Petrou | Panagiotis Ioannou | Giorgos Kostopoulos | Christos Dimitriou | Panagiota Dimitriou | Anna Dimitriou | Vasilis Nikolaou | Katerina Konstantinou | Anastasia Vasiliou | Spyros Athanasiou | Eleni Petrou
+2025	22	18	Ioanna Vasiliou | Giannis Dimitriou | Anna Vasiliou | Ioanna Pavlidis | Georgia Kostopoulos | Anastasia Athanasiou | Maria Ioannou | Petros Lazarou | Vasilis Papadopoulos | Natalia Dimitriou | Dimitra Lazarou | Petros Alexiou | Stavros Sotiriou | Vasilis Nikolaou | Evangelia Lazarou | Marios Athanasiou | Christos Petrou | Eleni Alexiou
+2025	21	14	Giannis Konstantinou | Ioanna Theodorou | Stavros Nikolaou | Katerina Vasiliou | Maria Ioannou | Evangelia Nikolaou | Marios Ioannou | Evangelia Ioannou | Sofia Vasiliou | Eleni Lazarou | Dimitris Vasiliou | Panagiotis Dimitriou | Katerina Vasiliou | Eleni Georgiou
+2025	20	17	Kostas Theodorou | Sofia Nikolaou | Dimitris Petrou | Georgia Petrou | Ioanna Pavlidis | Petros Alexiou | Giorgos Petrou | Nikos Alexiou | Stavros Athanasiou | Panagiota Vasiliou | Spyros Theodorou | Kostas Lazarou | Kostas Kostopoulos | Stavros Sotiriou | Sofia Theodorou | Petros Pavlidis | Stavros Theodorou
+2025	19	16	Maria Nikolaou | Eleni Dimitriou | Giannis Theodorou | Panagiota Georgiou | Petros Sotiriou | Nikos Papadopoulos | Maria Theodorou | Dimitris Vasiliou | Georgia Kostopoulos | Michalis Pavlidis | Eleni Pavlidis | Andreas Dimitriou | Stavros Lazarou | Anastasia Ioannou | Vasilis Petrou | Evangelia Georgiou
+2025	18	18	Giannis Alexiou | Giannis Nikolaou | Giannis Sotiriou | Marios Pavlidis | Anastasia Georgiou | Michalis Dimitriou | Georgia Lazarou | Giannis Kostopoulos | Katerina Georgiou | Dimitris Lazarou | Maria Athanasiou | Spyros Vasiliou | Evangelia Ioannou | Michalis Nikolaou | Christos Ioannou | Sofia Kostopoulos | Christos Dimitriou | Panagiota Lazarou
+2025	17	11	Petros Alexiou | Vasilis Lazarou | Chrysa Nikolaou | Georgia Papadopoulos | Michalis Petrou | Dimitra Vasiliou | Marios Sotiriou | Vasiliki Petrou | Katerina Theodorou | Evangelia Kostopoulos | Dimitra Vasiliou
+2025	16	10	Sofia Pavlidis | Anastasia Ioannou | Chrysa Konstantinou | Chrysa Dimitriou | Spyros Nikolaou | Michalis Alexiou | Spyros Papadopoulos | Georgia Dimitriou | Spyros Pavlidis | Stavros Georgiou

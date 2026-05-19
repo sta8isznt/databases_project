@@ -4,13 +4,15 @@ with recursive doctor_hierarchy as (
         d.AMKA as RootDoctorAMKA,
         concat(d.FirstName, ' ', d.LastName) as RootDoctorName,
 
-        d.AMKA as CurrentDoctorAMKA,
-        concat(d.FirstName, ' ', d.LastName) as CurrentDoctorName,
-        d.`Rank` as CurrentDoctorRank,
+        sup.AMKA as CurrentDoctorAMKA,
+        concat(sup.FirstName, ' ', sup.LastName) as CurrentDoctorName,
+        sup.`Rank` as CurrentDoctorRank,
 
-        0 as `Level`,
-        d.SupervisorAMKA
+        1 as `Level`,
+        sup.SupervisorAMKA
     from DocInfo d
+    join DocInfo sup
+        on d.SupervisorAMKA = sup.AMKA
 
     union all
 

@@ -39,14 +39,15 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (KENCode, `Description`, BaseCost, PredictedAvgTime);
 
+CREATE TEMPORARY TABLE FirstCost AS
+SELECT KENCode, MIN(LoadID) AS LoadID
+FROM CostLoad
+GROUP BY KENCode;
+
 INSERT INTO Cost (KENCode, `Description`, BaseCost, PredictedAvgTime)
 SELECT cl.KENCode, cl.`Description`, cl.BaseCost, cl.PredictedAvgTime
 FROM CostLoad cl
-JOIN (
-    SELECT KENCode, MIN(LoadID) AS LoadID
-    FROM CostLoad
-    GROUP BY KENCode
-) first_cost ON first_cost.LoadID = cl.LoadID;
+JOIN FirstCost fc ON fc.LoadID = cl.LoadID;
 
 LOAD DATA LOCAL INFILE 'data/procedure_type.csv'
 INTO TABLE ProcedureType

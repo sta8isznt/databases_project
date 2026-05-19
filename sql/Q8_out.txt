@@ -186,7 +186,6 @@
 10000000273,Nikos,Alexiou,42,Doctor
 10000000127,Nikos,Alexiou,45,Doctor
 10000000252,Petros,Alexiou,41,Doctor
-10000000005,Petros,Alexiou,31,Doctor
 10000000060,Sofia,Alexiou,63,Doctor
 10000000017,Stavros,Alexiou,34,Doctor
 10000000213,Vasilis,Alexiou,47,Doctor
@@ -435,7 +434,6 @@
 10000000260,Dimitra,Theodorou,63,Doctor
 10000000150,Dimitra,Theodorou,44,Doctor
 10000000160,Dimitra,Theodorou,55,Doctor
-10000000002,Eleni,Theodorou,27,Doctor
 10000000232,Georgia,Theodorou,45,Doctor
 10000000161,Giorgos,Theodorou,46,Doctor
 10000000049,Katerina,Theodorou,47,Doctor

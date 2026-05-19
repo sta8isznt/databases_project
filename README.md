@@ -335,7 +335,7 @@ optional and should be done from the project root.
 Install extra preprocessing dependencies if needed:
 
 ```bash
-python3 -m pip install --user pandas openpyxl
+python3 -m pip install --user pandas openpyxl xlrd
 ```
 
 Preprocess reference catalogs from the raw workbooks:
@@ -360,7 +360,7 @@ and `sql/load.sql`.
 | # | Assumption | Reason |
 |---|---|---|
 | 1 | `BirthDate` is stored instead of `Age` for `Staff` and `Patient`. | Age is derived and changes over time, while birth date is stable. |
-| 2 | `Staff.Type` is stored in the relational model together with subtype tables `Doctor`, `Nurse`, and `AdminStaff`. | The type value makes subtype validation explicit and is used by triggers to enforce consistency. |
+| 2 | `Staff.Type` is stored in the relational model together with subtype tables `Doctor`, `Nurse`, and `AdminStaff`. | The type value makes the intended staff category explicit and supports UI filtering and staff-category queries. |
 | 3 | A `Department` may exist without any assigned `Nurse` or `AdminStaff`. | This keeps the schema flexible for departments that are initially staffed only by doctors. |
 | 4 | A `Room` number is unique only inside its `Department`; `Department.RoomNum()` is derived from the rooms that belong to the department. | This supports modelling `Room` as a weak entity and avoids storing a derived count. |
 | 5 | `Doctor.Rank` uses English labels mapped from the assignment values: `Ειδικευόμενος -> Resident`, `Επιμελητής Β΄ -> Registrar`, `Επιμελητής Α΄ -> Consultant`, `Διευθυντής -> Director`. | This keeps rank values shorter and uniform while preserving the assignment semantics. |
@@ -378,7 +378,7 @@ and `sql/load.sql`.
 | 17 | `Shift` uses the composite primary key `(DepartmentID, ShiftTypeName, Date)`. The shift-assignment tables reference the same business key together with the assigned staff member. | A shift is naturally identified by department, shift type, and date, and this keeps shift assignments directly tied to that business identity. |
 | 18 | Some business rules are implemented with triggers instead of `CHECK` constraints. | MySQL cannot express all cross-row/cross-table rules with `CHECK`, so triggers enforce supervision, image exclusivity, allergies, procedure overlaps, shifts, and evaluation timing. |
 | 19 | Updates to `Staff.AMKA` are allowed and propagated with `ON UPDATE CASCADE` where appropriate. | This allows correction of identifier-entry mistakes while preserving related records. |
-| 20 | Staff specialization is disjoint: each staff member belongs to exactly one of `Doctor`, `Nurse`, or `AdminStaff`. | `Staff.Type` plus subtype triggers prevent inconsistent subtype inserts/updates. |
+| 20 | Staff specialization is treated as disjoint: each staff member belongs to exactly one of `Doctor`, `Nurse`, or `AdminStaff`. | The committed dataset and registration procedures maintain this convention by creating one matching subtype row per staff member; the schema uses foreign keys from subtype tables to `Staff`, but it does not define separate subtype triggers. |
 | 21 | The main doctor of a `ProcedureEvent` cannot be the main doctor of another overlapping procedure. Other participating staff may assist in overlapping events. | This enforces primary-doctor responsibility while allowing flexible assistant participation. |
 | 22 | Emergency arrivals create a `TriageEvent` and enter the priority FIFO `PatientQueue`; scheduled/direct admissions may create a `Hospitalization` without triage. | This preserves the emergency workflow while supporting planned admissions. |
 
